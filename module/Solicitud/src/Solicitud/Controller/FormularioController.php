@@ -1,11 +1,4 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/Solicitud for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Solicitud\Controller;
 
@@ -25,8 +18,25 @@ class FormularioController extends AbstractActionController
     {
         return array();
     }
+    
+    public function listAction(){
+    	$extraordModel = new SolicitudModel();
+    	$result = $extraordModel->getSql()->select();
+    
+    	$adapter = new PaginatorDbAdapter($result, $extraordModel->getAdapter());
+    	$paginator = new Paginator($adapter);
+    	$currentPage = $this->params('page', 1);
+    	$paginator->setCurrentPageNumber($currentPage);
+    	$paginator->setItemCountPerPage(10);
+    
+    	return array('tests'=> $paginator,
+    			'page'=> $currentPage
+    	);
+    
+    }    
+    
 
-    public function createAction()
+    public function extraordinarioAction()
     {
     	//instanciar la clase cuyo metodo nos devuelve el adaptador de nuestra bd
     	$database = new DatabaseAdapter();
@@ -77,24 +87,7 @@ class FormularioController extends AbstractActionController
     }
 
 
-    public function listAction(){
-		$extraordModel = new SolicitudModel();
-		$result = $extraordModel->getSql()->select();
-
-		$adapter = new PaginatorDbAdapter($result, $extraordModel->getAdapter());
-		$paginator = new Paginator($adapter);
-		$currentPage = $this->params('page', 1);
-		$paginator->setCurrentPageNumber($currentPage);
-		$paginator->setItemCountPerPage(10);
-
-		return array('tests'=> $paginator,
-					 'page'=> $currentPage
-		);
-
-	}
-
-
-	public function createsolicitudrupturaAction()
+	public function rupturaAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -132,7 +125,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudcertificadoAction()
+	public function certificadoAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -169,7 +162,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudinscripciontardiaAction()
+	public function inscripciontardiaAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -206,7 +199,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudcreditosAction()
+	public function creditosAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -244,7 +237,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudreduccionAction()
+	public function reduccionAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -282,7 +275,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudrevisionexamenAction()
+	public function revisionexamenAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -319,11 +312,11 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicituddesinscripcionAction()
+	public function desinscripcionAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
-		$form = new Form\SolicitudDesinscripcionExamen($dbAdapter);
+		$form = new Form\SolicitudDesinscripcionCurso($dbAdapter);
 		if($this->getRequest()->isPost()) {
 			$data = array_merge_recursive(
 					$this->getRequest()->getPost()->toArray(),
@@ -356,7 +349,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudtraspasopagoAction()
+	public function traspasopagoAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -393,7 +386,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudrevisionescolaridadAction()
+	public function revisionescolaridadAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -430,7 +423,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudcolaboradorcatedraAction()
+	public function colaboradorcatedraAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -467,7 +460,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudtituloAction()
+	public function tituloAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -504,7 +497,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudconvalidacionmateriasAction()
+	public function convalidacionmateriasAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -541,7 +534,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudhomologacionmateriasAction()
+	public function homologacionmateriasAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -579,7 +572,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudtesisAction()
+	public function tesisAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -617,7 +610,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudpasantiaAction()
+	public function pasantiaAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -655,7 +648,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudtutoriacatedraAction()
+	public function tutoriacatedraAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -693,7 +686,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudexoneracionAction()
+	public function exoneracionAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -731,7 +724,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudmateriafueramallacurricularAction()
+	public function materiafueramallacurricularAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -769,7 +762,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 	
-	public function createsolicitudcambioseccionAction()
+	public function cambioseccionAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -807,7 +800,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 
-	public function createsolicitudinclusionlistaAction()
+	public function inclusionlistaAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
@@ -848,7 +841,7 @@ class FormularioController extends AbstractActionController
 		return array('form1'=> $form);
 	}
 	
-	public function createsolicitudesvariasAction()
+	public function solicitudesvariasAction()
 	{
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd

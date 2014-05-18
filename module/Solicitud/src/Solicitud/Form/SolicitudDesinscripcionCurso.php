@@ -6,12 +6,12 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudDesinscripcionExamen extends Solicitud
+class SolicitudDesinscripcionCurso extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudDesinscripcionExamen', $dbadapter);
+		parent::__construct($name = 'solicitudDesinscripcionCurso', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
 

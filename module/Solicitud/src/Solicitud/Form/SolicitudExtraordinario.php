@@ -40,7 +40,7 @@ class SolicitudExtraordinario extends Solicitud
 		
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
@@ -143,7 +143,7 @@ class SolicitudExtraordinario extends Solicitud
 			) ) );
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

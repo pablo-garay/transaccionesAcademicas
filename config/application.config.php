@@ -10,7 +10,7 @@ return array(
         'ZfcUserAdmin',
     	'User',
         'Solicitud',
-        'Visualizar',
+        'Visualize',
         'GoalioMailService',
         'GoalioForgotPassword',
         'Usuarios',
