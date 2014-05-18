@@ -1,13 +1,13 @@
 <?php
 
-namespace Visualize\Controller;
+namespace Visualizar\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use DOMPDFModule\View\Model\PdfModel;
 
 
-class VisualizeController extends AbstractActionController
+class VisualizarController extends AbstractActionController
 {
 
     public function indexAction()

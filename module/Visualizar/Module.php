@@ -1,5 +1,5 @@
 <?php
-namespace Visualize;
+namespace Visualizar;
 
 class Module
 {

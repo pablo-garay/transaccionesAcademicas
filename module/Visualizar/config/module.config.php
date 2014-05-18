@@ -3,21 +3,21 @@ return array(
     'controllers' => array(
         'invokables' => array(
             // below is key                      and below is the fully qualified class name
-            'Visualize\Controller\Visualize' => 'Visualize\Controller\VisualizeController',
+            'Visualizar\Controller\Visualizar' => 'Visualizar\Controller\VisualizarController',
         ),
     ),
     'router' => array(
         'routes' => array(
-            'visualize' => array(
+            'visualizar' => array(
                 'type'    => 'Literal',
                 'options' => array(
                     // Change this to something specific to your module
-                    'route'    => '/visualize',
+                    'route'    => '/visualizar',
                     'defaults' => array(
                         // Change this value to reflect the namespace in which
                         // the controllers for your module are found
-                        '__NAMESPACE__' => 'Visualize\Controller',
-                        'controller'    => 'Visualize',
+                        '__NAMESPACE__' => 'Visualizar\Controller',
+                        'controller'    => 'Visualizar',
                         'action'        => 'index',
                     ),
                 ),
@@ -45,7 +45,7 @@ return array(
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'Visualize' => __DIR__ . '/../view',
+            'Visualizar' => __DIR__ . '/../view',
         ),
     ),
     
@@ -53,16 +53,16 @@ return array(
 	'navigation' => array(
 		'default' => array(
 			array(
-				'label' => 'Visualize',
-				'route' => 'visualize/default',
-				'controller'=> 'visualize',
+				'label' => 'Visualizar',
+				'route' => 'visualizar/default',
+				'controller'=> 'visualizar',
 				'pages' => array(
 					array(
 						'label' => 'Visualizar solicitud',
-						'route' => 'visualize/default',
-						'controller' => 'visualize',
+						'route' => 'visualizar/default',
+						'controller' => 'visualizar',
 						'action' => 'index',
-						'resource' => 'visualize',
+						'resource' => 'visualizar',
 						'privilege' => 'create',
 					),
 				)
