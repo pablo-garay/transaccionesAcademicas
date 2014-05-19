@@ -5,42 +5,42 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 <?php if ($this->pageCount): ?>
 <div class="paginationControl">
 <?php echo $this->firstItemNumber; ?> - <?php echo $this->lastItemNumber; ?>
-of <?php echo $this->totalItemCount; ?>
+ de <?php echo $this->totalItemCount; ?>
 
 <!-- First page link -->
 <?php if (isset($this->previous)): ?>
   <a href="<?php echo $this->url($this->route, array('page' => $this->first)); ?>">
-    First
+    Primero
   </a> |
 <?php else: ?>
-  <span class="disabled">First</span> |
+  <span class="disabled">Primero</span> |
 <?php endif; ?>
 
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
   <a href="<?php echo $this->url($this->route, array('page' => $this->previous)); ?>">
-    < Previous
+    < Anterior
   </a> |
 <?php else: ?>
-  <span class="disabled">< Previous</span> |
+  <span class="disabled">< Anterior</span> |
 <?php endif; ?>
 
 <!-- Next page link -->
 <?php if (isset($this->next)): ?>
   <a href="<?php echo $this->url($this->route, array('page' => $this->next)); ?>">
-    Next >
+    Siguiente >
   </a> |
 <?php else: ?>
-  <span class="disabled">Next ></span> |
+  <span class="disabled">Siguiente ></span> |
 <?php endif; ?>
 
 <!-- Last page link -->
 <?php if (isset($this->next)): ?>
   <a href="<?php echo $this->url($this->route, array('page' => $this->last)); ?>">
-    Last
+    Último
   </a>
 <?php else: ?>
-  <span class="disabled">Last</span>
+  <span class="disabled">Último</span>
 <?php endif; ?>
 
 </div>

@@ -29,7 +29,7 @@ class FormularioController extends AbstractActionController
     	$paginator->setCurrentPageNumber($currentPage);
     	$paginator->setItemCountPerPage(10);
     
-    	return array('tests'=> $paginator,
+    	return array('solicitudes'=> $paginator,
     			'page'=> $currentPage
     	);
     
@@ -873,9 +873,6 @@ class FormularioController extends AbstractActionController
 				));
 			}
 		}
-	
-	
-	
 	
 	
 		// pass the data to the view for visualization

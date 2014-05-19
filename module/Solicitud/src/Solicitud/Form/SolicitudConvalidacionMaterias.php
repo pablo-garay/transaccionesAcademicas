@@ -170,6 +170,7 @@ class SolicitudConvalidacionMaterias extends Form
 	public function getInputFilter()
 	{
 		if (! $this->filter) {
+			// DEBEMOS inicializar filter del padre					
 			$inputFilter = new InputFilter();
 			$factory = new InputFactory ();
 

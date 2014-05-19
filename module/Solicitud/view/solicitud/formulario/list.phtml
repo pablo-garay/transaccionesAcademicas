@@ -1,6 +1,6 @@
-<?php if (count($this->tests)): ?>
+<?php if (count($this->solicitudes)): ?>
 
-<table class="table table-striped">
+<table class="table table-hover">
 <thead>
     <tr>
         <th><?= $this->translate('Carrera') ?></th>
@@ -12,35 +12,35 @@
     </tr>
 </thead>
 <tbody>
-<?php foreach ($this->tests as $test): ?>
+<?php foreach ($this->solicitudes as $solicitud): ?>
    <tr>
-            <td><?= $this->escapehtml($test['carrera']) ?></td>
-            <td><?= $this->escapehtml($test['estado_solicitud']) ?></td>
-            <td><?= $test['etapa_actual'] ?> <?php $this->translate('minutes')?></td>
-            <td><a href="<?= $this->url('solicitud/default', array('controller'=> 'test', 'action'=>'take', 'id'=> $test['id'])) ?>"><?= $this->translate('Ver') ?></a></td>
+            <td><?= $this->escapehtml($solicitud['carrera']) ?></td>
+            <td><?= $this->escapehtml($solicitud['estado_solicitud']) ?></td>
+            <td><?= $solicitud['etapa_actual'] ?> </td>
+            <td><a href="<?= $this->url('solicitud/default', array('controller'=> 'test', 'action'=>'take', 'id'=> $solicitud['id'])) ?>"><?= $this->translate('Visualizar') ?></a></td>
             <td><?php
-                if($this->user->getId() == $test['id'] || $this->acl->isAllowed($this->user->getRole(),'test','edit')) :
-            ?>
-            <a href="<?= $this->url('solicitud/default', array('controller'=> 'test', 'action'=>'edit', 'id'=> $test['id'])) ?>"><?= $this->translate('Edit') ?></a>
+//                 if($this->user->getId() == $solicitud['id'] || $this->acl->isAllowed($this->user->getRole(),'test','edit')) :
+//             ?>
+            <a href="<?= $this->url('solicitud/default', array('controller'=> 'test', 'action'=>'edit', 'id'=> $solicitud['id'])) ?>"><?= $this->translate('Editar') ?></a>
             <?php
-                endif;
-            ?>
-            </td>
+//                 endif;
+//             ?>
+<!--             </td> -->
             <td><?php
-                if($this->acl->isAllowed($this->user->getRole(),'test','delete')) :
-            ?>
-            <a href="<?= $this->url('solicitud/default', array('controller'=> 'test', 'action'=>'delete', 'id'=> $test['id'])) ?>"><?= $this->translate('Delete') ?></a>
+//                 if($this->acl->isAllowed($this->user->getRole(),'test','delete')) :
+//             ?>
+            <a href="<?= $this->url('solicitud/default', array('controller'=> 'test', 'action'=>'delete', 'id'=> $solicitud['id'])) ?>"><?= $this->translate('Eliminar') ?></a>
             <?php
-                endif;
-            ?>
-            </td>
+//                 endif;
+//             ?>
+<!--             </td> -->
     </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
 <?php endif; ?>
 
-<?php echo $this->paginationControl($this->tests,
+<?php echo $this->paginationControl($this->solicitudes,
                                     'Sliding',
                                     'paginator/sliding',
                                     array('route' => 'solicitud/list')
