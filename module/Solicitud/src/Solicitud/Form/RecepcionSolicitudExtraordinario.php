@@ -74,11 +74,8 @@ class RecepcionSolicitudExtraordinario extends Form
 
 	}
 
+	
 
 
-	public function setInputFilter(InputFilterInterface $inputFilter)
-	{
-		throw new \Exception('It is not allowed to set the input filter');
-	}
 
 }

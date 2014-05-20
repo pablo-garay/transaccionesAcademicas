@@ -25,10 +25,10 @@ class SolicitudCertificadoEstudios extends Solicitud
 						'label' => 'Carrera',
 						'empty_option' => 'Elija su carrera',
 						'value_options' => array(
-								'0' => 'Carrera1',
-								'1' => 'Carrera2',
-								'2' => 'Carrera3',
-								'3' => 'Carrera4',
+								'Carrera1' => 'Carrera1',
+								'Carrera2' => 'Carrera2',
+								'Carrera3' => 'Carrera3',
+								'Carrera4' => 'Carrera4',
 						),
 		
 				),
@@ -53,6 +53,10 @@ class SolicitudCertificadoEstudios extends Solicitud
 
 						),
 				),
+				'attributes' => array(
+						// Below: HTML5 way to specify that the input will be phone number
+						'required' => 'required',
+				),
 	
 		),
 				array (
@@ -71,6 +75,10 @@ class SolicitudCertificadoEstudios extends Solicitud
 
 						),
 				),
+				'attributes' => array(
+						// Below: HTML5 way to specify that the input will be phone number
+						'required' => 'required',
+				),
 	
 		),
 				array (
@@ -87,6 +95,10 @@ class SolicitudCertificadoEstudios extends Solicitud
 								'0' => 'Si',
 								'1' => 'No',
 						),
+				),
+				'attributes' => array(
+						// Below: HTML5 way to specify that the input will be phone number
+						'required' => 'required',
 				),
 	
 		),
@@ -126,38 +138,10 @@ class SolicitudCertificadoEstudios extends Solicitud
 	public function getInputFilter()
 	{
 		if (! $this->filter) {
-			$inputFilter = new InputFilter();
+			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Email',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'EmailAddress',
-									'options' => array (
-											'messages' => array (
-													'emailAddressInvalidFormat' => 'Email address format is not invalid'
-											)
-									)
-							),
-							array (
-									'name' => 'NotEmpty',
-									'options' => array (
-											'messages' => array (
-													'isEmpty' => 'Email address is required'
-											)
-									)
-							)
-					)
-			) ) );
+
 	
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'Aclaraciones',

@@ -27,7 +27,11 @@ class SolicitudesVarias extends Solicitud
 						
 				),
 
-		));
+		), 
+			array (
+        		'priority' => 350,
+        	)
+				);
 
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -41,7 +45,10 @@ class SolicitudesVarias extends Solicitud
 						),
 				),
 		
-		)
+		), 
+			array (
+        		'priority' => 340,
+        	)
 			
 		);
 
@@ -56,7 +63,11 @@ class SolicitudesVarias extends Solicitud
 						'required' => false,
 						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
 				)
-		));
+		), 
+			array (
+        		'priority' => 330,
+        	)
+				);
 
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -64,16 +75,7 @@ class SolicitudesVarias extends Solicitud
 				'type' => 'Zend\Form\Element\Csrf',
 		));
 
-		//This is the submit button
-		$this->add(array(
-				'name' => 'enviar',
-				'type' => 'Zend\Form\Element\Submit',
-				'attributes' => array(
-						'value' => 'Enviar',
-						'required' => 'false',
 
-				),
-		));
 
 	}
 

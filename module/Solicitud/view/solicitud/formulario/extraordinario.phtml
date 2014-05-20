@@ -12,6 +12,7 @@
 	border-bottom-right-radius: 5px;
 	-webkit-border-radius: 200px; "> 
 	SOLICITUD DE EXAMEN EXTRAORDINARIO </h4>
+	<br> <br>
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
@@ -25,13 +26,13 @@ foreach ($this->form1 as $element) {
 
  
 ?>
-	<div class="control-group">
+<div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
             <?= $this->formElementErrors($element)?>
 	    </div>
-	 </div>
+</div>
 
 <?php 
 
@@ -52,18 +53,22 @@ foreach ($this->form1 as $element) {
 	<h4 align="center"> Con todo respeto. </h4>
 <?php 
     }
-    } else {
-       
-        
-        if ($element->getName() == "enviar"){
-			echo sprintf('<p align = "center">');
-			echo $this->formRow($element->setAttribute('class', 'btn btn-primary'));
-
-        }else if ($element->getName() == "cancelar"){
-        		echo $this->formRow($element->setAttribute('class', 'btn btn-primary')); 	
-        		echo sprintf('</p>');
-        	}
+    } else if ($element->getName() == 'enviar')  {
+        $element->setAttribute('class', 'btn btn-primary'); 
         ?>
+        <br>
+<div class="form-actions">
+<?=$this->formelement($element)?>
+    
+<?php
+    }
+    if ($element->getName() == 'cancelar'){
+	$element->setAttribute('class', 'btn btn-primary');
+?>
+&nbsp 
+<?=$this->formelement($element)?>
+
+</div>
 
 <?php
     }

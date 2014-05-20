@@ -87,15 +87,42 @@ return array(
 				'controller'=> 'formulario',
 				'pages' => array(
 					array(
-						'label' => 'Crear solicitud',
-						'route' => 'solicitud/default',
-						'controller' => 'formulario',
-						'action' => 'extraordinario',
-// 						'resource' => 'formulario',
-// 						'privilege' => 'create',
+						'label' => 'Lista',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
 					),
 					array(
-						'label' => 'Lista',
+						'label' => 'Lista de Solicitudes Pendientes',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),
+					array(
+						'label' => 'Lista de Solicitudes Nuevas',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),					
+					array(
+						'label' => 'Lista de Solicitudes Aprobadas',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),
+					array(
+						'label' => 'Lista de Solicitudes Rechazadas',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),
+					array(
+						'label' => 'Lista de Solicitudes Anuladas',
 						'route' => 'solicitud/list',
 // 						// acl
 // 						'resource'   => 'test',

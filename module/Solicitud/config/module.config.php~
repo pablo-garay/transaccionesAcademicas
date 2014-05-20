@@ -101,6 +101,41 @@ return array(
 // 						'resource'   => 'test',
 // 						'privilege'  => 'list',
 					),
+					array(
+						'label' => 'Lista de Solicitudes Pendientes',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),
+					array(
+						'label' => 'Lista de Solicitudes Nuevas',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),					
+					array(
+						'label' => 'Lista de Solicitudes Aprobadas',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),
+					array(
+						'label' => 'Lista de Solicitudes Rechazadas',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),
+					array(
+						'label' => 'Lista de Solicitudes Anuladas',
+						'route' => 'solicitud/list',
+// 						// acl
+// 						'resource'   => 'test',
+// 						'privilege'  => 'list',
+					),
 				)
 			),
 			array(
@@ -109,7 +144,7 @@ return array(
 				'controller'=> 'formulario',
 				'pages' => array(
 					array(
-						'label' => 'Solicitud de Examen Extraordinario',
+						'label' => 'Examen Extraordinario',
 						'route' => 'solicitud/default',
 						'controller' => 'formulario',
 						'action' => 'extraordinario',

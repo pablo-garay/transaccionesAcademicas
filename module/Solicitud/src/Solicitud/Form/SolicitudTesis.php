@@ -114,7 +114,7 @@ class SolicitudTesis extends Solicitud
 	public function getInputFilter()
 	{
 		if (! $this->filter) {
-			$inputFilter = new InputFilter();
+			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (

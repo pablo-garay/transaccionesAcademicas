@@ -24,7 +24,11 @@ class SolicitudExtraordinario extends Solicitud
 						'value_options' => $this->getAsignaturasDeCarrera(),
 				),
 
-		));
+		)
+				, array (
+						'priority' => 280,
+				)
+				);
 
 		$this->add(array(
 				'name' => 'fecha_extraordinario',
@@ -36,7 +40,11 @@ class SolicitudExtraordinario extends Solicitud
 // 						),
 				),
 
-		));
+		)
+				, array (
+						'priority' => 270,
+				)
+				);
 		
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -67,7 +75,11 @@ class SolicitudExtraordinario extends Solicitud
 						'required' => false,
 						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
 				)
-		));
+		)
+				, array (
+						'priority' => 250,
+				)
+				);
 
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -76,7 +88,7 @@ class SolicitudExtraordinario extends Solicitud
 		));
 
 		//This is the submit button
-		$this->add(array(
+/* 		$this->add(array(
 				'name' => 'enviar',
 				'type' => 'Zend\Form\Element\Submit',
 				'attributes' => array(
@@ -84,7 +96,7 @@ class SolicitudExtraordinario extends Solicitud
 						'required' => 'false',
 
 				),
-		));
+		)); */
 
 	}
 

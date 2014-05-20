@@ -1,4 +1,18 @@
-<h4 align="center"> SOLICITUD DE PASANTIA </h4>
+<h4  style="
+	margin: 1em 20px;
+	padding: 10px;
+
+	background-color: #f2f2f2;
+	color: #555;
+	font-size: 140%;
+	text-align: center;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	-webkit-border-radius: 200px; "> 
+	 SOLICITUD DE PASANTIA </h4>
+	 <br> <br>
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
@@ -29,12 +43,22 @@ foreach ($this->form1 as $element) {
 	<h4 align="center"></h4>
 <?php 
     }
-    } else {
-        $element->setAttribute('class', 'btn btn-primary');
+    } else if ($element->getName() == 'enviar')  {
+        $element->setAttribute('class', 'btn btn-primary'); 
         ?>
+        <br>
 <div class="form-actions">
 <?=$this->formelement($element)?>
-    </div>
+    
+<?php
+    }
+    if ($element->getName() == 'cancelar'){
+	$element->setAttribute('class', 'btn btn-primary');
+?>
+&nbsp 
+<?=$this->formelement($element)?>
+
+</div>
 <?php
     }
 }

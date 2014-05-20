@@ -32,26 +32,20 @@ class Solicitud extends AbstractTableGateway
 	}
 }
 
-class SolicitudExtraordinario extends AbstractTableGateway
-{
+// class SolicitudExtraordinario extends AbstractTableGateway
+// {
 
-	public function __construct()
-	{
+// 	public function __construct()
+// 	{
 
-		$this->table = 'solicitud_de_extraordinario';
-		$this->featureSet = new Feature\FeatureSet();
-		$this->featureSet->addFeature(new Feature\GlobalAdapterFeature());
-		$this->initialize();
-	}
+// 		$this->table = 'solicitud_de_extraordinario';
+// 		$this->featureSet = new Feature\FeatureSet();
+// 		$this->featureSet->addFeature(new Feature\GlobalAdapterFeature());
+// 		$this->initialize();
+// 	}
 
-	public function insert($set)
-	{
-		$extraordinarioData = array(
-			'solicitud' => $set['solicitud'],
-			'fecha_extraordinario' => $set['fecha_extraordinario'],
-			'motivo' => $set['motivo'],
-		);
-
-		return parent::insert($extraordinarioData);
-	}
-}
+// 	public function insert($set)
+// 	{
+// 		return parent::insert($set);
+// 	}
+// }

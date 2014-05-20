@@ -24,7 +24,11 @@ class SolicitudCambioSeccion extends Solicitud
 						'value_options' => $this->getAsignaturasDeCarrera(),
 				),
 
-		));
+		),
+				array (
+						'priority' => 350,
+				)
+				);
 
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -36,9 +40,15 @@ class SolicitudCambioSeccion extends Solicitud
 								'1' => 'Otro'
 						),
 				),
+				'attributes' => array(
+						// Below: HTML5 way to specify that the input will be phone number
+						'required' => 'required',
+				),
 		
-		)
-			
+		),
+				array (
+						'priority' => 340,
+				)
 		);
 
 		$this->add(array(
@@ -52,7 +62,11 @@ class SolicitudCambioSeccion extends Solicitud
 						'required' => false,
 						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
 				)
-		));
+		),
+				array (
+						'priority' => 330,
+				)
+				);
 		
 		$this->add(array(
 				'name' => 'Tipo',
@@ -95,16 +109,7 @@ class SolicitudCambioSeccion extends Solicitud
 				'type' => 'Zend\Form\Element\Csrf',
 		));
 
-		//This is the submit button
-		$this->add(array(
-				'name' => 'enviar',
-				'type' => 'Zend\Form\Element\Submit',
-				'attributes' => array(
-						'value' => 'Enviar',
-						'required' => 'false',
 
-				),
-		));
 
 	}
 
@@ -138,6 +143,8 @@ class SolicitudCambioSeccion extends Solicitud
 
 					)
 			) ) );
+			
+			
 
 
 

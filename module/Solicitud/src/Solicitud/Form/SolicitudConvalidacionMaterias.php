@@ -75,14 +75,8 @@ class SolicitudConvalidacionMaterias extends Form
 				'priority' => 300,
 		) );
 
+		
 
-
-
-        // This is the special code that protects our form beign submitted from automated scripts
-        $this->add(array(
-            'name' => 'csrf',
-            'type' => 'Zend\Form\Element\Csrf',
-        ));
         
         $this->add(array(
         		'name' => 'Universidad_origen',
@@ -162,6 +156,45 @@ class SolicitudConvalidacionMaterias extends Form
         				'required' => 'required'
         		)
         ));
+        
+        $this->add(array(
+        		'name' => 'enviar',
+        		'type' => 'Zend\Form\Element\Submit',
+        		'attributes' => array(
+        				'value' => 'Enviar',
+        				'required' => 'false',
+        
+        		),
+        
+        )
+        		, array (
+        				'priority' => 0,
+        		)
+        
+        );
+        
+        $this->add(array(
+        		'name' => 'cancelar',
+        		'type' => 'Zend\Form\Element\Submit',
+        		'attributes' => array(
+        				'value' => 'Cancelar',
+        				'required' => 'false',
+        
+        		),
+        
+        )
+        		, array (
+        				'priority' => 0,
+        		)
+        
+        );
+        
+        
+        // This is the special code that protects our form beign submitted from automated scripts
+        $this->add(array(
+        		'name' => 'csrf',
+        		'type' => 'Zend\Form\Element\Csrf',
+        ));
 
 
 
@@ -171,7 +204,7 @@ class SolicitudConvalidacionMaterias extends Form
 	{
 		if (! $this->filter) {
 			// DEBEMOS inicializar filter del padre					
-			$inputFilter = new InputFilter();
+			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
 
 			$inputFilter->add ( $factory->createInput ( array (
