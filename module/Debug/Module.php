@@ -58,7 +58,7 @@ class Module implements AutoloaderProviderInterface
         // actual finish event is triggered.
         $eventManager->attach(MvcEvent::EVENT_FINISH, array($this,'getMvcDuration'),2);
 
-        $eventManager->attach(MvcEvent::EVENT_RENDER,array($this,'addDebugOverlay'),100);
+        // $eventManager->attach(MvcEvent::EVENT_RENDER,array($this,'addDebugOverlay'),100);
 
         $eventManager->attach(MvcEvent::EVENT_RENDER,array($this,'injectViewVariables'),100);
 

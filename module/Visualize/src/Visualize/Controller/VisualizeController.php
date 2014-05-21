@@ -33,15 +33,12 @@ class VisualizeController extends AbstractActionController
     
     public function extraordinarioAction()
     {
-    	
-    	# $result->setTerminal(true);
-    	
         //quitar de la bd
         
         $pdf = new PdfModel();
-        #Para meter las variables
+        //$pdf->setTerminal(true);
         $pdf->setVariables(array(
-          'prueba' => 'Funciona',
+          'name' => 'John Doe',
         ));
         return $pdf;
         
