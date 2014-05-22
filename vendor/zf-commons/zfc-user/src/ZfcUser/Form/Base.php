@@ -22,14 +22,24 @@ class Base extends ProvidesEventsForm
             ),
         ));
 
-        $this->add(array(
-            'name' => 'email',
+        // This is how we define the "email" element
+       $this->add(array(
+            'name' => 'email', // the unique name of the element in the form.
+                                //Ex: <input name="..."
+            'type' => 'Zend\Form\Element\Email',
+// The above must be valid Zend Form element.
+// You can also use short names as “email” instead of “Zend\Form\Element\Email
             'options' => array(
-                'label' => 'Email',
+                // This is list of options that we can add to the element.
+                'label' => 'Email:'
+                // Label is the text that should who before the form field
             ),
             'attributes' => array(
-                'type' => 'text'
-            ),
+            // These are the attributes that are passed directly to the HTML element
+                'type' => 'email', // Ex: <input type="email"
+                'required' => 'required', // 'required' => true, // Ex: <input required="true"
+                'placeholder' => 'Su dirección de email...', // HTM5 placeholder attribute
+            )
         ));
 
         $this->add(array(
@@ -41,26 +51,36 @@ class Base extends ProvidesEventsForm
                 'type' => 'text'
             ),
         ));
-
+        
         $this->add(array(
-            'name' => 'password',
-            'options' => array(
-                'label' => 'Password',
-            ),
-            'attributes' => array(
-                'type' => 'password'
-            ),
-        ));
-
+        		'name' => 'contrasena',
+        		'type' => 'Zend\Form\Element\Password',
+        		'attributes' => array(
+        				'placeholder' => 'Indique contraseña aquí...',
+        				'required' => 'required',
+        		),
+        		'options' => array(
+        				'label' => 'Contraseña',
+        		),
+        ),
+            array (
+						'priority' => -90,
+		));
+        
         $this->add(array(
-            'name' => 'passwordVerify',
-            'options' => array(
-                'label' => 'Password Verify',
-            ),
-            'attributes' => array(
-                'type' => 'password'
-            ),
-        ));
+        		'name' => 'contrasena_verify',
+        		'type' => 'Zend\Form\Element\Password',
+        		'attributes' => array(
+        				'placeholder' => 'Confirme contraseña aquí...',
+        				'required' => 'required',
+        		),
+        		'options' => array(
+        				'label' => 'Verifique contraseña',
+        		),
+        ),
+            array (
+						'priority' => -95,
+		));
 
         if ($this->getRegistrationOptions()->getUseRegistrationFormCaptcha()) {
             $this->add(array(
@@ -73,16 +93,24 @@ class Base extends ProvidesEventsForm
             ));
         }
 
-        $submitElement = new Element\Button('submit');
-        $submitElement
-            ->setLabel('Submit')
-            ->setAttributes(array(
-                'type'  => 'submit',
-            ));
-
-        $this->add($submitElement, array(
-            'priority' => -100,
+        // This is the special code that protects our form beign submitted from automated scripts
+        $this->add(array(
+            'name' => 'csrf',
+            'type' => 'Zend\Form\Element\Csrf',
         ));
+
+        // This is the submit button
+        $this->add(array(
+        		'name' => 'submit',
+        		'type' => 'Zend\Form\Element\Submit',
+        		'attributes' => array(
+        				'value' => 'Registrarse',
+        				'required' => 'false',
+        		),
+        ),
+        array (
+			'priority' => -100,
+		));
 
         $this->add(array(
             'name' => 'userId',

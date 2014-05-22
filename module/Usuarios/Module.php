@@ -52,6 +52,7 @@ class Module
                                     'name' => 'nombres',
                                     'type' => 'text',
                                     'attributes' => array(
+                                    		'placeholder' => 'Escriba su nombre...',
                                             'required' => 'required',
                                     ),
                                     'options' => array(
@@ -65,6 +66,7 @@ class Module
                                     'name' => 'apellidos',
                                     'type' => 'text',
                                     'attributes' => array(
+                                    		'placeholder' => 'Escriba su apellido...',
                                             'required' => 'required',
                                     ),
                                     'options' => array(
@@ -72,6 +74,18 @@ class Module
                                     ),
                             )
                     );
+                    
+                    $form->add(array(
+                    		'name' => 'fecha_nacimiento',
+                    		'type' => 'Zend\Form\Element\Date',
+                    		'attributes' => array(
+                    				'placeholder' => 'Fecha de nacimiento...',
+                    				'required' => 'required',
+                    		),
+                    		'options' => array(
+                    				'label' => 'Fecha de Nacimiento',
+                    		),
+                    ));
                     
                     $form->add(array(
                         'name' => 'sexo',
@@ -85,18 +99,6 @@ class Module
                                         'M' => 'Masculino',
                                         'F' => 'Femenino',
                                 ),
-                            ),
-                    ));
-
-                    $form->add(array(
-                            'name' => 'fecha_nacimiento',
-                            'type' => 'Zend\Form\Element\Date',
-                            'attributes' => array(
-                                    'placeholder' => 'Fecha de nacimiento...',
-                                    'required' => 'required',
-                            ),
-                            'options' => array(
-                                    'label' => 'Fecha de Nacimiento',
                             ),
                     ));
 
@@ -147,7 +149,7 @@ class Module
                             'name' => 'documento',
                             'type' => 'Zend\Form\Element\Text',
                             'attributes' => array(
-                                    'placeholder' => '/ingrese sy numero de documento...',
+                                    'placeholder' => 'Escriba número de documento...',
                                     'required' => 'required',
                             ),
                             'options' => array(
@@ -248,7 +250,7 @@ class Module
                             'validators' => array (
                                     array (
                                             'name' => 'NotEmpty',
-                                            // @validate que sea Alphanum
+                                            //@todo validate que sea Alphanum
                                     ),
                             )
                     ));

@@ -253,37 +253,7 @@ class Solicitud extends Form
 									)
 							),
 					)
-			)));
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Email',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'EmailAddress',
-									'options' => array (
-											'messages' => array (
-													'emailAddressInvalidFormat' => 'Email address format is not invalid'
-											)
-									)
-							),
-							array (
-									'name' => 'NotEmpty',
-									'options' => array (
-											'messages' => array (
-													'isEmpty' => 'Email address is required'
-											)
-									)
-							)
-					)
-			) ) );
+			)));		
 
 
 			// @todo: posiblemente agregar filtros a los demas campos

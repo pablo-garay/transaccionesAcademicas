@@ -68,7 +68,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
         }
 
         $this->add(array(
-            'name'       => 'password',
+            'name'       => 'contrasena',
             'required'   => true,
             'filters'    => array(array('name' => 'StringTrim')),
             'validators' => array(
@@ -82,7 +82,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
         ));
 
         $this->add(array(
-            'name'       => 'passwordVerify',
+            'name'       => 'contrasena_verify',
             'required'   => true,
             'filters'    => array(array('name' => 'StringTrim')),
             'validators' => array(
@@ -95,7 +95,7 @@ class RegisterFilter extends ProvidesEventsInputFilter
                 array(
                     'name'    => 'Identical',
                     'options' => array(
-                        'token' => 'password',
+                        'token' => 'contrasena',
                     ),
                 ),
             ),

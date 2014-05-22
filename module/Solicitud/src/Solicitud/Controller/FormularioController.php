@@ -87,7 +87,7 @@ class FormularioController extends AbstractActionController
             	));
             } else {
             	// debug code -- borrar despues!
-            	$this->flashmessenger()->addSuccessMessage('no enviada');
+            	$this->flashmessenger()->addSuccessMessage(print_r($form->getData(), TRUE));
             	$messages = $form->getMessages();
             }
         }
