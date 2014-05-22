@@ -199,7 +199,7 @@ class SolicitudExtraordinario extends Solicitud
 	{
 		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
 		$dbAdapter = $this->dbAdapter;
-		$sql       = 'SELECT solicitud, materia FROM solicitudes';
+		$sql       = 'SELECT solicitud, matricula FROM solicitudes';
 
 		$statement = $dbAdapter->query($sql);
 		$result    = $statement->execute();
@@ -207,7 +207,7 @@ class SolicitudExtraordinario extends Solicitud
 		$selectData = array();
 
 		foreach ($result as $res) {
-			$selectData[$res['materia']] = $res['materia'];
+			$selectData[$res['matricula']] = $res['matricula'];
 		}
 		return array('Compiladores' =>'Compiladores', 'SPD' => 'SPD', 'Informática 2' =>'Informática 2');
 

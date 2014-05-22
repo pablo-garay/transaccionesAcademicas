@@ -66,6 +66,7 @@ return array(
 	'service_manager' => array (
 			'factories' => array(
 					'database' => 'Solicitud\Service\Factory\Database',
+					'sapientiadb' => 'Solicitud\Service\Factory\SapientiaDatabase',
 			),
 			'invokables' => array(
 					'table-gateway' => 'Solicitud\Service\Invokable\TableGateway',

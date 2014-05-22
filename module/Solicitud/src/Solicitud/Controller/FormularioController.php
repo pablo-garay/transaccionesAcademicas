@@ -78,7 +78,7 @@ class FormularioController extends AbstractActionController
             	$solEspecificaModel = $this->serviceLocator->get('table-gateway')->get($tableName);
             	$res = $solEspecificaModel->insert($filtered);
 
-            	$this->flashmessenger()->addSuccessMessage(print_r($filtered, TRUE));
+            	$this->flashmessenger()->addSuccessMessage('Solicitud Enviada');
 
             	// redirect the user to its account home page
             	return $this->redirect()->toRoute('user/default', array (
@@ -87,7 +87,7 @@ class FormularioController extends AbstractActionController
             	));
             } else {
             	// debug code -- borrar despues!
-            	$this->flashmessenger()->addSuccessMessage(print_r($form->getData(), TRUE));
+            	$this->flashmessenger()->addSuccessMessage('No enviado');
             	$messages = $form->getMessages();
             }
         }

@@ -24,7 +24,6 @@ class Solicitud extends AbstractTableGateway
 		$solicitudData = array(
 			'usuario_solicitante' => 1,
 			'carrera' => $set['carrera'],
-			'materia' => $set['materia'],
 		);
 
 		parent::insert($solicitudData);
