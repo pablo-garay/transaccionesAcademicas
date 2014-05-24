@@ -16,15 +16,18 @@ class SolicitudExoneracion extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('Prueba'=>'Prueba')//$this->getSubjectsOfCareer(),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
+				
 				array (
 						'priority' => 290,
 				)
@@ -35,16 +38,18 @@ class SolicitudExoneracion extends Solicitud
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Enfermedad',
-								'2' => 'Trabajo',
-								'3' => 'Otro'
+								'Enfermedad' => 'Enfermedad',
+								'Trabajo' => 'Trabajo',
+								'Otro' => 'Otro'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 260,
@@ -52,7 +57,7 @@ class SolicitudExoneracion extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
@@ -69,17 +74,19 @@ class SolicitudExoneracion extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'Tipo',
+				'name' => 'tipo',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'0' => 'Certificado Médico',
-								'1' => 'Certificado de Trabajo',
-								'2' => 'Otro'
+								'Certificado Médico' => 'Certificado Médico',
+								'Certificado de Trabajo' => 'Certificado de Trabajo',
+								'Otro' => 'Otro'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 240,
@@ -87,7 +94,7 @@ class SolicitudExoneracion extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Descripcion',
+				'name' => 'especificacion_adjunto',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de documento adjunto'
@@ -120,7 +127,7 @@ class SolicitudExoneracion extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -143,11 +150,9 @@ class SolicitudExoneracion extends Solicitud
 					)
 			) ) );
 			
-
-
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -156,11 +161,47 @@ class SolicitudExoneracion extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+			
+					)
+			) ) );
 
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					
+					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
+					'name' => 'especificacion_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -169,6 +210,18 @@ class SolicitudExoneracion extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
 			
 			) ) );
 			

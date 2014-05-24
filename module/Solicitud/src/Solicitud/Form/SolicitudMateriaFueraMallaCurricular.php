@@ -23,19 +23,16 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 						'label' => 'Carrera',
 						'empty_option' => 'Elija su carrera',
 						'value_options' => array(
-								'0' => 'Carrera1',
-								'1' => 'Carrera2',
-								'2' => 'Carrera3',
-								'3' => 'Carrera4',
+								'Carrera1' => 'Carrera1',
+								'Carrera2' => 'Carrera2',
+								'Carrera3' => 'Carrera3',
+								'Carrera4' => 'Carrera4',
 		
 						),
 		
 				),
 				'attributes' => array(
-						// Below: HTML5 way to specify that the input will be phone number
 						'required' => 'required',
-		
-		
 				),
 		),
 				array (
@@ -49,7 +46,10 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('Calculo'=>'Calculo')//$this->getSubjectsOfCareer(),
+				),
+				'attributes' => array(
+						'required' => 'required',
 				),
 	
 		),
@@ -63,13 +63,16 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Créditos',
-								'1' => 'Otro'
+								'Créditos' => 'Créditos',
+								'Otro' => 'Otro'
 						),
+				),
+				'attributes' => array(
+						'required' => 'required',								
 				),
 	
 		),
@@ -79,7 +82,7 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
@@ -136,11 +139,36 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 					)
 			) ) );
 			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			) ) );
+			
 
 
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -152,18 +180,18 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 
 			) ) );
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
+// 			$inputFilter->add ( $factory->createInput ( array (
+// 					'name' => 'Especificacion_adjunto',
+// 					'filters' => array (
+// 							array (
+// 									'name' => 'StripTags'
+// 							),
+// 							array (
+// 									'name' => 'StringTrim'
+// 							)
+// 					),
 			
-			) ) );
+// 			) ) );
 			
 			
 			

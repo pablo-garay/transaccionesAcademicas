@@ -16,14 +16,16 @@ class SolicitudHomologacionMaterias extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Carrera_anterior',
+				'name' => 'carrera_anterior',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Carrera a homologar ',
 						'empty_option' => 'Seleccione una carrera..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('Carrera3'=>'Carrera3')//$this->getSubjectsOfCareer(),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 290,
@@ -31,17 +33,16 @@ class SolicitudHomologacionMaterias extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'Plan_de_estudio_previo',
+				'name' => 'plan_de_estudio_previo',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Plan de estudio de carrera a homologar ',
-						'value_options' => array(''=>''),
+						'value_options' => array('1970'=>'1970'),
 					
 				),
 				'attributes' => array(
-					
-				),
-	
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 280,
@@ -49,13 +50,13 @@ class SolicitudHomologacionMaterias extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Documento_adjunto',
+				'name' => 'documento_adjunto',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'0' => 'Certificado de Estudios|',
-								'2' => 'Otro'
+								'Certificado de Estudios' => 'Certificado de Estudios',
+								'Otro' => 'Otro'
 						),
 				),
 	
@@ -66,7 +67,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Especificacion_adjunto',
+				'name' => 'especificacion_adjunto',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de documento adjunto'
@@ -99,7 +100,70 @@ class SolicitudHomologacionMaterias extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'carrera_anterior',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Carrera requerida'
+											)
+									),
+									array (
+											'name' => 'alnum',
+											'options' => array (
+													'messages' => array (
+															'notAlnum' => 'Se requieren sólo números y letras'
+													),
+													'allowWhiteSpace' => true,
+											)
+									),
+							)
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'plan_de_estudio_previo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Carrera requerida'
+											)
+									),
+									array (
+											'name' => 'alnum',
+											'options' => array (
+													'messages' => array (
+															'notAlnum' => 'Se requieren sólo números y letras'
+													),
+													'allowWhiteSpace' => true,
+											)
+									),
+							)
+					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'documento_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -118,12 +182,12 @@ class SolicitudHomologacionMaterias extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-							
+			
 					)
 			) ) );
-			
+				
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
+					'name' => 'especificacion_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -134,66 +198,17 @@ class SolicitudHomologacionMaterias extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
-							),
-								
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
+									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
+													'notAlnum' => 'Se requieren sólo números y letras'
 											),
 											'allowWhiteSpace' => true,
 									)
-							)
+							),
+			
 					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-			
+						
 			) ) );
 			
 			

@@ -17,10 +17,11 @@ class SolicitudesVarias extends Solicitud
 
 
 		$this->add(array(
-				'name' => 'Asunto',
+				'name' => 'asunto',
 				'type' => 'Zend\Form\Element\Text',
 				'attributes' => array(
 						'placeholder' => 'Describa el asunto de la solicitud...', // HTM5 placeholder attribute
+						'required' => 'required'
 							),
 				'options' => array(
 						'label' => 'Asunto ',
@@ -35,14 +36,17 @@ class SolicitudesVarias extends Solicitud
 
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Enfermedad',
-								'2' => 'Trabajo',
-								'3' => 'Otro'
+								'Enfermedad' => 'Enfermedad',
+								'Trabajo' => 'Trabajo',
+								'Otro' => 'Otro'
 						),
+				),
+				'attributes' => array(
+						'required' => 'required'
 				),
 		
 		), 
@@ -53,7 +57,7 @@ class SolicitudesVarias extends Solicitud
 		);
 
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
@@ -87,7 +91,7 @@ class SolicitudesVarias extends Solicitud
 			$factory = new InputFactory ();
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asunto',
+					'name' => 'asunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -109,11 +113,28 @@ class SolicitudesVarias extends Solicitud
 
 					)
 			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+						array (
+								'name' => 'notEmpty',
+						),					
+					)			
+			) ) );
 
 
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

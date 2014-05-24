@@ -72,6 +72,16 @@ return array(
 					'table-gateway' => 'Solicitud\Service\Invokable\TableGateway',
 			)
 	),
+    'translator' => array(
+        'locale' => 'es_ES',
+        'translation_file_patterns' => array(
+            array(
+                'type'     => 'gettext',
+                'base_dir' => __DIR__ . '/../language',
+                'pattern'  => '%s.mo',
+            ),
+        ),
+    ),	
 	'table-gateway' => array(
 			'map' => array(
 					'solicitudes' => 'Solicitud\Model\Solicitud',
@@ -88,7 +98,7 @@ return array(
 				'controller'=> 'formulario',
 				'pages' => array(
 					array(
-						'label' => 'Lista',
+						'label' => 'Lista de Solicitudes',
 						'route' => 'solicitud/list',
 // 						// acl
 // 						'resource'   => 'test',

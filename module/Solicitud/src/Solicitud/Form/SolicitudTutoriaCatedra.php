@@ -16,16 +16,18 @@ class SolicitudTutoriaCatedra extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
 						'value_options' => array(
-												'0'=>'Asignatura0'
+												'Asignatura0'=>'Asignatura0'
 											)
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 290,
@@ -33,17 +35,19 @@ class SolicitudTutoriaCatedra extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'Profesor',
+				'name' => 'profesor',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Profesor:',
 						'empty_option' => 'Elija un Profesor..',
 						'value_options' => array(
-								'0' => 'Profesor1',
-								'1' => 'Profesor2'
+								'Profesor1' => 'Profesor1',
+								'Profesor2' => 'Profesor2'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 270,
@@ -52,17 +56,19 @@ class SolicitudTutoriaCatedra extends Solicitud
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Créditos',
-								'1' => 'Experiencia',
-								'2' => 'Trabajo',
-								'3' => 'Otro'
+								'Créditos' => 'Créditos',
+								'Experiencia' => 'Experiencia',
+								'Trabajo' => 'Trabajo',
+								'Otro' => 'Otro'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 260,
@@ -70,10 +76,10 @@ class SolicitudTutoriaCatedra extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						'label' => 'Especificación de motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
@@ -87,14 +93,17 @@ class SolicitudTutoriaCatedra extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'Tipo', // de la tabla documentos adjuntos
+				'name' => 'tipo', // de la tabla documentos adjuntos
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'0' => 'Autorización Profesor',
-								'1' => 'Otro'
+								'Autorización Profesor' => 'Autorización Profesor',
+								'Otro' => 'Otro'
 						),
+				),
+				'attributes' => array(
+						'required' => 'required',
 				),
 	
 		),
@@ -104,7 +113,7 @@ class SolicitudTutoriaCatedra extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Descripcion', //de la tabla documentos adjuntos
+				'name' => 'especificacion_adjunto', //de la tabla documentos adjuntos
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de documento adjunto'
@@ -137,7 +146,7 @@ class SolicitudTutoriaCatedra extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -159,34 +168,10 @@ class SolicitudTutoriaCatedra extends Solicitud
 							
 					)
 			) ) );
+		
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
-							),
-								
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
+					'name' => 'profesor',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -209,7 +194,7 @@ class SolicitudTutoriaCatedra extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -218,11 +203,25 @@ class SolicitudTutoriaCatedra extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
-
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -231,7 +230,42 @@ class SolicitudTutoriaCatedra extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			) ) );
 			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_adjunto',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)			
 			) ) );
 			
 			
@@ -272,11 +306,6 @@ class SolicitudTutoriaCatedra extends Solicitud
 	public function getProfesoresDeAsignatura()
 	{
 		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
 	}
 	
 

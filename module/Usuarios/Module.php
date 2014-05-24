@@ -75,17 +75,17 @@ class Module
                             )
                     );
                     
-                    $form->add(array(
-                    		'name' => 'fecha_nacimiento',
-                    		'type' => 'Zend\Form\Element\Date',
-                    		'attributes' => array(
-                    				'placeholder' => 'Fecha de nacimiento...',
-                    				'required' => 'required',
-                    		),
-                    		'options' => array(
-                    				'label' => 'Fecha de Nacimiento',
-                    		),
-                    ));
+//                     $form->add(array(
+//                     		'name' => 'fecha_nacimiento',
+//                     		'type' => 'Zend\Form\Element\Date',
+//                     		'attributes' => array(
+//                     				'placeholder' => 'Fecha de nacimiento...',
+//                     				'required' => 'required',
+//                     		),
+//                     		'options' => array(
+//                     				'label' => 'Fecha de Nacimiento',
+//                     		),
+//                     ));
                     
                     $form->add(array(
                         'name' => 'sexo',
@@ -129,33 +129,37 @@ class Module
                             ),
                     ));
                    
-                    $form->add(array(
-                        'name' => 'tipo_doc',
-                        'type' => 'Zend\Form\Element\Radio',
-                        'attributes' => array(
-                                'required' => 'required',
-                        ),
-                        'options' => array(
-                                'label' => 'Tipo de documento',
-                                'value_options' => array(
-                                        1 => 'Cedula de Identidad',
-                                        2 => 'Pasaporte',
-                                        3 => 'Cedula verde (?)',
-                                ),
-                            ),
-                    ));
+//                     $form->add(array(
+//                         'name' => 'tipo_doc',
+//                         'type' => 'Zend\Form\Element\Radio',
+//                         'attributes' => array(
+//                                 'required' => 'required',
+//                         ),
+//                         'options' => array(
+//                                 'label' => 'Tipo de documento',
+//                                 'value_options' => array(
+//                                         'Cedula de Identidad' => 'Cedula de Identidad',
+//                                         'Pasaporte' => 'Pasaporte',
+//                                         'Carnet de Migraciones' => 'Carnet de Migraciones',
+//                                 		'Libreta Cívica' => 'Libreta Cívica',
+//                                 		'Libreta de Baja' => 'Libreta de Baja',
+//                                 		'RUC' => 'RUC',
+//                                 		'Indefinido' => 'Indefinido',
+//                                 ),
+//                             ),
+//                     ));
 
-                    $form->add(array(
-                            'name' => 'documento',
-                            'type' => 'Zend\Form\Element\Text',
-                            'attributes' => array(
-                                    'placeholder' => 'Escriba número de documento...',
-                                    'required' => 'required',
-                            ),
-                            'options' => array(
-                                    'label' => 'Numero de Documento',
-                            ),
-                    ));
+//                     $form->add(array(
+//                             'name' => 'documento',
+//                             'type' => 'Zend\Form\Element\Text',
+//                             'attributes' => array(
+//                                     'placeholder' => 'Escriba número de documento...',
+//                                     'required' => 'required',
+//                             ),
+//                             'options' => array(
+//                                     'label' => 'Número de Documento',
+//                             ),
+//                     ));
                 }
         );
  
@@ -213,19 +217,19 @@ class Module
                             )
                     ) );
 
-                    $filter->add ( array (
-                            'name' => 'fecha_nacimiento',
-                            'filters' => array (
-                                    array ('name' => 'StripTags'),
-                                    array ('name' => 'StringTrim'),
-                            ),
-                            'validators' => array (
-                                    array (
-                                            'name' => 'NotEmpty',
-                                            // @Validar fecha minima
-                                    )
-                            )
-                    ) );
+//                     $filter->add ( array (
+//                             'name' => 'fecha_nacimiento',
+//                             'filters' => array (
+//                                     array ('name' => 'StripTags'),
+//                                     array ('name' => 'StringTrim'),
+//                             ),
+//                             'validators' => array (
+//                                     array (
+//                                             'name' => 'NotEmpty',
+//                                             // @todo Validar fecha minima
+//                                     )
+//                             )
+//                     ) );
 
                     $filter->add ( array (
                             'name' => 'sexo',
@@ -271,31 +275,31 @@ class Module
                             )
                     ));
 
-                    $filter->add ( array (
-                            'name' => 'tipo_doc',
-                            'filters' => array(
-                                    array ( 'name' => 'StripTags' ),
-                                    array ( 'name' => 'StringTrim' ),
-                            ),
-                            'validators' => array (
-                                    array (
-                                            'name' => 'NotEmpty',
-                                    ),
-                            )
-                    ));
+//                     $filter->add ( array (
+//                             'name' => 'tipo_doc',
+//                             'filters' => array(
+//                                     array ( 'name' => 'StripTags' ),
+//                                     array ( 'name' => 'StringTrim' ),
+//                             ),
+//                             'validators' => array (
+//                                     array (
+//                                             'name' => 'NotEmpty',
+//                                     ),
+//                             )
+//                     ));
 
-                    $filter->add (array (
-                            'name' => 'documento',
-                            'filters' => array(
-                                    array ( 'name' => 'StripTags' ),
-                                    array ( 'name' => 'StringTrim' ),
-                            ),
-                            'validators' => array (
-                                    array (
-                                            'name' => 'NotEmpty',
-                                    ),
-                            )
-                    ));
+//                     $filter->add (array (
+//                             'name' => 'documento',
+//                             'filters' => array(
+//                                     array ( 'name' => 'StripTags' ),
+//                                     array ( 'name' => 'StringTrim' ),
+//                             ),
+//                             'validators' => array (
+//                                     array (
+//                                             'name' => 'NotEmpty',
+//                                     ),
+//                             )
+//                     ));
                 }
         );
     }

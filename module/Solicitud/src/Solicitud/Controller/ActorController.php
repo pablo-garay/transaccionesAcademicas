@@ -91,7 +91,7 @@ class ActorController extends AbstractActionController
 				$update = $sql2->update('solicitudes')
 				->set(array(
 						'etapa_actual'	   => 'FINAL',
-						'estado_solicitud' => 'REC',
+						'estado_solicitud' => 'RECHAZ',
 				))
 				->where(array('solicitud' => $solicitud_id));
 
@@ -207,7 +207,7 @@ class ActorController extends AbstractActionController
 					$update = $sql2->update('solicitudes')
 					->set(array(
 							'etapa_actual'	   => 'FINAL',
-							'estado_solicitud' => 'REC',
+							'estado_solicitud' => 'RECHAZ',
 					))
 					->where(array('solicitud' => $solicitud_id));
 
@@ -305,7 +305,7 @@ class ActorController extends AbstractActionController
 					$update = $sql2->update('solicitudes')
 					->set(array(
 							'etapa_actual'	   => 'FINAL',
-							'estado_solicitud' => 'APR',
+							'estado_solicitud' => 'APROB',
 					))
 					->where(array('solicitud' => $solicitud_id));
 
@@ -337,7 +337,7 @@ class ActorController extends AbstractActionController
 					$update = $sql2->update('solicitudes')
 					->set(array(
 							'etapa_actual'	   => 'FINAL',
-							'estado_solicitud' => 'REC',
+							'estado_solicitud' => 'RECHAZ',
 					))
 					->where(array('solicitud' => $solicitud_id));
 

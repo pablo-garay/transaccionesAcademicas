@@ -94,7 +94,7 @@ class Solicitud extends Form
         		'name' => 'telefono',
         		'type' => 'Zend\Form\Element\Text',
         		'options' => array(
-        				'label' => 'Teléfono:',
+        				'label' => 'Teléfono',
 
         		),
         		'attributes' => array (
@@ -174,7 +174,16 @@ class Solicitud extends Form
 													'isEmpty' => 'Nombre requerido'
 											)
 									)
-							)
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
 					)
 			) ) );
 
@@ -196,7 +205,16 @@ class Solicitud extends Form
 													'isEmpty' => 'Apellido requerido'
 											)
 									)
-							)
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
 					)
 			) ) );
 
@@ -213,6 +231,7 @@ class Solicitud extends Form
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
+									'name' => 'Digits',
 							)
 					)
 			) ) );
@@ -234,7 +253,16 @@ class Solicitud extends Form
 											'messages' => array (
 													'isEmpty' => 'Carrera requerida'
 											)
-									)
+									),
+									array (
+											'name' => 'alnum',
+											'options' => array (
+													'messages' => array (
+															'notAlnum' => 'Se requieren sólo números y letras'
+													),
+													'allowWhiteSpace' => true,
+											)
+									),
 							)
 					)
 			) ) );

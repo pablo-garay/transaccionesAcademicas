@@ -16,12 +16,14 @@ class SolicitudTesis extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Tema_tesis',
+				'name' => 'tema_tesis',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
 						'label' => 'Tema de Tesis ',			
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 290,
@@ -30,14 +32,14 @@ class SolicitudTesis extends Solicitud
 		
 		
 		$this->add(array(
-				'name' => 'Cedula',
+				'name' => 'integrante',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Integrante:',
 						'empty_option' => 'Elija Integrante',
 						'value_options' => array(
-								'0' => 'Alumno1',
-								'1' => 'Alumno2'
+								'Alumno1' => 'Alumno1',
+								'Alumno2' => 'Alumno2'
 						),
 				),
 		
@@ -48,17 +50,19 @@ class SolicitudTesis extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Profesor',
+				'name' => 'profesor',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Profesor:',
 						'empty_option' => 'Elija Tutor..',
 						'value_options' => array(
-								'0' => 'Profesor1',
-								'1' => 'Profesor2'
+								'Profesor1' => 'Profesor1',
+								'Profesor2' => 'Profesor2'
 						),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 270,
@@ -68,13 +72,13 @@ class SolicitudTesis extends Solicitud
 
 	
 		$this->add(array(
-				'name' => 'Documento_adjunto',
+				'name' => 'documento_adjunto',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'0' => 'Descripción de Tema de Tesis',
-								'2' => 'Otro'
+								'Descripción de Tema de Tesis' => 'Descripción de Tema de Tesis',
+								'Otro' => 'Otro'
 						),
 				),
 	
@@ -85,7 +89,7 @@ class SolicitudTesis extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Especificacion_adjunto',
+				'name' => 'especificacion_adjunto',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de documento adjunto'
@@ -118,7 +122,91 @@ class SolicitudTesis extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'tema_tesis',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'integrante',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'profesor',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'El Profesor es requerido'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'documento_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -137,12 +225,12 @@ class SolicitudTesis extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-							
+								
 					)
-			) ) );
+			) ) );		
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
+					'name' => 'especificacion_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -153,65 +241,16 @@ class SolicitudTesis extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'date',
+									'name' => 'alnum',
 									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
 									)
 							),
 								
 					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-									'options' => array (
-											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
-											),
-											'allowWhiteSpace' => true,
-									)
-							)
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
 			
 			) ) );
 			

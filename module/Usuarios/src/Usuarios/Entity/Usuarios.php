@@ -8,42 +8,42 @@ class Usuarios implements UserInterface
 	 /**
      * @var int
      */
-    protected $id;
+    protected $usuario;
 
-    /**
-     * @var string
-     */
-    protected $username;
+//     /**
+//      * @var string
+//      */
+//      protected $username;
 
     /**
      * @var string
      */
     protected $email;
 
-    /**
-     * @var string
-     */
-    protected $displayName;
+//     /**
+//      * @var string
+//      */
+//      protected $displayName;
 
     /**
      * @var string
      */
-    protected $password;
+    protected $contrasena;
 
     /**
      * @var int
      */
-    protected $state;
+    protected $estado_cuenta;
 
     /**
      * @var int
      */
     protected $sexo;
 
-    /**
-     * @var string
-     */
-    protected $fecha_nacimiento;
+//     /**
+//      * @var date
+//      */
+//     protected $fecha_nacimiento;
 
     /**
      * @var string
@@ -55,15 +55,15 @@ class Usuarios implements UserInterface
      */
     protected $telefono;
 
-    /**
-     * @var int
-     */
-    protected $tipo_doc;
+//     /**
+//      * @var int
+//      */
+//      protected $tipo_doc;
 
-    /**
-     * @var string
-     */
-    protected $documento;
+//      /**
+//       * @var string
+//       */
+//      protected $documento;
 
     /**
      * @var string
@@ -82,7 +82,7 @@ class Usuarios implements UserInterface
      */
     public function getId()
     {
-        return $this->id;
+        return $this->usuario;
     }
 
     /**
@@ -93,7 +93,7 @@ class Usuarios implements UserInterface
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->usuario = (int) $id;
         return $this;
     }
 
@@ -170,7 +170,7 @@ class Usuarios implements UserInterface
      */
     public function getPassword()
     {
-        return $this->password;
+        return $this->contrasena;
     }
 
     /**
@@ -181,7 +181,7 @@ class Usuarios implements UserInterface
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->contrasena = $password;
         return $this;
     }
 
@@ -192,7 +192,7 @@ class Usuarios implements UserInterface
      */
     public function getState()
     {
-        return $this->state;
+        return $this->estado_cuenta;
     }
 
     /**
@@ -203,7 +203,7 @@ class Usuarios implements UserInterface
      */
     public function setState($state)
     {
-        $this->state = $state;
+        $this->estado_cuenta = $state;
         return $this;
     }
 
@@ -229,27 +229,27 @@ class Usuarios implements UserInterface
         return $this;
     }
 
-    /**
-     * Get fecha nacimiento.
-     *
-     * @return string
-     */
-    public function getFecha_nacimiento()
-    {
-        return $this->fecha_nacimiento;
-    }
+//     /**
+//      * Get fecha nacimiento.
+//      *
+//      * @return date
+//      */
+//     public function getFecha_nacimiento()
+//     {
+//         return $this->fecha_nacimiento;
+//     }
 
-    /**
-     * Set fecha nacimiento.
-     *
-     * @param string $fecha_nacimiento
-     * @return UserInterface
-     */
-    public function setFecha_nacimiento($fecha_nacimiento)
-    {
-        $this->fecha_nacimiento = $fecha_nacimiento;
-        return $this;
-    }
+//     /**
+//      * Set fecha nacimiento.
+//      *
+//      * @param date $fecha_nacimiento
+//      * @return UserInterface
+//      */
+//     public function setFecha_nacimiento($fecha_nacimiento)
+//     {
+//         $this->fecha_nacimiento = $fecha_nacimiento;
+//         return $this;
+//     }
 
     /**
      * Get direccion.
@@ -295,49 +295,49 @@ class Usuarios implements UserInterface
         return $this;
     }
 
-    /**
-     * Get tipo doc.
-     *
-     * @return int
-     */
-    public function getTipo_doc()
-    {
-        return $this->tipo_doc;
-    }
+//     /**
+//      * Get tipo doc.
+//      *
+//      * @return int
+//      */
+//     public function getTipo_doc()
+//     {
+//         return $this->tipo_doc;
+//     }
 
-    /**
-     * Set tipo doc.
-     *
-     * @param int $tipo_doc
-     * @return UserInterface
-     */
-    public function setTipo_doc($tipo_doc)
-    {
-        $this->tipo_doc = $tipo_doc;
-        return $this;
-    }
+//     /**
+//      * Set tipo doc.
+//      *
+//      * @param int $tipo_doc
+//      * @return UserInterface
+//      */
+//     public function setTipo_doc($tipo_doc)
+//     {
+//         $this->tipo_doc = $tipo_doc;
+//         return $this;
+//     }
 
-    /**
-     * Get documento.
-     *
-     * @return string
-     */
-    public function getDocumento()
-    {
-        return $this->documento;
-    }
+//     /**
+//      * Get documento.
+//      *
+//      * @return string
+//      */
+//     public function getDocumento()
+//     {
+//         return $this->documento;
+//     }
 
-    /**
-     * Set documento.
-     *
-     * @param string $documento
-     * @return UserInterface
-     */
-    public function setDocumento($documento)
-    {
-        $this->documento = $documento;
-        return $this;
-    }
+//     /**
+//      * Set documento.
+//      *
+//      * @param string $documento
+//      * @return UserInterface
+//      */
+//     public function setDocumento($documento)
+//     {
+//         $this->documento = $documento;
+//         return $this;
+//     }
 
     /**
      * Get nombres.

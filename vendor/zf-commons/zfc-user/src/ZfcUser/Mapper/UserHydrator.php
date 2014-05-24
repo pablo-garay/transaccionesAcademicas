@@ -36,11 +36,23 @@ class UserHydrator extends ClassMethods
         /* @var $object UserInterface*/
         $data = parent::extract($object);
         $data = $this->mapField('id', 'usuario', $data);
+        $data = $this->mapField('password', 'contrasena', $data);
+        $data = $this->mapField('state', 'estado_cuenta', $data);
+        
         foreach ($this->deleteAttributeOnExtractIfNull as $field) {
             if (array_key_exists($field, $data)) {
                 unset($data[$field]);
             }
         }
+        
+        if (array_key_exists('username', $data)) {
+        	unset($data['username']);
+        }
+        
+        if (array_key_exists('display_name', $data)) {
+        	unset($data['display_name']);
+        }
+        
         return $data;
     }
 
@@ -58,6 +70,9 @@ class UserHydrator extends ClassMethods
             throw new Exception\InvalidArgumentException('$object must be an instance of ZfcUser\Entity\UserInterface');
         }
         $data = $this->mapField('usuario', 'id', $data);
+        $data = $this->mapField('contrasena', 'password', $data);
+        $data = $this->mapField('estado_cuenta', 'state', $data);
+        
         return parent::hydrate($data, $object);
     }
 

@@ -5,5 +5,13 @@ return array(
                         'usuarios' => __DIR__ . '/../view',
                 ),
      ),
+// 		'doctrine' => array(
+// 				'driver' => array(
+// 						'zfcuser_entity' => array(
+// 								'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+// 								'paths' => __DIR__ . '/../src/Usuarios/Entity',
+// 						),
+// 				)
+// 		)
 	
 );

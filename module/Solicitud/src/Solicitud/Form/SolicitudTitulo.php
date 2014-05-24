@@ -18,15 +18,23 @@ class SolicitudTitulo extends Solicitud
 
 	
 		$this->add(array(
-				'name' => 'Nombre_titulo',
+				'name' => 'nombre_titulo',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Título ',
 						'empty_option' => 'Seleccione un título..',
 						'value_options' => array(
-								'0' => 'Ingeniero Informático',
-								'1' => 'Otro'
+								'Arquitecto' => 'Arquitecto',
+								'Ingeniero' => 'Ingeniero',
+								'Master' => 'Master',
+								'Licenciado' => 'Licenciado',
+								'Programador' => 'Programador',
+								'Tecnico' => 'Tecnico',
+								'Especializacion' => 'Especializacion',
 						),
+				),
+				'attributes' => array(
+						'required' => 'required',
 				),
 		),
 				array (
@@ -36,7 +44,7 @@ class SolicitudTitulo extends Solicitud
 		
 		
 		$this->add(array(
-				'name' => 'Fotocopia_cedula',
+				'name' => 'fotocopia_cedula',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Fotocopia de cédula ',
@@ -49,7 +57,7 @@ class SolicitudTitulo extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Fotocopia_certificado_nacimiento',
+				'name' => 'fotocopia_certificado_nacimiento',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Fotocopia de certificado de nacimiento ',
@@ -62,7 +70,7 @@ class SolicitudTitulo extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Fotocopia_certificado_matrimonio',
+				'name' => 'fotocopia_certificado_matrimonio',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Fotocopia de certificado de matrimonio ',
@@ -75,7 +83,7 @@ class SolicitudTitulo extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Postgrado',
+				'name' => 'postgrado',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Marque si es un título de postgrado ',
@@ -88,7 +96,7 @@ class SolicitudTitulo extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Fotocopia_de_titulo_de_grado ',
+				'name' => 'fotocopia_de_titulo_de_grado',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Fotocopia de titulo de grado (egresados de otras universidades) ',
@@ -101,7 +109,7 @@ class SolicitudTitulo extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Fotocopia_simple_de_titulo',
+				'name' => 'fotocopia_simple_de_titulo',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Fotocopia simple de titulo de grado (egresados UCA) ',
@@ -114,8 +122,8 @@ class SolicitudTitulo extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Tipo', //campo de la tabla adjuntos, tipo de doc adjunto
-				'type' => 'Zend\Form\Element\Text',
+				'name' => 'otros', //campo de la tabla adjuntos, tipo de doc adjunto
+				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Otro Documento ',
 						//'value_options' => 'Curso completo',
@@ -127,7 +135,7 @@ class SolicitudTitulo extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Descripcion', //campo de la tabla adjuntos, descripcion de doc adjunto
+				'name' => 'especificacion_otros', //campo de la tabla adjuntos, descripcion de doc adjunto
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Descripción de Otro Documento ',
@@ -156,9 +164,133 @@ class SolicitudTitulo extends Solicitud
 		if (! $this->filter) {
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'nombre_titulo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'fotocopia_cedula',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+										'min' => 0,
+										'max' => 1,
+										'inclusive' => true
+									)
+							),
+					)					
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fotocopia_certificado_nacimiento',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+										'min' => 0,
+										'max' => 1,
+										'inclusive' => true
+									)
+							),
+					)	
+			) ) );
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fotocopia_certificado_matrimonio',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );			
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'postgrado',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );			
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fotocopia_de_titulo_de_grado',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );			
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fotocopia_simple_de_titulo',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'otros',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_otros',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -177,88 +309,10 @@ class SolicitudTitulo extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-							
+			
 					)
+						
 			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
-							),
-								
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-									'options' => array (
-											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
-											),
-											'allowWhiteSpace' => true,
-									)
-							)
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-			
-			) ) );
-			
-			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}

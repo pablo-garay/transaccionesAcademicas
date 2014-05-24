@@ -32,12 +32,12 @@ class SolicitudCambioSeccion extends Solicitud
 
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Trabajo',
-								'1' => 'Otro'
+								'Trabajo' => 'Trabajo',
+								'Otro' => 'Otro'
 						),
 				),
 				'attributes' => array(
@@ -52,7 +52,7 @@ class SolicitudCambioSeccion extends Solicitud
 		);
 
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
@@ -74,9 +74,9 @@ class SolicitudCambioSeccion extends Solicitud
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'0' => 'Certificado Médico',
-								'1' => 'Certificado de Trabajo',
-								'2' => 'Otro'
+								'Certificado Médico' => 'Certificado Médico',
+								'Certificado de Trabajo' => 'Certificado de Trabajo',
+								'Otro' => 'Otro'
 						),
 				),
 		
@@ -144,12 +144,34 @@ class SolicitudCambioSeccion extends Solicitud
 					)
 			) ) );
 			
-			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			) ) );
 
 
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -193,7 +215,7 @@ class SolicitudCambioSeccion extends Solicitud
 	{
 		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
 		$dbAdapter = $this->dbAdapter;
-		$sql       = 'SELECT solicitud, materia FROM solicitudes';
+		$sql       = 'SELECT solicitud, resultado_requisitos FROM solicitudes';
 
 		$statement = $dbAdapter->query($sql);
 		$result    = $statement->execute();
@@ -201,7 +223,7 @@ class SolicitudCambioSeccion extends Solicitud
 		$selectData = array();
 
 		foreach ($result as $res) {
-			$selectData[$res['materia']] = $res['materia'];
+			$selectData[$res['resultado_requisitos']] = $res['resultado_requisitos'];
 		}
 		return array('Compiladores' =>'Compiladores', 'SPD' => 'SPD', 'Informática 2' =>'Informática 2');
 

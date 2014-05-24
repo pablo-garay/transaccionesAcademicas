@@ -4,7 +4,7 @@
  
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
-$this->registerForm->setAttribute('class', 'form-vertical');
+$this->registerForm->setAttribute('class', 'form-horizontal');
 $this->registerForm->prepare();
 
 echo $this->form()->openTag($this->registerForm);
@@ -24,6 +24,7 @@ foreach ($this->registerForm as $element) {
     } else {
         $element->setAttribute('class', 'btn btn-primary');
         ?>
+<br>        
 <div class="form-actions">
 <?=$this->formelement($element)?>
     </div>

@@ -16,11 +16,14 @@ class SolicitudPasantia extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Lugar',
+				'name' => 'lugar',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Nombre ',
+						'label' => 'Lugar de Pasantía',
 						
+				),
+				'attributes' => array(
+						'required' => 'required',
 				),
 	
 		),
@@ -30,13 +33,15 @@ class SolicitudPasantia extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'Direccion',
+				'name' => 'direccion',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Dirección ',
+						'label' => 'Dirección',
 						
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 280,
@@ -44,10 +49,13 @@ class SolicitudPasantia extends Solicitud
 				);
 	
         $this->add(array(
-        		'name' => 'Correo_electronico',
+        		'name' => 'correo_electronico',
         		'type' => 'Zend\Form\Element\Email',
         		'options' => array(
-        				'label' => 'Email ',
+        				'label' => 'Email de empresa',
+        		),
+        		'attributes' => array(
+        				'required' => 'required',
         		),
         ),
         		array (
@@ -56,35 +64,37 @@ class SolicitudPasantia extends Solicitud
         );
         
         $this->add(array(
-        		'name' => 'Telefono',
+        		'name' => 'telefono',
         		'type' => 'Zend\Form\Element\Text',
         		'options' => array(
-        				'label' => 'Teléfono:',
+        				'label' => 'Teléfono del lugar',
         
         		),
         		'attributes' => array (
+        				'required' => 'required',
         				//'value' => '0981334566', // @todo getphone
-        				'disabled' => 'disabled'
         		),
         
         ),
         		array (
-        				'priority' => 300,
+        				'priority' => 265,
         		)
         );
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Créditos',
-								'1' => 'Experiencia',
-								'3' => 'Otro'
+								'Créditos' => 'Créditos',
+								'Experiencia' => 'Experiencia',
+								'Otro' => 'Otro'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 260,
@@ -92,7 +102,7 @@ class SolicitudPasantia extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
@@ -109,16 +119,18 @@ class SolicitudPasantia extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'Documento_adjunto',
+				'name' => 'documento_adjunto',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'0' => 'Datos Adicionales de la Empresa',
-								'1' => 'Otro'
+								'Datos Adicionales de la Empresa' => 'Datos Adicionales de la Empresa',
+								'Otro' => 'Otro'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 240,
@@ -126,7 +138,7 @@ class SolicitudPasantia extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'Especificacion_adjunto',
+				'name' => 'especificacion_adjunto',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de documento adjunto'
@@ -159,7 +171,134 @@ class SolicitudPasantia extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'lugar',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Nombre de lugar requerido'
+											)
+									)
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'direccion',
+					'filters' => array(
+							array ( 'name' => 'StripTags' ),
+							array ( 'name' => 'StringTrim' ),
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									// @validate que sea Alphanum
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			)));
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'correo_electronico',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'EmailAddress',
+									'options' => array (
+											'messages' => array (
+													'emailAddressInvalidFormat' => 'Dirección de email no válida'
+											)
+									)
+							),
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Se requiere email'
+											)
+									)
+							)
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'telefono',
+					'filters' => array(
+							array ( 'name' => 'digits' ),
+							array ( 'name' => 'stringtrim' ),
+					),
+					'validators' => array (
+							array (
+									'name' => 'regex',
+									'options' => array (
+											'pattern' => '/^[\d-\/]+$/',
+									)
+							),
+					)
+			)));		
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -178,12 +317,12 @@ class SolicitudPasantia extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-							
+					
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
+					'name' => 'especificacion_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -194,65 +333,16 @@ class SolicitudPasantia extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'date',
+									'name' => 'alnum',
 									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
 									)
 							),
 								
 					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-									'options' => array (
-											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
-											),
-											'allowWhiteSpace' => true,
-									)
-							)
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
 			
 			) ) );
 			

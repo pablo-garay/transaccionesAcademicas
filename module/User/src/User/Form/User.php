@@ -175,7 +175,7 @@ class User extends Form
 									'name' => 'EmailAddress',
 									'options' => array (
 											'messages' => array (
-													'emailAddressInvalidFormat' => 'Email address format is not invalid'
+													'emailAddressInvalidFormat' => 'Dirección de email no válida'
 											)
 									)
 							),
@@ -272,6 +272,15 @@ class User extends Form
 							array (
 									'name' => 'NotEmpty',
 									// @validate que sea Alphanum
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
 							),
 					)
 			)));
