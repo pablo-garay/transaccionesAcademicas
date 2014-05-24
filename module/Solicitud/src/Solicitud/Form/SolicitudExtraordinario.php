@@ -15,36 +15,57 @@ class SolicitudExtraordinario extends Solicitud
 		$this->setAttribute('method', 'post');
 
 
-
 		$this->add(array(
-				'name' => 'materia',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
-						'value_options' => $this->getAsignaturasDeCarrera(),
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => array('A1'=>'A1')//$this->getSubjectsOfCareer(),
 				),
-
-		)
-				, array (
+				'attributes' => array(
+						'required' => 'required',
+				),
+		),
+				array (
 						'priority' => 280,
 				)
-				);
+		);		
 
 		$this->add(array(
 				'name' => 'fecha_extraordinario',
 				'type' => 'Zend\Form\Element\Date',
 				'options' => array(
 						'label' => 'Fecha de Examen:',
-// 						'value_options' => array(
-// 								'0' => 'FechadeExamen',
-// 						),
 				),
-
-		)
-				, array (
+				'attributes' => array(
+						'required' => 'required',
+				),
+		),
+				array (
 						'priority' => 270,
 				)
-				);
+		);
+		
+		$this->add(array(
+				'name' => 'profesor',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Profesor:',
+						'empty_option' => 'Elija un Profesor..',
+						'value_options' => array(
+								'Profesor1' => 'Profesor1',
+								'Profesor2' => 'Profesor2'
+						),
+				),
+				'attributes' => array(
+						'required' => 'required',
+				),
+		),
+				array (
+						'priority' => 270,
+				)
+		);
 		
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -52,12 +73,14 @@ class SolicitudExtraordinario extends Solicitud
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Enfermedad',
-								'2' => 'Trabajo',
-								'3' => 'Otro'
+								'Enfermedad' => 'Enfermedad',
+								'Trabajo' => 'Trabajo',
+								'Otro' => 'Otro'
 						),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 260,
@@ -65,21 +88,21 @@ class SolicitudExtraordinario extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => false,
+						'required' => 'required',
 						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
 				)
 		)
 				, array (
 						'priority' => 250,
 				)
-				);
+		);
 
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -87,16 +110,6 @@ class SolicitudExtraordinario extends Solicitud
 				'type' => 'Zend\Form\Element\Csrf',
 		));
 
-		//This is the submit button
-/* 		$this->add(array(
-				'name' => 'enviar',
-				'type' => 'Zend\Form\Element\Submit',
-				'attributes' => array(
-						'value' => 'Enviar',
-						'required' => 'false',
-
-				),
-		)); */
 
 	}
 
@@ -108,31 +121,7 @@ class SolicitudExtraordinario extends Solicitud
 			$factory = new InputFactory ();
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'materia',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-										'name' => 'notEmpty',
-	// 									'options' => array (
-	// 											'messages' => array (
-	// 													'notAlnum' => 'Se requieren sólo números y letras'
-	// 											),
-	// 											'allowWhiteSpace' => true,
-	// 									)
-								),
-
-					)
-			) ) );
-
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_extraordinario',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -144,13 +133,52 @@ class SolicitudExtraordinario extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'notEmpty',
-	// 									'options' => array (
-	// // 											'messages' => array (
-	// // 													'false' => 'Se requiere formato fecha'
-	// // 											),
-	// 									)
 							),
-
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fecha_extraordinario',
+					'validators' => array (
+							array (
+									'name' => 'Date',
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'profesor',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
 					)
 			) ) );
 
@@ -164,7 +192,48 @@ class SolicitudExtraordinario extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
+					'validators' => array (
+						array (
+								'name' => 'notEmpty',
+						),
+						array (
+								'name' => 'alnum',
+								'options' => array (
+										'messages' => array (
+												'notAlnum' => 'Se requieren sólo números y letras'
+										),
+										'allowWhiteSpace' => true,
+								)
+						),
+					)			
+			) ) );
 
+
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'notEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
 			) ) );
 
 

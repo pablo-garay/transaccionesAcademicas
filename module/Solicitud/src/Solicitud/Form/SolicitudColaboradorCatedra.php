@@ -18,17 +18,19 @@ class SolicitudColaboradorCatedra extends Solicitud
 
 	
 		$this->add(array(
-				'name' => 'Profesor',
+				'name' => 'profesor',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Profesor:',
 						'empty_option' => 'Elija un Profesor..',
 						'value_options' => array(
-								'0' => 'Profesor1',
-								'1' => 'Profesor2'
+								'Profesor1' => 'Profesor1',
+								'Profesor2' => 'Profesor2'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 850,
@@ -37,30 +39,33 @@ class SolicitudColaboradorCatedra extends Solicitud
 		
 	
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('Asignatura1'=>'Asignatura1')//$this->getSubjectsOfCareer(),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 840,
 				)
 		);
 		$this->add(array(
-				'name' => 'Carreras_profesor',
+				'name' => 'carreras_profesor',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Carreras ',
+						'label' => 'Carreras',
 		
 							
 				),
 				'attributes' => array(
 						'value' =>  'Ingeniería Informática y Electrónica',
-						'disabled' => 'disabled'
+						'required' => 'required',
+// 						'disabled' => 'disabled'
 				),
 		
 		),
@@ -71,13 +76,15 @@ class SolicitudColaboradorCatedra extends Solicitud
 		
 	
 		$this->add(array(
-				'name' => 'Descripcion_actividades',
+				'name' => 'descripcion_actividades',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Descripción de actividades',
 
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 240,
@@ -100,9 +107,10 @@ class SolicitudColaboradorCatedra extends Solicitud
 		if (! $this->filter) {
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
-	
+			
+			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'profesor',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -112,6 +120,37 @@ class SolicitudColaboradorCatedra extends Solicitud
 							)
 					),
 					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			
+			) ) );
+	
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'asignatura',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
 							array (
 									'name' => 'alnum',
 									'options' => array (
@@ -126,32 +165,7 @@ class SolicitudColaboradorCatedra extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
-							),
-								
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
+					'name' => 'carreras_profesor',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -163,18 +177,22 @@ class SolicitudColaboradorCatedra extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
+													'notAlnum' => 'Se requieren sólo números y letras'
 											),
 											'allowWhiteSpace' => true,
 									)
-							)
+							),
+							
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'descripcion_actividades',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -183,26 +201,27 @@ class SolicitudColaboradorCatedra extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+			
+					)
+						
+			) ) );
+			
+			
+			
 
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-			
-			) ) );
-			
-			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}

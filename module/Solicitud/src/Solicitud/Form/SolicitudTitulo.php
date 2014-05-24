@@ -21,7 +21,7 @@ class SolicitudTitulo extends Solicitud
 				'name' => 'nombre_titulo',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Título ',
+						'label' => 'Título',
 						'empty_option' => 'Seleccione un título..',
 						'value_options' => array(
 								'Arquitecto' => 'Arquitecto',
@@ -29,8 +29,8 @@ class SolicitudTitulo extends Solicitud
 								'Master' => 'Master',
 								'Licenciado' => 'Licenciado',
 								'Programador' => 'Programador',
-								'Tecnico' => 'Tecnico',
-								'Especializacion' => 'Especializacion',
+								'Técnico' => 'Técnico',
+								'Especialización' => 'Especialización',
 						),
 				),
 				'attributes' => array(

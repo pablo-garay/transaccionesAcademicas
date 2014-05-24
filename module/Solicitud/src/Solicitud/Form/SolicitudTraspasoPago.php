@@ -16,50 +16,52 @@ class SolicitudTraspasoPago extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Asignatura:',
+						'label' => 'Asignatura',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('asign1'=>'asign1')//$this->getSubjectsOfCareer(),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 290,
 				)
-				);
+		);
 	
 
 	
 		$this->add(array(
-				'name' => 'Seccion',
+				'name' => 'seccion',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Sección ',
+						'label' => 'Sección',
 						
 						),
 				'attributes' => array(
-								'disabled' => 'disabled'
+						'required' => 'required',
 				),
-				),
-	
-		
+		),
 				array (
 						'priority' => 280,
 				)
-						);
+		);
 		
 		$this->add(array(
-				'name' => 'Oportunidad_pagada',
+				'name' => 'oportunidad_pagada',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Oportunidad pagada:',
+						'label' => 'Oportunidad pagada',
 						'value_options' => array(
-								'0' => '1',
-								'1' => '2',				
+								'1' => '1',
+								'2' => '2',				
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 			),
 		),
 				array (
@@ -69,18 +71,17 @@ class SolicitudTraspasoPago extends Solicitud
 		
 		
 		$this->add(array(
-				'name' => 'Fecha_oportunidad_pagada',
+				'name' => 'fecha_oportunidad_pagada',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Fecha de Oportunidad pagada',
 						'value_options' => array(
-								'0' => 'F1',
-						)
-		
-							
+								'2014-05-21' => '2014-05-21',
+						)							
 				),
 				'attributes' => array(
 						'value' =>  'dd/mm/aaaa',
+						'required' => 'required',
 				),
 		
 		),
@@ -90,36 +91,37 @@ class SolicitudTraspasoPago extends Solicitud
 		);
 	
 		$this->add(array(
-				'name' => 'Oportunidad_a_pagar',
+				'name' => 'oportunidad_a_pagar',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Oportunidad a pagar:',
+						'label' => 'Oportunidad a pagar',
 						'value_options' => array(
-								'0' => '2',
-								'1' => '3',
-						),
-		
+								'2' => '2',
+								'3' => '3',
+						),		
+				),
+				'attributes' => array(
+						'required' => 'required',
 				),
 			),
-				array (
-						'priority' => 250,
-				)
+			array (
+					'priority' => 250,
+			)
 		);
 		
 		
 		$this->add(array(
-				'name' => 'Fecha_oportunidad_a_pagar',
+				'name' => 'fecha_oportunidad_a_pagar',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Fecha de Oportunidad a pagar',
 						'value_options' => array(
-								'0' => 'F1',
-						)
-		
-							
+								'2014-05-21' => '2014-05-21',
+						)									
 				),
 				'attributes' => array(
 						'value' =>  'dd/mm/aaaa',
+						'required' => 'required',
 				),
 		
 		),
@@ -127,9 +129,6 @@ class SolicitudTraspasoPago extends Solicitud
 						'priority' => 240,
 				)
 		);
-
-	
-
 
 	
 		// This is the special code that protects our form beign submitted from automated scripts
@@ -149,7 +148,7 @@ class SolicitudTraspasoPago extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -159,6 +158,9 @@ class SolicitudTraspasoPago extends Solicitud
 							)
 					),
 					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
 							array (
 									'name' => 'alnum',
 									'options' => array (
@@ -173,32 +175,7 @@ class SolicitudTraspasoPago extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
-							),
-								
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
+					'name' => 'seccion',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -210,41 +187,66 @@ class SolicitudTraspasoPago extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
+													'notAlnum' => 'Se requieren sólo números y letras'
 											),
 											'allowWhiteSpace' => true,
 									)
-							)
+							),
+							
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
-					'filters' => array (
+					'name' => 'oportunidad_pagada',
+					'validators' => array (
 							array (
-									'name' => 'StripTags'
+								'name' => 'between',
+								'options' => array(
+										'min' => 0,
+										'max' => 3,
+										'inclusive' => true
+								)
 							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-
+					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
+					'name' => 'fecha_oportunidad_pagada',
+					'validators' => array (
 							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-			
+									'name' => 'Date',
+							),						
+					)
 			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'oportunidad_a_pagar',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 1,
+											'max' => 3,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fecha_oportunidad_a_pagar',
+					'validators' => array (
+							array (
+									'name' => 'Date',
+							),
+					)
+			) ) );
+			
 			
 			
 			

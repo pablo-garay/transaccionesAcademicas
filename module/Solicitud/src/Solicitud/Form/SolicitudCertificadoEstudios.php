@@ -14,14 +14,12 @@ class SolicitudCertificadoEstudios extends Solicitud
 		parent::__construct($name = 'solicitudExtraordinario', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
-
-
 		
-		$this->add(array(
-				'name' => 'Carrera_cursada',
+		
+		$this->add ( array (
+				'name' => 'carrera_cursada',
 				'type' => 'Zend\Form\Element\Select',
-		
-				'options' => array(
+				'options' => array (
 						'label' => 'Carrera',
 						'empty_option' => 'Elija su carrera',
 						'value_options' => array(
@@ -30,31 +28,27 @@ class SolicitudCertificadoEstudios extends Solicitud
 								'Carrera3' => 'Carrera3',
 								'Carrera4' => 'Carrera4',
 						),
-		
 				),
-				'attributes' => array(
-						// Below: HTML5 way to specify that the input will be phone number
-						'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 280,
+				'attributes' => array (
+						'placeholder' => 'Elija su carrera...',
+						'required' => 'required'
 				)
-		);
+		), array (
+				'priority' => 280,
+		) );
 	
 		$this->add(array(
-				'name' => 'Tipo_de_certificado',
+				'name' => 'tipo_de_certificado',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Tipo de certificado',
 						'value_options' => array(
-								'0' => 'Simple',
-								'1' => 'Para Legalizar',
+								'S' => 'Simple',
+								'L' => 'Para Legalizar',
 
 						),
 				),
 				'attributes' => array(
-						// Below: HTML5 way to specify that the input will be phone number
 						'required' => 'required',
 				),
 	
@@ -62,21 +56,26 @@ class SolicitudCertificadoEstudios extends Solicitud
 				array (
 						'priority' => 270,
 				)
-						);
+		);
 	
 		$this->add(array(
-				'name' => 'Tipo_de_titulo',
+				'name' => 'tipo_de_titulo',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Tipo de título',
 						'value_options' => array(
-								'0' => 'Master',
-								'1' => 'Ingenierio/a',
-
+								'Arquitecto' => 'Arquitecto',
+								'Ingeniero' => 'Ingeniero',
+								'Master' => 'Master',
+								'Licenciado' => 'Licenciado',
+								'Programador' => 'Programador',
+								'Técnico' => 'Técnico',
+								'Especialización' => 'Especialización',
+								'Completo' => 'Completo',
+								'Incompleto' => 'Incompleto',
 						),
 				),
 				'attributes' => array(
-						// Below: HTML5 way to specify that the input will be phone number
 						'required' => 'required',
 				),
 	
@@ -88,16 +87,15 @@ class SolicitudCertificadoEstudios extends Solicitud
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Solicitud_anterior',
+				'name' => 'solicitud_anterior',
 				'options' => array(
-						'label' => 'Especifique ',
+						'label' => 'Especifique',
 						'value_options' => array(
 								'0' => 'Si',
 								'1' => 'No',
 						),
 				),
 				'attributes' => array(
-						// Below: HTML5 way to specify that the input will be phone number
 						'required' => 'required',
 				),
 	
@@ -105,25 +103,24 @@ class SolicitudCertificadoEstudios extends Solicitud
 				array (
 						'priority' => 250,
 				)
-						);
+		);
 	
 	
 		$this->add(array(
-				'name' => 'Aclaraciones',
+				'name' => 'aclaraciones',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Aclaraciones'
+						'label' => 'Observaciones'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna aclaración aquí...',
 						'required' => false,
-						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
 				)
 		),
 				array (
 						'priority' => 240,
 				)
-				);
+		);
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -141,10 +138,95 @@ class SolicitudCertificadoEstudios extends Solicitud
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
 			
-
-	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Aclaraciones',
+					'name' => 'carrera_cursada',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+								'name' => 'NotEmpty',
+								'options' => array (
+										'messages' => array (
+												'isEmpty' => 'Carrera requerida'
+										)
+								),
+								array (
+										'name' => 'alnum',
+										'options' => array (
+												'messages' => array (
+														'notAlnum' => 'Se requieren sólo números y letras'
+												),
+												'allowWhiteSpace' => true,
+										)
+								),
+							)
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'tipo_de_certificado',
+					'filters' => array(
+							array ( 'name' => 'stringtrim' ),
+					),
+					'validators' => array (
+							array (
+									'name' => 'regex',
+									'options' => array (
+											'pattern' => '/^L|S$/',
+									)
+							),
+					)
+			)));
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'tipo_de_titulo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );	
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'solicitud_anterior',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'aclaraciones',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -166,14 +248,8 @@ class SolicitudCertificadoEstudios extends Solicitud
 							
 					)
 			) ) );
-			
 
 			
-			
-			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}

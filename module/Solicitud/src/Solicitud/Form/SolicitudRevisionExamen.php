@@ -16,50 +16,56 @@ class SolicitudRevisionExamen extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('A1'=>'A1')//$this->getSubjectsOfCareer(),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 290,
 				)
-				);
+		);
 	
 		$this->add(array(
-				'name' => 'Fecha_examen',
+				'name' => 'fecha_examen',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Fecha de Examen:',
-						
-					
+						'value_options' => array(
+								'2014-05-21' => '2014-05-21',
+						)					
 				),
 				'attributes' => array(
 					'value' =>  'dd/mm/aaaa',
+					'required' => 'required',
 				),
 	
 		),
 				array (
 						'priority' => 280,
 				)
-						);
+		);
 	
 		$this->add(array(
-				'name' => 'Profesor',
+				'name' => 'profesor',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Profesor:',
 						'empty_option' => 'Elija un Profesor..',
 						'value_options' => array(
-								'0' => 'Profesor1',
-								'1' => 'Profesor2'
+								'Profesor1' => 'Profesor1',
+								'Profesor2' => 'Profesor2'
 						),
 				),
-	
+				'attributes' => array(
+					'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 270,
@@ -68,26 +74,28 @@ class SolicitudRevisionExamen extends Solicitud
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Select',
-				'name' => 'Oportunidad',
+				'name' => 'oportunidad',
 				'options' => array(
 						'label' => 'Oportunidad ',
 						'value_options' => array(
-								'0' => '1',
-								'1' => '2',
-								'2' => '3',
-								'3' => 'Extraordinario'
+								'1' => '1',
+								'2' => '2',
+								'3' => '3',
+								'E' => 'Extraordinario'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 260,
 				)
-						);
+		);
 		
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Select',
-				'name' => 'Calificacion_previa',
+				'name' => 'calificacion_previa',
 				'options' => array(
 						'label' => 'Calificación obtenida ',
 						'value_options' => array(
@@ -98,7 +106,9 @@ class SolicitudRevisionExamen extends Solicitud
 								'4' => '5'
 						),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 260,
@@ -106,7 +116,7 @@ class SolicitudRevisionExamen extends Solicitud
 		);
 	
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
@@ -122,7 +132,6 @@ class SolicitudRevisionExamen extends Solicitud
 				)
 				);
 	
-
 
 	
 		// This is the special code that protects our form beign submitted from automated scripts
@@ -142,7 +151,7 @@ class SolicitudRevisionExamen extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -166,32 +175,16 @@ class SolicitudRevisionExamen extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
+					'name' => 'fecha_examen',
 					'validators' => array (
 							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
+									'name' => 'Date',
 							),
-								
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
+					'name' => 'profesor',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -203,18 +196,63 @@ class SolicitudRevisionExamen extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
+													'notAlnum' => 'Se requieren sólo números y letras'
 											),
 											'allowWhiteSpace' => true,
 									)
+							),								
+					)			
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'oportunidad',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
 							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'calificacion_previa',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 5,
+											'inclusive' => true
+									)
+							),
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
+					'name' => 'motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -223,26 +261,21 @@ class SolicitudRevisionExamen extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
-
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
+					'validators' => array (
 							array (
-									'name' => 'StripTags'
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
 							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-			
+					)
 			) ) );
 			
 			
 			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}

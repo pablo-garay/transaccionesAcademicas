@@ -18,15 +18,12 @@ class SolicitudDesinscripcionCurso extends Solicitud
 
 	
 		$this->add(array(
-				'name' => 'Curso_completo',
+				'name' => 'curso_completo',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
 						'label' => 'Curso completo ',
 						//'value_options' => 'Curso completo',
-						
-					
-				),
-	
+				),	
 		),
 				array (
 						'priority' => 280,
@@ -34,15 +31,11 @@ class SolicitudDesinscripcionCurso extends Solicitud
 						);
 		
 		$this->add(array(
-				'name' => 'Por_asignatura',
+				'name' => 'por_asignatura',
 				'type' => 'Zend\Form\Element\Checkbox',
 				'options' => array(
-						'label' => 'Por asignatura',
-						//'value_options' => 'Por asignatura',
-		
-							
-				),
-		
+						'label' => 'Por asignatura',						
+				),		
 		),
 				array (
 						'priority' => 275,
@@ -50,14 +43,13 @@ class SolicitudDesinscripcionCurso extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Cod_Asignatura',
+				'name' => 'cod_asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Código Asignatura:',
 						'empty_option' => 'Seleccione código de asignatura ',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
-				),
-		
+						'value_options' => array('123'=>'123')//$this->getSubjectsOfCareer(),
+				),		
 		),
 				array (
 						'priority' => 270,
@@ -65,23 +57,20 @@ class SolicitudDesinscripcionCurso extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
 						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
-				),
-		
+				),		
 		),
 				array (
 						'priority' => 260,
 				)
 		);
+
 		
-	
-
-
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -98,9 +87,39 @@ class SolicitudDesinscripcionCurso extends Solicitud
 		if (! $this->filter) {
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
-	
+			
+			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'curso_completo',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+				
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'por_asignatura',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'cod_asignatura',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -118,13 +137,13 @@ class SolicitudDesinscripcionCurso extends Solicitud
 											),
 											'allowWhiteSpace' => true,
 									)
-							),
-							
+							),								
 					)
 			) ) );
-			
+	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_extraordinario',
+					'name' => 'asignatura',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -135,72 +154,20 @@ class SolicitudDesinscripcionCurso extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
-							),
-								
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
+									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
+													'notAlnum' => 'Se requieren sólo números y letras'
 											),
 											'allowWhiteSpace' => true,
 									)
-							)
+							),							
 					)
 			) ) );
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
 
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-			
-			) ) );
 			
 			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}

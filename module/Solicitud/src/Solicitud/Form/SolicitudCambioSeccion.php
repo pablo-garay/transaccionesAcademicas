@@ -180,7 +180,18 @@ class SolicitudCambioSeccion extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
-
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					
+					)
 			) ) );
 
 

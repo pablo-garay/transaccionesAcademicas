@@ -143,7 +143,11 @@ class SolicitudesVarias extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
-
+					'validators' => array (
+							array (
+									'name' => 'notEmpty',
+							),
+					)
 			) ) );
 
 

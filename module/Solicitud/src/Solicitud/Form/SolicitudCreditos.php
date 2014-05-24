@@ -13,77 +13,75 @@ class SolicitudCreditos extends Solicitud
 		
 		parent::__construct($name = 'solicitudCreditos', $dbadapter);
 	
-			$this->setAttribute('method', 'post');
-
-		$this->add(array(
-				'name' => 'Actividad',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Actividad ',
-						'empty_option' => 'Seleccione una actividad ',
-						'value_options' => array('0'=>'Materias',
-												 '1' => 'Cursos',
-												 '2' => '')//$this->getSubjectsOfCareer(),
-				),
+		$this->setAttribute('method', 'post');
 	
+		$this->add(array(
+				'name' => 'tipo_actividad',
+				'type' => 'Zend\Form\Element\Select',
+				'attributes' => array(
+						'required' => 'required',
+				),
+				'options' => array(
+						'label' => 'Tipo de actividad',
+						'empty_option' => 'Seleccione una actividad ',
+						'value_options' => array('Materias'=>'Materias',
+								'Cursos' => 'Cursos',
+								' ' => ' ')//$this->getSubjectsOfCareer(),
+				),
+		
 		),
 				array (
 						'priority' => 290,
 				)
-				);
-	
+		);
+		
+		
 		$this->add(array(
-				'name' => 'Fecha_inicio',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Fecha de Inicio de la Actividad ',
-						
-					
-				),
+				'name' => 'fecha_inicio',
+				'type' => 'Zend\Form\Element\Date',
 				'attributes' => array(
-					'value' =>  'dd/mm/aaaa',
-
+						'required' => 'required',
 				),
-	
+				'options' => array(
+						'label' => 'Fecha de Inicio de la Actividad',
+				),
 		),
 				array (
 						'priority' => 280,
 				)
-						);
-
+		);
+		
+		
 		$this->add(array(
-				'name' => 'Fecha_fin',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Fecha de Fin de la Actividad ',
-		
-							
-				),
+				'name' => 'fecha_fin',
+				'type' => 'Zend\Form\Element\Date',
 				'attributes' => array(
-						'value' =>  'dd/mm/aaaa',
+						'required' => 'required',
 				),
-		
+				'options' => array(
+						'label' => 'Fecha de Fin de la Actividad',
+				),
 		),
 				array (
 						'priority' => 270,
 				)
 		);
 		
-		$this->add(array(
-				'name' => 'Descripcion_actividad',
+		
+		$this->add ( array (
+				'name' => 'descripcion_actividades',
 				'type' => 'Zend\Form\Element\Textarea',
-				'options' => array(
-						'label' => 'Descripción ',
-						'empty_option' => 'Descripcion de la actividad ',
-
+				'attributes' => array (
+						'placeholder' => 'Describa la actividad realizada...',
+						'required' => 'required',
 				),
-	
+				'options' => array (
+						'label' => 'Descripción de la Actividad'
+				)
 		),
 				array (
 						'priority' => 260,
-				)
-						);
-	
+		) );	
 
 	
 	
@@ -102,9 +100,9 @@ class SolicitudCreditos extends Solicitud
 		if (! $this->filter) {
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
-	
+			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'tipo_actividad',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -114,6 +112,9 @@ class SolicitudCreditos extends Solicitud
 							)
 					),
 					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
 							array (
 									'name' => 'alnum',
 									'options' => array (
@@ -123,12 +124,33 @@ class SolicitudCreditos extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-							
+								
 					)
 			) ) );
 			
+			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_de_examen',
+					'name' => 'fecha_inicio',
+					'validators' => array (
+							array (
+									'name' => 'Date',
+							),
+					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fecha_fin',
+					'validators' => array (
+							array (
+									'name' => 'Date',
+							),
+					)
+			) ) );				
+	
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'descripcion_actividades',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -139,39 +161,24 @@ class SolicitudCreditos extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'date',
-									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
-									)
+									'name' => 'NotEmpty',
 							),
-								
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),								
 					)
 			) ) );
 			
-
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Descripcion_actividad',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-
-			) ) );
 			
 			
+			//@todo verificar, validar fechas no sean futuro
 			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}

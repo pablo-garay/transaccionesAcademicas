@@ -16,14 +16,16 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 		$this->setAttribute('method', 'post');
 	
 		$this->add(array(
-				'name' => 'Semestre',
+				'name' => 'semestre',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Semestre ',
 						'empty_option' => 'Seleccione su semestre..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('1'=>'1')//$this->getSubjectsOfCareer(),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 290,
@@ -31,14 +33,16 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('2'=>'2')//$this->getSubjectsOfCareer(),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 280,
@@ -46,14 +50,16 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'Semestre_asignatura',
+				'name' => 'semestre_asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Semestre de Asignatura ',
 						'empty_option' => 'Seleccione su semestre..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 270,
@@ -61,14 +67,16 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Prerrequisito',
+				'name' => 'prerrequisito',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura Prerrequisito ',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 260,
@@ -76,14 +84,16 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Semestre_prerrequisito',
+				'name' => 'semestre_prerrequisito',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Semestre de Asignatura Prerrequisito ',
 						'empty_option' => 'Seleccione su semestre..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
 				),
-		
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 250,
@@ -111,7 +121,7 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-                    'name' => 'Semestre',
+                    'name' => 'semestre',
                     'filters' => array(
                             array ( 'name' => 'digits' ),
     
@@ -122,14 +132,59 @@ class SolicitudRupturaCorrelatividad extends Solicitud
                                     'options' => array (
                                             'messages' => array(
                                     						'notDigits' => 'Solo especifique en números',	
-                                    						),
+                                    		),
                                     )
                             ),
                     )
             )));
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'notEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'semestre_asignatura',
+					'filters' => array(
+							array ( 'name' => 'digits' ),
+			
+					),
+					'validators' => array (
+							array (
+									'name' => 'digits',
+									'options' => array (
+											'messages' => array(
+													'notDigits' => 'Solo especifique en números',
+											),
+									)
+							),
+					)
+			)));
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'prerrequisito',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -148,54 +203,12 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-								
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Semestre_asignatura',
-					'filters' => array(
-							array ( 'name' => 'digits' ),
-			
-					),
-					'validators' => array (
-							array (
-									'name' => 'digits',
-									'options' => array (
-											'messages' => array(
-													'notDigits' => 'Solo especifique en números',
-											),
-									)
-							),
-					)
-			)));
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Prerrequisito',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
 			
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Semestre_prerrequisito',
+					'name' => 'semestre_prerrequisito',
 					'filters' => array(
 							array ( 'name' => 'digits' ),
 								
@@ -212,10 +225,7 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 					)
 			)));
 			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
-	
+
 			$this->filter = $inputFilter;
 		}
 	

@@ -31,10 +31,7 @@ class SolicitudExoneracion extends Solicitud
 				array (
 						'priority' => 290,
 				)
-				);
-
-	
-
+		);
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -54,7 +51,7 @@ class SolicitudExoneracion extends Solicitud
 				array (
 						'priority' => 260,
 				)
-						);
+		);
 	
 		$this->add(array(
 				'name' => 'especificacion_motivo',
@@ -71,7 +68,7 @@ class SolicitudExoneracion extends Solicitud
 				array (
 						'priority' => 250,
 				)
-				);
+		);
 	
 		$this->add(array(
 				'name' => 'tipo',
@@ -91,7 +88,7 @@ class SolicitudExoneracion extends Solicitud
 				array (
 						'priority' => 240,
 				)
-						);
+		);
 	
 		$this->add(array(
 				'name' => 'especificacion_adjunto',
@@ -108,7 +105,7 @@ class SolicitudExoneracion extends Solicitud
 				array (
 						'priority' => 230,
 				)
-				);
+		);
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -137,6 +134,9 @@ class SolicitudExoneracion extends Solicitud
 							)
 					),
 					'validators' => array (
+							array (
+									'name' => 'notEmpty',
+							),
 							array (
 									'name' => 'alnum',
 									'options' => array (
@@ -227,9 +227,7 @@ class SolicitudExoneracion extends Solicitud
 			
 			
 			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
-	
+
 			$this->filter = $inputFilter;
 		}
 	

@@ -13,97 +13,105 @@ class SolicitudInscripcionTardia extends Solicitud
 		
 		parent::__construct($name = 'solicitudInscripcionTardia', $dbadapter);
 	
-			$this->setAttribute('method', 'post');
-
+		$this->setAttribute('method', 'post');
+		
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => array('Prueba'=>'Prueba')//$this->getSubjectsOfCareer(),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
+		
 				array (
 						'priority' => 290,
 				)
-				);
-	
+		);
+		
 		$this->add(array(
-				'name' => 'Fecha_de_examen',
-				'type' => 'Zend\Form\Element\Text',
+				'name' => 'fecha_de_examen',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Fecha de Examen:',
-						
-					
+						'label' => 'Fecha de Examen',
+						'value_options' => array(
+								'2014-05-21' => '2014-05-21',
+						)
 				),
 				'attributes' => array(
-					'value' =>  'dd/mm/aaaa',
-					'disabled' => 'disabled'
+						'value' =>  'dd/mm/aaaa',
+						'required' => 'required',
 				),
-	
+		
 		),
 				array (
 						'priority' => 280,
 				)
-						);
-	
+		);
+		
 		$this->add(array(
-				'name' => 'Oportunidad',
 				'type' => 'Zend\Form\Element\Select',
+				'name' => 'oportunidad',
 				'options' => array(
 						'label' => 'Oportunidad ',
 						'empty_option' => 'Elija una Oportunidad..',
 						'value_options' => array(
-								'0' =>  1,
-								'1' =>  2,
-								'3' => 	3
+								'1' => '1',
+								'2' => '2',
+								'3' => '3',
+								'E' => 'Extraordinario'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 270,
 				)
-						);
-	
+		);
+		
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'Motivo',
+				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'0' => 'Enfermedad',
-								'1' => 'Duelo',
-								'2' => 'Trabajo',
-								'3' => 'Repitente',
-								'4' => 'Otro'
+								'Enfermedad' => 'Enfermedad',
+								'Duelo' => 'Duelo',
+								'Trabajo' => 'Trabajo',
+								'Repitente' => 'Repitente',
+								'Otro' => 'Otro'
 						),
 				),
-	
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 260,
 				)
-						);
-	
+		);
+		
 		$this->add(array(
-				'name' => 'Especificacion_motivo',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => false,
-						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+						'required' => 'required',
 				)
 		),
 				array (
 						'priority' => 250,
 				)
-				);
+		);
 	
 	
 	
@@ -124,7 +132,69 @@ class SolicitudInscripcionTardia extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'notEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fecha_de_examen',
+					'validators' => array (
+							array (
+									'name' => 'Date',
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'oportunidad',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -143,12 +213,13 @@ class SolicitudInscripcionTardia extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-							
+			
 					)
 			) ) );
+
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Fecha_de_examen',
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -159,50 +230,19 @@ class SolicitudInscripcionTardia extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'date',
+									'name' => 'alnum',
 									'options' => array (
-// 											'messages' => array (
-// 													'false' => 'Se requiere formato fecha'
-// 											),
-											'locale' => 'en', 
-											'format' => 'Y'
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
 									)
 							),
-								
+					
 					)
 			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Oportunidad',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
 
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Especificacion_motivo',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-
-			) ) );
-			
-			
-			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
+			// @todo: validar fecha no pase dia actual
 	
 			$this->filter = $inputFilter;
 		}
