@@ -70,7 +70,7 @@ class SolicitudRevisionExamen extends Solicitud
 				array (
 						'priority' => 270,
 				)
-						);
+		);
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Select',
@@ -99,11 +99,11 @@ class SolicitudRevisionExamen extends Solicitud
 				'options' => array(
 						'label' => 'Calificación obtenida ',
 						'value_options' => array(
-								'0' => '1',
-								'1' => '2',
-								'2' => '3',
-								'3' => '4',
-								'4' => '5'
+								'1' => '1',
+								'2' => '2',
+								'3' => '3',
+								'4' => '4',
+								'5' => '5'
 						),
 				),
 				'attributes' => array(

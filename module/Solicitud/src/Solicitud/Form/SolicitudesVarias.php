@@ -30,37 +30,15 @@ class SolicitudesVarias extends Solicitud
 
 		), 
 			array (
-        		'priority' => 350,
+        		'priority' => 200,
         	)
 				);
-
-		$this->add(array(
-				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'motivo',
-				'options' => array(
-						'label' => 'Motivo',
-						'value_options' => array(
-								'Enfermedad' => 'Enfermedad',
-								'Trabajo' => 'Trabajo',
-								'Otro' => 'Otro'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required'
-				),
-		
-		), 
-			array (
-        		'priority' => 340,
-        	)
-			
-		);
 
 		$this->add(array(
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						'label' => 'Solicito'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
@@ -69,7 +47,7 @@ class SolicitudesVarias extends Solicitud
 				)
 		), 
 			array (
-        		'priority' => 330,
+        		'priority' => 100,
         	)
 				);
 
@@ -89,7 +67,7 @@ class SolicitudesVarias extends Solicitud
 			// DEBEMOS inicializar filter del padre
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
-
+			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'asunto',
 					'filters' => array (
@@ -102,36 +80,19 @@ class SolicitudesVarias extends Solicitud
 					),
 					'validators' => array (
 							array (
-										'name' => 'notEmpty',
-	// 									'options' => array (
-	// 											'messages' => array (
-	// 													'notAlnum' => 'Se requieren sólo números y letras'
-	// 											),
-	// 											'allowWhiteSpace' => true,
-	// 									)
-								),
-
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'motivo',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
+									'name' => 'notEmpty',
 							),
 							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-						array (
-								'name' => 'notEmpty',
-						),					
-					)			
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),								
+					)
 			) ) );
-
-
 
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',

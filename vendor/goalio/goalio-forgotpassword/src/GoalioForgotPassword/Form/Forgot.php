@@ -27,7 +27,7 @@ class Forgot extends ProvidesEventsForm
 
         $submitElement = new Element\Button('submit');
         $submitElement
-            ->setLabel('Request new password')
+            ->setLabel('Solicitar nueva contraseña')
             ->setAttributes(array(
                 'type'  => 'submit',
             ));

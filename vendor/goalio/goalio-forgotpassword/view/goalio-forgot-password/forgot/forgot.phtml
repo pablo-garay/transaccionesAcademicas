@@ -1,4 +1,4 @@
-<h1>Forgot your password?</h1>
+<h1>Olvidó su contraseña?</h1>
 
 <?php
 $form = $this->forgotForm;
@@ -15,9 +15,15 @@ $form->setAttribute('method', 'post');
         <dt><?php echo $this->formLabel($form->get('email')) ?></dt>
         <dd><?php echo $this->formInput($form->get('email')) ?></dd>
 
-        <dd><?php echo $this->formButton($form->get('submit')) ?></dd>
+		<dd><?php
+			$buttonElement = $form->get('submit');
+			$buttonElement->setAttribute('class', 'btn btn-primary');
+			
+			echo $this->formElement($buttonElement);
+		
+		?></dd>
     </dl>
 
 <?php echo $this->form()->closeTag() ?>
 
-<a href="<?php echo $this->url('zfcuser/login') ?>">Back to login?</a>
+<a href="<?php echo $this->url('zfcuser/login') ?>">Regresar a Iniciar Sesión?</a>

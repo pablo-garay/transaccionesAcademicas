@@ -1,35 +1,46 @@
-<h1>Sign In</h1>
-
+<div class="page-header">
+    <h1>Iniciar Sesión</h1>
+</div>
+ 
 <?php
 $form = $this->loginForm;
 $form->prepare();
 $form->setAttribute('action', $this->url('zfcuser/login'));
 $form->setAttribute('method', 'post');
 ?>
-
+ 
 <?php echo $this->form()->openTag($form) ?>
+<?php foreach ($form as $element) : ?>
+ 
+    <div style="width: 330px;" class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
+        <?php
+            if ('submit' != $element->getAttribute('type')) { ?>
+                <label class="control-label"><?php echo $element->getLabel() ?></label>
+                <?php
+                $element->setAttribute('class', 'form-control')
+                        ->setAttribute('placeholder', $element->getLabel());
+            } else {
+                $element->setAttribute('class', 'btn btn-primary');
+            }
+            echo $this->formElement($element);
+            if ($this->formElementErrors($element)) : ?>
+                <?php
+                echo $this->formElementErrors()
+                    ->setMessageOpenFormat('<p class="help-block">')
+                    ->setMessageSeparatorString('</p><p class="help-block">')
+                    ->setMessageCloseString('</p>')
+                    ->render($element);
+                ?>
+            <?php endif; ?>
+    </div>
+ 
+<?php
+endforeach;
+ 
+echo $this->form()->closeTag() ?>
 
-    <dl class="zend_form">
-        <?php echo $this->formElementErrors($form->get('identity')) ?>
-
-        <dt><?php echo $this->formLabel($form->get('identity')) ?></dt>
-        <dd><?php echo $this->formInput($form->get('identity')) ?></dd>
-
-        <dt><?php echo $this->formLabel($form->get('credential')) ?></dt>
-        <dd><?php echo $this->formInput($form->get('credential')) ?></dd>
-
-        <?php if ($this->redirect): ?>
-            <input type="hidden" name="redirect" value="<?php echo $this->redirect ?>" />
-        <?php endif ?>
-
-        <dd><?php echo $this->formButton($form->get('submit')) ?></dd>
-    </dl>
-
-<?php echo $this->form()->closeTag() ?>
-
-<p><a href="<?php echo $this->url('zfcuser/forgotpassword') ?>">Forgot your password?</a></p>
-
+<p><a href="<?php echo $this->url('zfcuser/forgotpassword') ?>">Olvidó su contraseña?</a></p>
+ 
 <?php if ($this->enableRegistration) : ?>
-<p>Not registered? <a href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>">Sign up!</a></p>
+No se encuentra registrado? <a href="<?php echo $this->url('zfcuser/register') . ($this->redirect ? '?redirect='.$this->redirect : '') ?>">Regístrese</a>
 <?php endif; ?>
-

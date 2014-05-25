@@ -59,7 +59,7 @@ class Login extends ProvidesEventsForm
 
         $submitElement = new Element\Button('submit');
         $submitElement
-            ->setLabel('Sign In')
+            ->setLabel('Iniciar sesión')
             ->setAttributes(array(
                 'type'  => 'submit',
             ));

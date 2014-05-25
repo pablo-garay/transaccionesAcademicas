@@ -15,20 +15,23 @@ class SolicitudInclusionLista extends Solicitud
 		$this->setAttribute('method', 'post');
 
 
-
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
-						'value_options' => $this->getAsignaturasDeCarrera(),
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => array('A1'=>'A1')//$this->getSubjectsOfCareer(),
 				),
-
+				'attributes' => array(
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 350,
 				)
-				);
+		);
+
 
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -85,7 +88,7 @@ class SolicitudInclusionLista extends Solicitud
 			$factory = new InputFactory ();
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -96,15 +99,18 @@ class SolicitudInclusionLista extends Solicitud
 					),
 					'validators' => array (
 							array (
-										'name' => 'notEmpty',
-	// 									'options' => array (
-	// 											'messages' => array (
-	// 													'notAlnum' => 'Se requieren sólo números y letras'
-	// 											),
-	// 											'allowWhiteSpace' => true,
-	// 									)
-								),
-
+									'name' => 'notEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							
 					)
 			) ) );
 			

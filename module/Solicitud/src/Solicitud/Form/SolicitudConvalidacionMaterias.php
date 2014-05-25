@@ -341,6 +341,7 @@ class SolicitudConvalidacionMaterias extends Form
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'email_universidad_origen',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

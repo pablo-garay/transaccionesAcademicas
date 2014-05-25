@@ -16,10 +16,19 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $e->getApplication()->getServiceManager()->get('translator');
+        $translator = $e->getApplication()->getServiceManager()->get('translator');
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+        
+        $translator->addTranslationFile(
+        		'phpArray',
+        		'./vendor/zendframework/zendframework/resources/languages/es/Zend_Validate.php',
+        		'default',
+        		'es_ES'
+        );
+        \Zend\Validator\AbstractValidator::setDefaultTranslator(new
+        		\Zend\Mvc\I18n\Translator($translator));
     }
 
     public function getConfig()

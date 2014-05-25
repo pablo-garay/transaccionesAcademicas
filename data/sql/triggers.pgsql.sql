@@ -94,19 +94,18 @@ CREATE TRIGGER tesis_insert BEFORE INSERT ON solicitud_de_tesis
     FOR EACH ROW EXECUTE PROCEDURE tesis_insert();
 
 
-
-CREATE OR REPLACE FUNCTION inclusionlista_insert() RETURNS trigger AS $$
-    BEGIN
-	NEW.validez_materia := 'NO_VERIFICADO';
-        
-        RETURN NEW;
-    END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS inclusionlista_insert ON solicitud_de_inclusion_en_lista;
-
-CREATE TRIGGER inclusionlista_insert BEFORE INSERT ON solicitud_de_inclusion_en_lista
-    FOR EACH ROW EXECUTE PROCEDURE inclusionlista_insert();
+-- 
+-- CREATE OR REPLACE FUNCTION inclusionlista_insert() RETURNS trigger AS $$
+--     BEGIN
+--         
+--         RETURN NEW;
+--     END;
+-- $$ LANGUAGE plpgsql;
+-- 
+-- DROP TRIGGER IF EXISTS inclusionlista_insert ON solicitud_de_inclusion_en_lista;
+-- 
+-- CREATE TRIGGER inclusionlista_insert BEFORE INSERT ON solicitud_de_inclusion_en_lista
+--     FOR EACH ROW EXECUTE PROCEDURE inclusionlista_insert();
 
 
 
@@ -235,6 +234,21 @@ DROP TRIGGER IF EXISTS ruptura_insert ON solicitud_de_ruptura_de_correlatividad;
 
 CREATE TRIGGER ruptura_insert BEFORE INSERT ON solicitud_de_ruptura_de_correlatividad
     FOR EACH ROW EXECUTE PROCEDURE ruptura_insert();    
+
+
+
+CREATE OR REPLACE FUNCTION revisionexamen_insert() RETURNS trigger AS $$
+    BEGIN
+	NEW.calificacion_nueva := 0;
+        
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS revisionexamen_insert ON solicitud_de_revision_de_examen;
+
+CREATE TRIGGER revisionexamen_insert BEFORE INSERT ON solicitud_de_revision_de_examen
+    FOR EACH ROW EXECUTE PROCEDURE revisionexamen_insert();    
 
 
 

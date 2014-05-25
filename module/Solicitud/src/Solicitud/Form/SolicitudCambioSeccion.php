@@ -17,7 +17,7 @@ class SolicitudCambioSeccion extends Solicitud
 
 
 		$this->add(array(
-				'name' => 'materia',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
@@ -121,7 +121,7 @@ class SolicitudCambioSeccion extends Solicitud
 			$factory = new InputFactory ();
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'materia',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -132,15 +132,18 @@ class SolicitudCambioSeccion extends Solicitud
 					),
 					'validators' => array (
 							array (
-										'name' => 'notEmpty',
-	// 									'options' => array (
-	// 											'messages' => array (
-	// 													'notAlnum' => 'Se requieren sólo números y letras'
-	// 											),
-	// 											'allowWhiteSpace' => true,
-	// 									)
-								),
-
+									'name' => 'notEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							
 					)
 			) ) );
 			

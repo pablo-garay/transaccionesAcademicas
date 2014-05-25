@@ -77,6 +77,17 @@ class FormularioController extends AbstractActionController
             	
             	$solEspecificaModel = $this->serviceLocator->get('table-gateway')->get($tableName);
             	$res = $solEspecificaModel->insert($filtered);
+            	
+            	if (array_key_exists ( 'asignatura' , $info )){            		            		
+            		# obtener campos de la tabla Asignaturas por Solicitud
+            		$columns = $metadata->getColumnNames('asignaturas_por_solicitud');
+            		# interseccion entre campos de form y campos de Asignaturas por Solicitud
+            		$filtered = array_intersect_key($info, array_flip($columns));
+
+            		$asignaturasSolicitudModel = $this->serviceLocator->get('table-gateway')->get('asignaturas_por_solicitud');
+            		$asignaturasSolicitudModel->insert($filtered);
+            	}
+            	
 
             	$this->flashmessenger()->addSuccessMessage('Solicitud Enviada');
 

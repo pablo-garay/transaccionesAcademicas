@@ -1,9 +1,9 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     5/21/2014 11:12:03 PM                        */
+/* Created on:     5/25/2014 1:12:17 AM                         */
 /*==============================================================*/
-
-
+-- 
+-- 
 -- drop index ALUMNOS_PK;
 -- 
 -- drop table ALUMNOS;
@@ -62,6 +62,8 @@
 -- 
 -- drop table LOGS;
 -- 
+-- drop table PARAMETROS_DE_REQUISITOS;
+-- 
 -- drop index PARAMETROS_LOGS_PK;
 -- 
 -- drop table PARAMETROS_LOGS;
@@ -91,6 +93,8 @@
 -- drop table ROLES_POR_USUARIO;
 -- 
 -- drop index HECHA_POR_FK;
+-- 
+-- drop index ES_UN_FK2;
 -- 
 -- drop index SOLICITUDES_PK;
 -- 
@@ -195,6 +199,144 @@
 -- drop index USUARIOS_PK;
 -- 
 -- drop table USUARIOS;
+-- 
+-- drop domain D_ACTA;
+-- 
+-- drop domain D_ADJUNTO;
+-- 
+-- drop domain D_ANHO;
+-- 
+-- drop domain D_APELLIDO_USUARIO;
+-- 
+-- drop domain D_ASISTENCIA;
+-- 
+-- drop domain D_ASUNTO_SOLICITUD;
+-- 
+-- drop domain D_BOOLEAN;
+-- 
+-- drop domain D_CALIFICACION;
+-- 
+-- drop domain D_CANTIDAD;
+-- 
+-- drop domain D_CARRERA;
+-- 
+-- drop domain D_CEDULA;
+-- 
+-- drop domain D_COMPROBANTE;
+-- 
+-- drop domain D_CONTRASENA;
+-- 
+-- drop domain D_CORREO;
+-- 
+-- drop domain D_CUENTA;
+-- 
+-- drop domain D_DEPARTAMENTO;
+-- 
+-- drop domain D_DESCRIPCION_ACTIVIDADES;
+-- 
+-- drop domain D_DESCRIPCION_LOG;
+-- 
+-- drop domain D_DESCRIPCION_PERMISO;
+-- 
+-- drop domain D_DIA;
+-- 
+-- drop domain D_DIRECCION;
+-- 
+-- drop domain D_DIRECCION_EMAIL;
+-- 
+-- drop domain D_DOCUMENT_ID;
+-- 
+-- drop domain D_EMAIL;
+-- 
+-- drop domain D_ESTADO_CUENTA;
+-- 
+-- drop domain D_ESTADO_SOLICITUD;
+-- 
+-- drop domain D_ETAPA_ACTUAL;
+-- 
+-- drop domain D_FECHA;
+-- 
+-- drop domain D_FECHAHORA;
+-- 
+-- drop domain D_FILENAME;
+-- 
+-- drop domain D_HISTORIAL;
+-- 
+-- drop domain D_HORA;
+-- 
+-- drop domain D_HORARIO;
+-- 
+-- drop domain D_MATERIA;
+-- 
+-- drop domain D_MATRICULA;
+-- 
+-- drop domain D_MESA_ENTRADA;
+-- 
+-- drop domain D_MOTIVO;
+-- 
+-- drop domain D_NOMBRE_CARRERA;
+-- 
+-- drop domain D_NOMBRE_DEPARTAMENTO;
+-- 
+-- drop domain D_NOMBRE_LOG;
+-- 
+-- drop domain D_NOMBRE_LUGAR;
+-- 
+-- drop domain D_NOMBRE_MATERIA;
+-- 
+-- drop domain D_NOMBRE_PERMISO;
+-- 
+-- drop domain D_NOMBRE_ROL;
+-- 
+-- drop domain D_NOMBRE_TESIS;
+-- 
+-- drop domain D_NOMBRE_TITULO;
+-- 
+-- drop domain D_NOMBRE_UNIVERSIDAD;
+-- 
+-- drop domain D_NOMBRE_USUARIO;
+-- 
+-- drop domain D_NUM_ARCHIVO;
+-- 
+-- drop domain D_NUM_LOG;
+-- 
+-- drop domain D_OBSERVACIONES;
+-- 
+-- drop domain D_OPORTUNIDAD;
+-- 
+-- drop domain D_PARAMETRO;
+-- 
+-- drop domain D_PERMISO;
+-- 
+-- drop domain D_PROFESOR;
+-- 
+-- drop domain D_RESULTADO_REQUISITO;
+-- 
+-- drop domain D_ROL;
+-- 
+-- drop domain D_SECCION;
+-- 
+-- drop domain D_SEMESTRE;
+-- 
+-- drop domain D_SEXO;
+-- 
+-- drop domain D_SOLICITUD;
+-- 
+-- drop domain D_TELEFONO;
+-- 
+-- drop domain D_TEXTO_EMAIL;
+-- 
+-- drop domain D_TEXTO_LOG;
+-- 
+-- drop domain D_TIME;
+-- 
+-- drop domain D_TIPO_CERTIFICADO;
+-- 
+-- drop domain D_TIPO_TITULO;
+-- 
+-- drop domain D_USUARIO;
+-- 
+-- drop domain D_VALOR_PARAMETRO;
 
 /*==============================================================*/
 /* Table: ALUMNOS                                               */
@@ -274,8 +416,7 @@ CORREO
 /*==============================================================*/
 create table ASIGNATURAS_POR_SOLICITUD (
    SOLICITUD            INT4                 not null,
-   COD_ASIGNATURA       INT4                 not null,
-   ASIGNATURA           VARCHAR(80)          null,
+   ASIGNATURA           VARCHAR(80)          not null,
    SECCION              CHAR(1)              null,
    SEMESTRE_ANHO        INT4                 null
       constraint CKC_SEMESTRE_ANHO_ASIGNATU check (SEMESTRE_ANHO is null or (SEMESTRE_ANHO >= 1)),
@@ -284,7 +425,7 @@ create table ASIGNATURAS_POR_SOLICITUD (
    PORCENTAJE_ASISTENCIA_ACTUAL INT4                 null,
    PORCENTAJE_ASISTENCIA_ANTERIOR INT4                 null,
    CARRERA_DE_ASIGNATURA VARCHAR(80)          null,
-   constraint PK_ASIGNATURAS_POR_SOLICITUD primary key (SOLICITUD, COD_ASIGNATURA)
+   constraint PK_ASIGNATURAS_POR_SOLICITUD primary key (SOLICITUD, ASIGNATURA)
 );
 
 /*==============================================================*/
@@ -292,7 +433,7 @@ create table ASIGNATURAS_POR_SOLICITUD (
 /*==============================================================*/
 create unique index ASIGNATURAS_POR_SOLICITUD_PK on ASIGNATURAS_POR_SOLICITUD (
 SOLICITUD,
-COD_ASIGNATURA
+ASIGNATURA
 );
 
 /*==============================================================*/
@@ -448,6 +589,15 @@ PARAMETRO
 );
 
 /*==============================================================*/
+/* Table: PARAMETROS_DE_REQUISITOS                              */
+/*==============================================================*/
+create table PARAMETROS_DE_REQUISITOS (
+   PORCENTAJE_REDUCCION_ASISTENCIA VARCHAR(10)          null,
+   PORCENTAJE_EXONERACION_ASISTENCIA VARCHAR(10)          null,
+   TIEMPO_LIMITE_TRASPASO_PAGO VARCHAR(10)          null
+);
+
+/*==============================================================*/
 /* Table: PARAMETROS_LOGS                                       */
 /*==============================================================*/
 create table PARAMETROS_LOGS (
@@ -566,6 +716,7 @@ ROL
 create table SOLICITUDES (
    SOLICITUD            SERIAL not null,
    USUARIO_SOLICITANTE  INT4                 not null,
+   SOL_SOLICITUD        INT4                 null,
    MESA_ENTRADA         INT4                 not null,
    MATRICULA            INT4                 null,
    CARRERA              VARCHAR(80)          not null,
@@ -588,6 +739,13 @@ SOLICITUD
 );
 
 /*==============================================================*/
+/* Index: ES_UN_FK2                                             */
+/*==============================================================*/
+create  index ES_UN_FK2 on SOLICITUDES (
+SOL_SOLICITUD
+);
+
+/*==============================================================*/
 /* Index: HECHA_POR_FK                                          */
 /*==============================================================*/
 create  index HECHA_POR_FK on SOLICITUDES (
@@ -599,9 +757,7 @@ USUARIO_SOLICITANTE
 /*==============================================================*/
 create table SOLICITUDES_VARIAS (
    SOLICITUD            INT4                 not null,
-   ASUNTO               VARCHAR(80)          not null,
-   MOTIVO               TEXT                 not null,
-   ESPECIFICACION_MOTIVO TEXT                 null,
+   ESPECIFICACION_MOTIVO TEXT                 not null,
    constraint PK_SOLICITUDES_VARIAS primary key (SOLICITUD)
 );
 
@@ -636,7 +792,7 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS (
    SOLICITUD            INT4                 not null,
-   CARRERA_CURSADA      INT4                 null,
+   CARRERA_CURSADA      VARCHAR(80)          null,
    TIPO_DE_CERTIFICADO  CHAR(1)              not null
       constraint CKC_TIPO_DE_CERTIFICA_SOLICITU check (TIPO_DE_CERTIFICADO in ('S','L')),
    TIPO_DE_TITULO       CHAR(15)             not null
@@ -710,8 +866,8 @@ create table SOLICITUD_DE_CREDITOS_ACADEMICOS (
    DESCRIPCION_ACTIVIDADES TEXT                 not null,
    FECHA_INICIO         DATE                 not null,
    FECHA_FIN            DATE                 not null,
-   CANTIDAD_HORAS_REALIZADAS INT4                 not null
-      constraint CKC_CANTIDAD_HORAS_RE_SOLICITU check (CANTIDAD_HORAS_REALIZADAS >= 0),
+   CANTIDAD_HORAS_REALIZADAS INT4                 null
+      constraint CKC_CANTIDAD_HORAS_RE_SOLICITU check (CANTIDAD_HORAS_REALIZADAS is null or (CANTIDAD_HORAS_REALIZADAS >= 0)),
    CREDITOS_OTORGADOS   INT4                 null
       constraint CKC_CREDITOS_OTORGADO_SOLICITU check (CREDITOS_OTORGADOS is null or (CREDITOS_OTORGADOS >= 0)),
    constraint PK_SOLICITUD_DE_CREDITOS_ACADE primary key (SOLICITUD)
@@ -729,11 +885,11 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_DESINSCRIPCION_DE_CURSO (
    SOLICITUD            INT4                 not null,
-   MOTIVO_DESINSCRIPCION TEXT                 not null,
+   MOTIVO_DESINSCRIPCION TEXT                 null,
    CURSO_COMPLETO       BOOL                 not null,
    POR_ASIGNATURA       BOOL                 not null,
-   CUOTAS_PAGADAS       INT4                 null
-      constraint CKC_CUOTAS_PAGADAS_SOLICITU check (CUOTAS_PAGADAS is null or (CUOTAS_PAGADAS >= 0)),
+   CUOTAS_PAGADAS       CHAR(13)             null
+      constraint CKC_CUOTAS_PAGADAS_SOLICITU check (CUOTAS_PAGADAS is null or (CUOTAS_PAGADAS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE'))),
    constraint PK_SOLICITUD_DE_DESINSCRIPCION primary key (SOLICITUD)
 );
 
@@ -816,8 +972,6 @@ SOLICITUD
 create table SOLICITUD_DE_INCLUSION_EN_LISTA (
    SOLICITUD            INT4                 not null,
    MOTIVO               TEXT                 not null,
-   VALIDEZ_MATERIA      CHAR(13)             not null
-      constraint CKC_VALIDEZ_MATERIA_SOLICITU check (VALIDEZ_MATERIA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    ESPECIFICACION_MOTIVO TEXT                 null,
    constraint PK_SOLICITUD_DE_INCLUSION_EN_L primary key (SOLICITUD)
 );
@@ -834,8 +988,8 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN (
    SOLICITUD            INT4                 not null,
-   OPORTUNIDAD          INT4                 not null
-      constraint CKC_OPORTUNIDAD_SOLICITU check (OPORTUNIDAD between 1 and 3),
+   OPORTUNIDAD          CHAR(1)              not null
+      constraint CKC_OPORTUNIDAD_SOLICITU check (OPORTUNIDAD in ('1','2','3','E')),
    MOTIVO               TEXT                 not null,
    FECHA_DE_EXAMEN      DATE                 not null,
    ESPECIFICACION_MOTIVO TEXT                 null,
@@ -894,8 +1048,6 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_REVISION_DE_ESCOLARIDAD (
    SOLICITUD            INT4                 not null,
-   VALIDEZ_MATERIA      CHAR(13)             not null
-      constraint CKC_VALIDEZ_MATERIA_SOLICITU check (VALIDEZ_MATERIA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_REVISION_DE_ES primary key (SOLICITUD)
 );
 
@@ -914,14 +1066,15 @@ create table SOLICITUD_DE_REVISION_DE_EXAMEN (
    MOTIVO               TEXT                 not null,
    FECHA_EXAMEN         DATE                 not null,
    PROFESOR             VARCHAR(80)          null,
-   OPORTUNIDAD          INT4                 not null
-      constraint CKC_OPORTUNIDAD_SOLICITU check (OPORTUNIDAD between 1 and 3),
-   CALIFICACION_PREVIA  INT4                 not null
-      constraint CKC_CALIFICACION_PREV_SOLICITU check (CALIFICACION_PREVIA between 0 and 5),
-   CALIFICACION_NUEVA   INT4                 not null
-      constraint CKC_CALIFICACION_NUEV_SOLICITU check (CALIFICACION_NUEVA between 0 and 5),
-   FECHA_HORA_REVISION  DATE                 not null,
-   LUGAR_REVISION       VARCHAR(80)          not null,
+   OPORTUNIDAD          CHAR(1)              not null
+      constraint CKC_OPORTUNIDAD_SOLICITU check (OPORTUNIDAD in ('1','2','3','E')),
+   CALIFICACION_PREVIA  CHAR(1)              not null
+      constraint CKC_CALIFICACION_PREV_SOLICITU check (CALIFICACION_PREVIA in ('0','1','2','3','4','5','F')),
+   CALIFICACION_NUEVA   CHAR(1)              not null
+      constraint CKC_CALIFICACION_NUEV_SOLICITU check (CALIFICACION_NUEVA in ('0','1','2','3','4','5','F')),
+   FECHA_REVISION       DATE                 null,
+   HORA_REVISION        TIME                 null,
+   LUGAR_REVISION       VARCHAR(80)          null,
    constraint PK_SOLICITUD_DE_REVISION_DE_EX primary key (SOLICITUD)
 );
 
@@ -1005,16 +1158,16 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN (
    SOLICITUD            INT4                 not null,
-   OPORTUNIDAD_PAGADA   INT4                 not null
-      constraint CKC_OPORTUNIDAD_PAGAD_SOLICITU check (OPORTUNIDAD_PAGADA between 1 and 3),
+   OPORTUNIDAD_PAGADA   CHAR(1)              not null
+      constraint CKC_OPORTUNIDAD_PAGAD_SOLICITU check (OPORTUNIDAD_PAGADA in ('1','2','3','E')),
    FECHA_OPORTUNIDAD_PAGADA DATE                 not null,
-   OPORTUNIDAD_A_PAGAR  INT4                 not null
-      constraint CKC_OPORTUNIDAD_A_PAG_SOLICITU check (OPORTUNIDAD_A_PAGAR between 1 and 3),
+   OPORTUNIDAD_A_PAGAR  CHAR(1)              not null
+      constraint CKC_OPORTUNIDAD_A_PAG_SOLICITU check (OPORTUNIDAD_A_PAGAR in ('1','2','3','E')),
    FECHA_OPORTUNIDAD_A_PAGAR DATE                 not null,
    CUMPLE_PLAZO_LIMITE  CHAR(13)             not null
       constraint CKC_CUMPLE_PLAZO_LIMI_SOLICITU check (CUMPLE_PLAZO_LIMITE in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   FECHA_DE_ABONO       DATE                 not null,
-   COMPROBANTE          VARCHAR(120)         not null,
+   FECHA_DE_ABONO       DATE                 null,
+   COMPROBANTE          VARCHAR(120)         null,
    constraint PK_SOLICITUD_DE_TRASPASO_DE_PA primary key (SOLICITUD)
 );
 
@@ -1100,7 +1253,6 @@ create table USUARIOS (
    USUARIO              SERIAL not null,
    NOMBRES              VARCHAR(80)          not null,
    APELLIDOS            VARCHAR(80)          not null,
-   FECHA_NACIMIENTO     DATE                 not null,
    SEXO                 CHAR(1)              not null
       constraint CKC_SEXO_USUARIOS check (SEXO in ('M','F')),
    DIRECCION            VARCHAR(120)         not null,
@@ -1192,6 +1344,11 @@ alter table ROLES_POR_USUARIO
 alter table ROLES_POR_USUARIO
    add constraint FK_ROLES_PO_TIENE_ASI_USUARIOS foreign key (USUARIO)
       references USUARIOS (USUARIO)
+      on delete restrict on update restrict;
+
+alter table SOLICITUDES
+   add constraint FK_SOLICITU_ES_UN_SOLICITU foreign key (SOL_SOLICITUD)
+      references SOLICITUD_DE_TUTORIA_DE_CATEDRA (SOLICITUD)
       on delete restrict on update restrict;
 
 alter table SOLICITUDES

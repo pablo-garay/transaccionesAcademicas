@@ -15,7 +15,7 @@ class ModuleOptions extends AbstractOptions implements
     /**
      * @var string
      */
-    protected $resetEmailSubjectLine = 'You requested to reset your password';
+    protected $resetEmailSubjectLine = 'Ha solicitado reestablecer su contraseña';
 
     /**
      * @var string

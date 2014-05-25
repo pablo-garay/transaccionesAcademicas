@@ -82,7 +82,6 @@ class Solicitud extends Form
 						'value_options' => $this->getCarrera ()
 				),
 				'attributes' => array (
-						// Below: HTML5 way to specify that the input will be phone number
 						'placeholder' => 'Elija su carrera...',
 						'required' => 'required'
 				)
@@ -99,6 +98,7 @@ class Solicitud extends Form
         		),
         		'attributes' => array (
         				'value' => $this->getTelefono(), // @todo getphone
+        				'required' => 'required'
         				//'disabled' => 'disabled'
         		),
 

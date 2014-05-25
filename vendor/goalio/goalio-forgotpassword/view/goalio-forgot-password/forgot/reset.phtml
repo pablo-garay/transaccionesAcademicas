@@ -1,4 +1,4 @@
-<h3>Change Password for <?php echo $this->escapeHtml($this->email); ?></h3>
+<h3>Cambiar contraseña para <?php echo $this->escapeHtml($this->email); ?></h3>
 <?php
 
 $form = $this->resetForm;
@@ -22,7 +22,11 @@ echo $this->formInput($form->get('newCredentialVerify')) . $this->formElementErr
 ?></dd>
 
 <dd><?php
-echo $this->formButton($form->get('submit'));
+	$buttonElement = $form->get('submit');
+	$buttonElement->setAttribute('class', 'btn btn-primary');
+	
+	echo $this->formElement($buttonElement);
+
 ?></dd>
 
 </dl>
