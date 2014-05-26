@@ -1,5 +1,5 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -70,12 +70,6 @@ class RecepcionSolicitudExtraordinario extends Form
 				'type' => 'Zend\Form\Element\Csrf',
 		));
 
-
-
 	}
-
-	
-
-
 
 }

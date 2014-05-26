@@ -1,18 +1,19 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudExtraordinario extends Solicitud
+class SolicitudCambioSeccion extends Solicitud
 {
 
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 
-		parent::__construct($name = 'extraordinario', $dbadapter);
+		parent::__construct($name = 'cambioSeccion', $dbadapter);
 
 		$this->setAttribute('method', 'post');
+
 
 
 		$this->add(array(
@@ -20,73 +21,36 @@ class SolicitudExtraordinario extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
-						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('A1'=>'A1')//$this->getSubjectsOfCareer(),
+						'value_options' => $this->getAsignaturasDeCarrera(),
 				),
-				'attributes' => array(
-						'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 280,
-				)
-		);		
 
-		$this->add(array(
-				'name' => 'fecha_extraordinario',
-				'type' => 'Zend\Form\Element\Date',
-				'options' => array(
-						'label' => 'Fecha de Examen:',
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),
 		),
 				array (
-						'priority' => 270,
+						'priority' => 350,
 				)
-		);
-		
-		$this->add(array(
-				'name' => 'profesor',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Profesor:',
-						'empty_option' => 'Elija un Profesor..',
-						'value_options' => array(
-								'Profesor1' => 'Profesor1',
-								'Profesor2' => 'Profesor2'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 270,
-				)
-		);
-		
+				);
+
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
 				'name' => 'motivo',
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'Enfermedad' => 'Enfermedad',
 								'Trabajo' => 'Trabajo',
 								'Otro' => 'Otro'
 						),
 				),
 				'attributes' => array(
+						// Below: HTML5 way to specify that the input will be phone number
 						'required' => 'required',
 				),
+		
 		),
 				array (
-						'priority' => 260,
+						'priority' => 340,
 				)
 		);
-		
+
 		$this->add(array(
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
@@ -95,12 +59,47 @@ class SolicitudExtraordinario extends Solicitud
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => 'required',
+						'required' => false,
 						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
 				)
-		)
-				, array (
-						'priority' => 250,
+		),
+				array (
+						'priority' => 330,
+				)
+				);
+		
+		$this->add(array(
+				'name' => 'Tipo',
+				'type' => 'Zend\Form\Element\Radio',
+				'options' => array(
+						'label' => 'Documento Adjunto',
+						'value_options' => array(
+								'Certificado Médico' => 'Certificado Médico',
+								'Certificado de Trabajo' => 'Certificado de Trabajo',
+								'Otro' => 'Otro'
+						),
+				),
+		
+		),
+				array (
+						'priority' => 240,
+				)
+		);
+		
+		$this->add(array(
+				'name' => 'Descripcion',
+				'type' => 'Zend\Form\Element\Textarea',
+				'options' => array(
+						'label' => 'Especificación de documento adjunto'
+				),
+				'attributes' => array(
+						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
+						'required' => false,
+						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+				)
+		),
+				array (
+						'priority' => 230,
 				)
 		);
 
@@ -109,6 +108,7 @@ class SolicitudExtraordinario extends Solicitud
 				'name' => 'csrf',
 				'type' => 'Zend\Form\Element\Csrf',
 		));
+
 
 
 	}
@@ -148,41 +148,6 @@ class SolicitudExtraordinario extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_extraordinario',
-					'validators' => array (
-							array (
-									'name' => 'Date',
-							),
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-					)
-			) ) );
-
-			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'motivo',
 					'filters' => array (
 							array (
@@ -193,19 +158,17 @@ class SolicitudExtraordinario extends Solicitud
 							)
 					),
 					'validators' => array (
-						array (
-								'name' => 'notEmpty',
-						),
-						array (
-								'name' => 'alnum',
-								'options' => array (
-										'messages' => array (
-												'notAlnum' => 'Se requieren sólo números y letras'
-										),
-										'allowWhiteSpace' => true,
-								)
-						),
-					)			
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
 			) ) );
 
 
@@ -222,9 +185,6 @@ class SolicitudExtraordinario extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'notEmpty',
-							),
-							array (
 									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
@@ -233,6 +193,7 @@ class SolicitudExtraordinario extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
+					
 					)
 			) ) );
 
@@ -268,7 +229,7 @@ class SolicitudExtraordinario extends Solicitud
 	{
 		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
 		$dbAdapter = $this->dbAdapter;
-		$sql       = 'SELECT solicitud, matricula FROM solicitudes';
+		$sql       = 'SELECT solicitud, resultado_requisitos FROM solicitudes';
 
 		$statement = $dbAdapter->query($sql);
 		$result    = $statement->execute();
@@ -276,7 +237,7 @@ class SolicitudExtraordinario extends Solicitud
 		$selectData = array();
 
 		foreach ($result as $res) {
-			$selectData[$res['matricula']] = $res['matricula'];
+			$selectData[$res['resultado_requisitos']] = $res['resultado_requisitos'];
 		}
 		return array('Compiladores' =>'Compiladores', 'SPD' => 'SPD', 'Informática 2' =>'Informática 2');
 

@@ -1,89 +1,111 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudCreditos extends Solicitud
+class SolicitudExoneracion extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudCreditos', $dbadapter);
+		parent::__construct($name = 'solicitudExoneracion', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
-	
+
 		$this->add(array(
-				'name' => 'tipo_actividad',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Asignatura:',
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => array('Prueba'=>'Prueba')//$this->getSubjectsOfCareer(),
+				),
 				'attributes' => array(
 						'required' => 'required',
-				),
-				'options' => array(
-						'label' => 'Tipo de actividad',
-						'empty_option' => 'Seleccione una actividad ',
-						'value_options' => array('Materias'=>'Materias',
-								'Cursos' => 'Cursos',
-								' ' => ' ')//$this->getSubjectsOfCareer(),
-				),
-		
+				),	
 		),
+				
 				array (
 						'priority' => 290,
 				)
 		);
-		
-		
+	
 		$this->add(array(
-				'name' => 'fecha_inicio',
-				'type' => 'Zend\Form\Element\Date',
+				'type' => 'Zend\Form\Element\Radio',
+				'name' => 'motivo',
+				'options' => array(
+						'label' => 'Motivo',
+						'value_options' => array(
+								'Enfermedad' => 'Enfermedad',
+								'Trabajo' => 'Trabajo',
+								'Otro' => 'Otro'
+						),
+				),
 				'attributes' => array(
 						'required' => 'required',
-				),
-				'options' => array(
-						'label' => 'Fecha de Inicio de la Actividad',
-				),
-		),
-				array (
-						'priority' => 280,
-				)
-		);
-		
-		
-		$this->add(array(
-				'name' => 'fecha_fin',
-				'type' => 'Zend\Form\Element\Date',
-				'attributes' => array(
-						'required' => 'required',
-				),
-				'options' => array(
-						'label' => 'Fecha de Fin de la Actividad',
-				),
-		),
-				array (
-						'priority' => 270,
-				)
-		);
-		
-		
-		$this->add ( array (
-				'name' => 'descripcion_actividades',
-				'type' => 'Zend\Form\Element\Textarea',
-				'attributes' => array (
-						'placeholder' => 'Describa la actividad realizada...',
-						'required' => 'required',
-				),
-				'options' => array (
-						'label' => 'Descripción de la Actividad'
-				)
+				),	
 		),
 				array (
 						'priority' => 260,
-		) );	
-
+				)
+		);
 	
+		$this->add(array(
+				'name' => 'especificacion_motivo',
+				'type' => 'Zend\Form\Element\Textarea',
+				'options' => array(
+						'label' => 'Especificación de Motivo'
+				),
+				'attributes' => array(
+						'placeholder' => 'Agregue alguna información adicional aquí...',
+						'required' => false,
+						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+				)
+		),
+				array (
+						'priority' => 250,
+				)
+		);
+	
+		$this->add(array(
+				'name' => 'tipo',
+				'type' => 'Zend\Form\Element\Radio',
+				'options' => array(
+						'label' => 'Documento Adjunto',
+						'value_options' => array(
+								'Certificado Médico' => 'Certificado Médico',
+								'Certificado de Trabajo' => 'Certificado de Trabajo',
+								'Otro' => 'Otro'
+						),
+				),
+				'attributes' => array(
+						'required' => 'required',
+				),
+		),
+				array (
+						'priority' => 240,
+				)
+		);
+	
+		$this->add(array(
+				'name' => 'especificacion_adjunto',
+				'type' => 'Zend\Form\Element\Textarea',
+				'options' => array(
+						'label' => 'Especificación de documento adjunto'
+				),
+				'attributes' => array(
+						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
+						'required' => false,
+						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+				)
+		),
+				array (
+						'priority' => 230,
+				)
+		);
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -100,9 +122,9 @@ class SolicitudCreditos extends Solicitud
 		if (! $this->filter) {
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
-			
+	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'tipo_actividad',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -113,8 +135,82 @@ class SolicitudCreditos extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'NotEmpty',
+									'name' => 'notEmpty',
 							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							
+					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+			
+					)
+			) ) );
+
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_motivo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_adjunto',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
 							array (
 									'name' => 'alnum',
 									'options' => array (
@@ -126,60 +222,12 @@ class SolicitudCreditos extends Solicitud
 							),
 								
 					)
+			
 			) ) );
 			
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_inicio',
-					'validators' => array (
-							array (
-									'name' => 'Date',
-							),
-					)
-			) ) );
 			
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_fin',
-					'validators' => array (
-							array (
-									'name' => 'Date',
-							),
-					)
-			) ) );				
-	
 
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'descripcion_actividades',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),								
-					)
-			) ) );
-			
-			
-			
-			//@todo verificar, validar fechas no sean futuro
-			
-	
 			$this->filter = $inputFilter;
 		}
 	
@@ -210,11 +258,15 @@ class SolicitudCreditos extends Solicitud
 	
 	}
 	
-	public function getFechaDeExamen()
+	public function getProfesoresDeAsignatura()
 	{
-		//@todo: Rescatar fecha de examen
+		//@todo: Rescatar profesores titulares según la asignatura elegida
 	}
 	
+	public function getFechaDeExtraordinario()
+	{
+		//@todo: Rescatar los datos de usuario según la asignatura elegida
+	}
 	
 
 	

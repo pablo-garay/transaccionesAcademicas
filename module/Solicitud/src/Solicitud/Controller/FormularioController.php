@@ -2,12 +2,9 @@
 
 namespace Solicitud\Controller;
 
-use Solicitud\Form as Form;
+use Solicitud\Form\Formulario as Form;
 use Zend\Mvc\Controller\AbstractActionController;
 use Solicitud\Service\Factory\Database as DatabaseAdapter;
-use Solicitud\Model\Solicitud as SolicitudModel;
-use Zend\Paginator\Adapter\DbSelect as PaginatorDbAdapter;
-use Zend\Paginator\Paginator;
 
 
 
@@ -17,22 +14,6 @@ class FormularioController extends AbstractActionController
     {
     	//@todo Solicitudes Index page    	   
         return array();
-    }
-    
-    public function listAction(){
-    	$model = new SolicitudModel();
-    	$result = $model->getSql()->select();
-    
-    	$adapter = new PaginatorDbAdapter($result, $model->getAdapter());
-    	$paginator = new Paginator($adapter);
-    	$currentPage = $this->params('page', 1);
-    	$paginator->setCurrentPageNumber($currentPage);
-    	$paginator->setItemCountPerPage(10);
-    
-    	return array('solicitudes'=> $paginator,
-    			'page'=> $currentPage
-    	);
-    
     }
     
     public function setDbAdapter()
@@ -64,7 +45,9 @@ class FormularioController extends AbstractActionController
             	$info = $form->getData(); //The form's getData returns an array of key/value pairs
 
             	$solicitudesModel = $this->serviceLocator->get('table-gateway')->get('solicitudes');
+            	$info['tipo_solicitud'] = $tableName; // tipo de solicitud insertada
             	$id = $solicitudesModel->insert($info); // @todo valor id: posible problema de concurrencia
+            	
             	$info['solicitud'] = $id; // id de solicitud insertada
             	
             	# obtener campos de la tabla de la Solicitud Especifica
@@ -78,7 +61,7 @@ class FormularioController extends AbstractActionController
             	$solEspecificaModel = $this->serviceLocator->get('table-gateway')->get($tableName);
             	$res = $solEspecificaModel->insert($filtered);
             	
-            	if (array_key_exists ( 'asignatura' , $info )){            		            		
+            	if (array_key_exists ( 'asignatura' , $info )){ #caso en que solicitud involucra materia            		            		
             		# obtener campos de la tabla Asignaturas por Solicitud
             		$columns = $metadata->getColumnNames('asignaturas_por_solicitud');
             		# interseccion entre campos de form y campos de Asignaturas por Solicitud

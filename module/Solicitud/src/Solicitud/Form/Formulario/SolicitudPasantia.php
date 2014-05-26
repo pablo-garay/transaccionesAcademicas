@@ -1,122 +1,108 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudRevisionExamen extends Solicitud
+class SolicitudPasantia extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudRevisionExamen', $dbadapter);
+		parent::__construct($name = 'solicitudPasantia', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'asignatura',
-				'type' => 'Zend\Form\Element\Select',
+				'name' => 'lugar',
+				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Asignatura:',
-						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('A1'=>'A1')//$this->getSubjectsOfCareer(),
+						'label' => 'Lugar de Pasantía',
+						
 				),
 				'attributes' => array(
 						'required' => 'required',
 				),
+	
 		),
 				array (
 						'priority' => 290,
 				)
-		);
+				);
 	
 		$this->add(array(
-				'name' => 'fecha_examen',
-				'type' => 'Zend\Form\Element\Select',
+				'name' => 'direccion',
+				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Fecha de Examen:',
-						'value_options' => array(
-								'2014-05-21' => '2014-05-21',
-						)					
+						'label' => 'Dirección',
+						
 				),
 				'attributes' => array(
-					'value' =>  'dd/mm/aaaa',
-					'required' => 'required',
-				),
-	
+						'required' => 'required',
+				),	
 		),
 				array (
 						'priority' => 280,
 				)
-		);
+				);
+	
+        $this->add(array(
+        		'name' => 'correo_electronico',
+        		'type' => 'Zend\Form\Element\Email',
+        		'options' => array(
+        				'label' => 'Email de empresa',
+        		),
+        		'attributes' => array(
+        				'required' => 'required',
+        		),
+        ),
+        		array (
+        				'priority' => 270,
+        		)
+        );
+        
+        $this->add(array(
+        		'name' => 'telefono',
+        		'type' => 'Zend\Form\Element\Text',
+        		'options' => array(
+        				'label' => 'Teléfono del lugar',
+        
+        		),
+        		'attributes' => array (
+        				'required' => 'required',
+        				//'value' => '0981334566', // @todo getphone
+        		),
+        
+        ),
+        		array (
+        				'priority' => 265,
+        		)
+        );
 	
 		$this->add(array(
-				'name' => 'profesor',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Profesor:',
-						'empty_option' => 'Elija un Profesor..',
-						'value_options' => array(
-								'Profesor1' => 'Profesor1',
-								'Profesor2' => 'Profesor2'
-						),
-				),
-				'attributes' => array(
-					'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 270,
-				)
-		);
-	
-		$this->add(array(
-				'type' => 'Zend\Form\Element\Select',
-				'name' => 'oportunidad',
-				'options' => array(
-						'label' => 'Oportunidad ',
-						'value_options' => array(
-								'1' => '1',
-								'2' => '2',
-								'3' => '3',
-								'E' => 'Extraordinario'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 260,
-				)
-		);
-		
-		$this->add(array(
-				'type' => 'Zend\Form\Element\Select',
-				'name' => 'calificacion_previa',
-				'options' => array(
-						'label' => 'Calificación obtenida ',
-						'value_options' => array(
-								'1' => '1',
-								'2' => '2',
-								'3' => '3',
-								'4' => '4',
-								'5' => '5'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 260,
-				)
-		);
-	
-		$this->add(array(
+				'type' => 'Zend\Form\Element\Radio',
 				'name' => 'motivo',
+				'options' => array(
+						'label' => 'Motivo',
+						'value_options' => array(
+								'Créditos' => 'Créditos',
+								'Experiencia' => 'Experiencia',
+								'Otro' => 'Otro'
+						),
+				),
+				'attributes' => array(
+						'required' => 'required',
+				),	
+		),
+				array (
+						'priority' => 260,
+				)
+						);
+	
+		$this->add(array(
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de Motivo'
@@ -132,7 +118,41 @@ class SolicitudRevisionExamen extends Solicitud
 				)
 				);
 	
-
+		$this->add(array(
+				'name' => 'documento_adjunto',
+				'type' => 'Zend\Form\Element\Radio',
+				'options' => array(
+						'label' => 'Documento Adjunto',
+						'value_options' => array(
+								'Datos Adicionales de la Empresa' => 'Datos Adicionales de la Empresa',
+								'Otro' => 'Otro'
+						),
+				),
+				'attributes' => array(
+						'required' => 'required',
+				),	
+		),
+				array (
+						'priority' => 240,
+				)
+						);
+	
+		$this->add(array(
+				'name' => 'especificacion_adjunto',
+				'type' => 'Zend\Form\Element\Textarea',
+				'options' => array(
+						'label' => 'Especificación de documento adjunto'
+				),
+				'attributes' => array(
+						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
+						'required' => false,
+						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+				)
+		),
+				array (
+						'priority' => 230,
+				)
+				);
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -151,40 +171,7 @@ class SolicitudRevisionExamen extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'asignatura',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-							
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_examen',
-					'validators' => array (
-							array (
-									'name' => 'Date',
-							),
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'profesor',
+					'name' => 'lugar',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -196,6 +183,11 @@ class SolicitudRevisionExamen extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Nombre de lugar requerido'
+											)
+									)
 							),
 							array (
 									'name' => 'alnum',
@@ -205,12 +197,35 @@ class SolicitudRevisionExamen extends Solicitud
 											),
 											'allowWhiteSpace' => true,
 									)
-							),								
-					)			
+							),
+					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'oportunidad',
+					'name' => 'direccion',
+					'filters' => array(
+							array ( 'name' => 'StripTags' ),
+							array ( 'name' => 'StringTrim' ),
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									// @validate que sea Alphanum
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			)));
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'correo_electronico',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -221,38 +236,69 @@ class SolicitudRevisionExamen extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
+									'name' => 'EmailAddress',
 									'options' => array (
 											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
+													'emailAddressInvalidFormat' => 'Dirección de email no válida'
+											)
 									)
 							),
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Se requiere email'
+											)
+									)
+							)
 					)
 			) ) );
-			
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'calificacion_previa',
+					'name' => 'telefono',
+					'filters' => array(
+							array ( 'name' => 'digits' ),
+							array ( 'name' => 'stringtrim' ),
+					),
 					'validators' => array (
 							array (
-									'name' => 'between',
-									'options' => array(
-											'min' => 0,
-											'max' => 5,
-											'inclusive' => true
+									'name' => 'regex',
+									'options' => array (
+											'pattern' => '/^[\d-\/]+$/',
 									)
 							),
 					)
-			) ) );
+			)));		
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'motivo',
-					'allow_empty' => true,
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -271,11 +317,39 @@ class SolicitudRevisionExamen extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
+					
 					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'especificacion_adjunto',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			
 			) ) );
 			
 			
 			
+	
+			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}

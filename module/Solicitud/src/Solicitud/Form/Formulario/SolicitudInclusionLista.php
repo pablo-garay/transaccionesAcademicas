@@ -1,5 +1,5 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;

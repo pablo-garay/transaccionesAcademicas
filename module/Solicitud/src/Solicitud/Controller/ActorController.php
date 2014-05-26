@@ -1,11 +1,4 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonSolicitud for the canonical source repository
- * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Solicitud\Controller;
 
@@ -23,6 +16,8 @@ class ActorController extends AbstractActionController
 {
 	public function recepcionAction()
 	{
+		$id_solicitud = $this->params()->fromRoute('id', 0);
+		
 		$database = new DatabaseAdapter(); //instanciamos la clase cuyo metodo nos devuelve el adaptador de nuestra bd
 		$dbAdapter = $database->createService($this->getServiceLocator()); //llamamos al metodo que nos devuelve el adaptador de bd
 
@@ -30,9 +25,10 @@ class ActorController extends AbstractActionController
 
 
 		$sql = 	'SELECT s.solicitud as solicitud, mesa_entrada, fecha_solicitada, nombres, apellidos, carrera, telefono, email,
-				materia, fecha_extraordinario, motivo, archivo, cumple_fecha, inscripto_tercera_op, ausente_tercera_op
+				asignatura, fecha_extraordinario, motivo, archivo, cumple_fecha, inscripto_tercera_op, ausente_tercera_op
 				FROM usuarios as u INNER JOIN solicitudes as s ON (u.usuario = s.usuario_solicitante)
 				INNER JOIN solicitud_de_extraordinario as se ON (s.solicitud = se.solicitud)
+				INNER JOIN asignaturas_por_solicitud as aso ON (s.solicitud = aso.solicitud)
 				LEFT OUTER  JOIN documentos_adjuntos as d ON (se.solicitud = d.solicitud)
 				WHERE s.etapa_actual = \'RCDA\'
 				ORDER BY mesa_entrada DESC
@@ -112,6 +108,7 @@ class ActorController extends AbstractActionController
 			}
 
 			$this->flashmessenger()->addSuccessMessage('Operación realizada con éxito');
+			$this->flashmessenger()->addSuccessMessage(print_r($id_solicitud, TRUE));
 
 			// redirect the user to the view user action
 			return $this->redirect()->toRoute('user/default', array (
@@ -123,7 +120,7 @@ class ActorController extends AbstractActionController
 
 			//		$resultmerged = array_merge($resultUsuarios, $resultSolicitudes, $resultSolicitudEspecifica);
 			return array('data' => $selectData, 'form1'=> $form);
-		}
+	}
 
 
 	public function secretariaAction()
@@ -135,9 +132,10 @@ class ActorController extends AbstractActionController
 
 
 		$sql = 	'SELECT s.solicitud as solicitud, mesa_entrada, fecha_solicitada, nombres, apellidos,
-				carrera, telefono, email, materia, fecha_extraordinario, motivo, archivo
+				carrera, telefono, email, asignatura, fecha_extraordinario, motivo, archivo
 				FROM usuarios as u INNER JOIN solicitudes as s ON (u.usuario = s.usuario_solicitante)
 				INNER JOIN solicitud_de_extraordinario as se ON (s.solicitud = se.solicitud)
+				INNER JOIN asignaturas_por_solicitud as aso ON (s.solicitud = aso.solicitud)
 				LEFT OUTER JOIN documentos_adjuntos as d ON (se.solicitud = d.solicitud)
 				WHERE s.etapa_actual = \'DEL_SG\'
 				ORDER BY mesa_entrada DESC
@@ -255,9 +253,10 @@ class ActorController extends AbstractActionController
 
 
 		$sql = 	'SELECT s.solicitud as solicitud, mesa_entrada, fecha_solicitada, nombres, apellidos, carrera, telefono, email,
-			materia, fecha_extraordinario, motivo, archivo, cumple_fecha, inscripto_tercera_op, ausente_tercera_op
+			asignatura, fecha_extraordinario, motivo, archivo, cumple_fecha, inscripto_tercera_op, ausente_tercera_op
 			FROM usuarios as u INNER JOIN solicitudes as s ON (u.usuario = s.usuario_solicitante)
 			INNER JOIN solicitud_de_extraordinario as se ON (s.solicitud = se.solicitud)
+			INNER JOIN asignaturas_por_solicitud as aso ON (s.solicitud = aso.solicitud)
 			LEFT OUTER JOIN documentos_adjuntos as d ON (se.solicitud = d.solicitud)
 			WHERE s.etapa_actual = \'DEL_DE\'
 			ORDER BY mesa_entrada DESC
@@ -373,9 +372,10 @@ class ActorController extends AbstractActionController
 		$form = new ResultadoRequisitosForm($dbAdapter);
 
 		$sql = 	'SELECT s.solicitud as solicitud, mesa_entrada, fecha_solicitada, resultado_requisitos, nombres, apellidos, carrera, telefono, email,
-		materia, fecha_extraordinario, motivo, archivo, cumple_fecha, inscripto_tercera_op, ausente_tercera_op
+		asignatura, fecha_extraordinario, motivo, archivo, cumple_fecha, inscripto_tercera_op, ausente_tercera_op
 		FROM usuarios as u INNER JOIN solicitudes as s ON (u.usuario = s.usuario_solicitante)
 		INNER JOIN solicitud_de_extraordinario as se ON (s.solicitud = se.solicitud)
+		INNER JOIN asignaturas_por_solicitud as aso ON (s.solicitud = aso.solicitud)
 		LEFT OUTER  JOIN documentos_adjuntos as d ON (se.solicitud = d.solicitud)
 		ORDER BY mesa_entrada DESC
 		LIMIT 1';

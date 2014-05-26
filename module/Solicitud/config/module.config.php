@@ -5,6 +5,7 @@ return array(
             // below is key                      and below is the fully qualified class name
             'Solicitud\Controller\Formulario' => 'Solicitud\Controller\FormularioController',
         	'Solicitud\Controller\Actor' 	  => 'Solicitud\Controller\ActorController',
+        	'Solicitud\Controller\Lista' 	  => 'Solicitud\Controller\ListaController',
         ),
     ),
     'router' => array(
@@ -43,17 +44,31 @@ return array(
                 	'list' => array(
                 		'type'    => 'Segment',
                 		'options' => array (
-                			'route' => '/formulario/list[/:page]',
+                			'route' => '/lista/list[/:page]',
                 			'constraints' => array(
                 					'page'     => '[0-9]*',
                 			),
                 			'defaults' => array(
-                				'controller'    => 'Formulario',
+                				'controller'    => 'Lista',
                 				'action'        => 'list',
                 				'page'          => '1',
                 			),
                 		)
-                	)
+                	),
+            		'actor' => array(
+        				'type'    => 'Segment',
+		                'options' => array(
+		                    'route'    => '/actor[/:action][/:id]',
+		                    'constraints' => array(
+		                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+		                        'id'     => '[0-9]+',
+		                    ),
+		                    'defaults' => array(
+		                        'controller' => 'Actor',
+		                        'action'     => 'recepcion',
+		                    ),
+		                ),
+            		)                	
                 ),
             ),
         ),

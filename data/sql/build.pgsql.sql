@@ -1,9 +1,9 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     5/25/2014 1:12:17 AM                         */
+/* Created on:     5/25/2014 10:54:36 PM                        */
 /*==============================================================*/
--- 
--- 
+
+
 -- drop index ALUMNOS_PK;
 -- 
 -- drop table ALUMNOS;
@@ -16,23 +16,11 @@
 -- 
 -- drop table ALUMNOS_POR_TESIS;
 -- 
--- drop index CONTIENE_FK;
--- 
--- drop index ARCHIVOS_ADJUNTOS_PK;
--- 
--- drop table ARCHIVOS_ADJUNTOS;
--- 
 -- drop index TIENE_FK3;
 -- 
 -- drop index ASIGNATURAS_POR_SOLICITUD_PK;
 -- 
 -- drop table ASIGNATURAS_POR_SOLICITUD;
--- 
--- drop index POSEE_FK;
--- 
--- drop index CORREOS_ELECTRONICOS_PK;
--- 
--- drop table CORREOS_ELECTRONICOS;
 -- 
 -- drop index CREDITOS_POR_CARRERA_PK;
 -- 
@@ -62,11 +50,11 @@
 -- 
 -- drop table LOGS;
 -- 
--- drop table PARAMETROS_DE_REQUISITOS;
--- 
 -- drop index PARAMETROS_LOGS_PK;
 -- 
 -- drop table PARAMETROS_LOGS;
+-- 
+-- drop table PARAMETROS_REQUISITOS;
 -- 
 -- drop index PERMISOS_PK;
 -- 
@@ -93,8 +81,6 @@
 -- drop table ROLES_POR_USUARIO;
 -- 
 -- drop index HECHA_POR_FK;
--- 
--- drop index ES_UN_FK2;
 -- 
 -- drop index SOLICITUDES_PK;
 -- 
@@ -284,6 +270,8 @@
 -- 
 -- drop domain D_NOMBRE_MATERIA;
 -- 
+-- drop domain D_NOMBRE_PARAMETRO;
+-- 
 -- drop domain D_NOMBRE_PERMISO;
 -- 
 -- drop domain D_NOMBRE_ROL;
@@ -331,6 +319,8 @@
 -- drop domain D_TIME;
 -- 
 -- drop domain D_TIPO_CERTIFICADO;
+-- 
+-- drop domain D_TIPO_SOLICITUD;
 -- 
 -- drop domain D_TIPO_TITULO;
 -- 
@@ -386,32 +376,6 @@ CEDULA
 );
 
 /*==============================================================*/
-/* Table: ARCHIVOS_ADJUNTOS                                     */
-/*==============================================================*/
-create table ARCHIVOS_ADJUNTOS (
-   CORREO               INT4                 not null,
-   NUMERO               SERIAL not null
-      constraint CKC_NUMERO_ARCHIVOS check (NUMERO >= 1),
-   OBJETO_ADJUNTO       VARCHAR(255)         not null,
-   constraint PK_ARCHIVOS_ADJUNTOS primary key (CORREO, NUMERO)
-);
-
-/*==============================================================*/
-/* Index: ARCHIVOS_ADJUNTOS_PK                                  */
-/*==============================================================*/
-create unique index ARCHIVOS_ADJUNTOS_PK on ARCHIVOS_ADJUNTOS (
-CORREO,
-NUMERO
-);
-
-/*==============================================================*/
-/* Index: CONTIENE_FK                                           */
-/*==============================================================*/
-create  index CONTIENE_FK on ARCHIVOS_ADJUNTOS (
-CORREO
-);
-
-/*==============================================================*/
 /* Table: ASIGNATURAS_POR_SOLICITUD                             */
 /*==============================================================*/
 create table ASIGNATURAS_POR_SOLICITUD (
@@ -441,32 +405,6 @@ ASIGNATURA
 /*==============================================================*/
 create  index TIENE_FK3 on ASIGNATURAS_POR_SOLICITUD (
 SOLICITUD
-);
-
-/*==============================================================*/
-/* Table: CORREOS_ELECTRONICOS                                  */
-/*==============================================================*/
-create table CORREOS_ELECTRONICOS (
-   CORREO               SERIAL not null,
-   USUARIO              INT4                 not null,
-   DESTINATARIO         VARCHAR(255)         not null,
-   REMITENTE            VARCHAR(255)         not null,
-   CUERPO               TEXT                 not null,
-   constraint PK_CORREOS_ELECTRONICOS primary key (CORREO)
-);
-
-/*==============================================================*/
-/* Index: CORREOS_ELECTRONICOS_PK                               */
-/*==============================================================*/
-create unique index CORREOS_ELECTRONICOS_PK on CORREOS_ELECTRONICOS (
-CORREO
-);
-
-/*==============================================================*/
-/* Index: POSEE_FK                                              */
-/*==============================================================*/
-create  index POSEE_FK on CORREOS_ELECTRONICOS (
-USUARIO
 );
 
 /*==============================================================*/
@@ -589,15 +527,6 @@ PARAMETRO
 );
 
 /*==============================================================*/
-/* Table: PARAMETROS_DE_REQUISITOS                              */
-/*==============================================================*/
-create table PARAMETROS_DE_REQUISITOS (
-   PORCENTAJE_REDUCCION_ASISTENCIA VARCHAR(10)          null,
-   PORCENTAJE_EXONERACION_ASISTENCIA VARCHAR(10)          null,
-   TIEMPO_LIMITE_TRASPASO_PAGO VARCHAR(10)          null
-);
-
-/*==============================================================*/
 /* Table: PARAMETROS_LOGS                                       */
 /*==============================================================*/
 create table PARAMETROS_LOGS (
@@ -613,6 +542,14 @@ create table PARAMETROS_LOGS (
 /*==============================================================*/
 create unique index PARAMETROS_LOGS_PK on PARAMETROS_LOGS (
 PARAMETRO
+);
+
+/*==============================================================*/
+/* Table: PARAMETROS_REQUISITOS                                 */
+/*==============================================================*/
+create table PARAMETROS_REQUISITOS (
+   NOMBRE               VARCHAR(80)          not null,
+   VALOR_PARAMETRO      VARCHAR(10)          not null
 );
 
 /*==============================================================*/
@@ -716,7 +653,7 @@ ROL
 create table SOLICITUDES (
    SOLICITUD            SERIAL not null,
    USUARIO_SOLICITANTE  INT4                 not null,
-   SOL_SOLICITUD        INT4                 null,
+   TIPO_SOLICITUD       VARCHAR(80)          null,
    MESA_ENTRADA         INT4                 not null,
    MATRICULA            INT4                 null,
    CARRERA              VARCHAR(80)          not null,
@@ -736,13 +673,6 @@ create table SOLICITUDES (
 /*==============================================================*/
 create unique index SOLICITUDES_PK on SOLICITUDES (
 SOLICITUD
-);
-
-/*==============================================================*/
-/* Index: ES_UN_FK2                                             */
-/*==============================================================*/
-create  index ES_UN_FK2 on SOLICITUDES (
-SOL_SOLICITUD
 );
 
 /*==============================================================*/
@@ -1286,19 +1216,9 @@ alter table ALUMNOS_POR_TESIS
       references SOLICITUD_DE_TESIS (SOLICITUD)
       on delete restrict on update restrict;
 
-alter table ARCHIVOS_ADJUNTOS
-   add constraint FK_ARCHIVOS_CONTIENE_CORREOS_ foreign key (CORREO)
-      references CORREOS_ELECTRONICOS (CORREO)
-      on delete restrict on update restrict;
-
 alter table ASIGNATURAS_POR_SOLICITUD
    add constraint FK_ASIGNATU_TIENE_SOLICITU foreign key (SOLICITUD)
       references SOLICITUDES (SOLICITUD)
-      on delete restrict on update restrict;
-
-alter table CORREOS_ELECTRONICOS
-   add constraint FK_CORREOS__POSEE_USUARIOS foreign key (USUARIO)
-      references USUARIOS (USUARIO)
       on delete restrict on update restrict;
 
 alter table DOCUMENTOS_ADJUNTOS
@@ -1344,11 +1264,6 @@ alter table ROLES_POR_USUARIO
 alter table ROLES_POR_USUARIO
    add constraint FK_ROLES_PO_TIENE_ASI_USUARIOS foreign key (USUARIO)
       references USUARIOS (USUARIO)
-      on delete restrict on update restrict;
-
-alter table SOLICITUDES
-   add constraint FK_SOLICITU_ES_UN_SOLICITU foreign key (SOL_SOLICITUD)
-      references SOLICITUD_DE_TUTORIA_DE_CATEDRA (SOLICITUD)
       on delete restrict on update restrict;
 
 alter table SOLICITUDES

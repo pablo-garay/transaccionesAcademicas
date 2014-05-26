@@ -1,37 +1,75 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudRevisionEscolaridad extends Solicitud
+class SolicitudDesinscripcionCurso extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudRevisionEscolaridad', $dbadapter);
+		parent::__construct($name = 'solicitudDesinscripcionCurso', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
 
+
+	
+		$this->add(array(
+				'name' => 'curso_completo',
+				'type' => 'Zend\Form\Element\Checkbox',
+				'options' => array(
+						'label' => 'Curso completo ',
+						//'value_options' => 'Curso completo',
+				),	
+		),
+				array (
+						'priority' => 280,
+				)
+						);
+		
+		$this->add(array(
+				'name' => 'por_asignatura',
+				'type' => 'Zend\Form\Element\Checkbox',
+				'options' => array(
+						'label' => 'Por asignatura',						
+				),		
+		),
+				array (
+						'priority' => 275,
+				)
+		);
+		
+		$this->add(array(
+				'name' => 'cod_asignatura',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Código Asignatura:',
+						'empty_option' => 'Seleccione código de asignatura ',
+						'value_options' => array('123'=>'123')//$this->getSubjectsOfCareer(),
+				),		
+		),
+				array (
+						'priority' => 270,
+				)
+		);
+		
 		$this->add(array(
 				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('asign1'=>'asign1')//$this->getSubjectsOfCareer(),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),	
+						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+				),		
 		),
 				array (
-						'priority' => 290,
+						'priority' => 260,
 				)
 		);
-	
+
 		
 	
 		// This is the special code that protects our form beign submitted from automated scripts
@@ -49,9 +87,39 @@ class SolicitudRevisionEscolaridad extends Solicitud
 		if (! $this->filter) {
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
-	
+			
+			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'asignatura',
+					'name' => 'curso_completo',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+				
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'por_asignatura',
+					'validators' => array (
+							array (
+									'name' => 'between',
+									'options' => array(
+											'min' => 0,
+											'max' => 1,
+											'inclusive' => true
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'cod_asignatura',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -62,8 +130,29 @@ class SolicitudRevisionEscolaridad extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'NotEmpty',
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),								
+					)
+			) ) );
+	
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'asignatura',
+					'allow_empty' => true,
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
 							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
 							array (
 									'name' => 'alnum',
 									'options' => array (
@@ -72,10 +161,12 @@ class SolicitudRevisionEscolaridad extends Solicitud
 											),
 											'allowWhiteSpace' => true,
 									)
-							),
-							
+							),							
 					)
 			) ) );
+			
+
+			
 			
 	
 			$this->filter = $inputFilter;

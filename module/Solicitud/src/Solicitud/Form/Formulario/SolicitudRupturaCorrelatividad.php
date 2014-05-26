@@ -1,46 +1,45 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudTraspasoPago extends Solicitud
+class SolicitudRupturaCorrelatividad extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudTraspasoPagoExamen', $dbadapter);
+		parent::__construct($name = 'solicitudRupturaCorrelatividad', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
-
+	
 		$this->add(array(
-				'name' => 'asignatura',
+				'name' => 'semestre',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Asignatura',
-						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('asign1'=>'asign1')//$this->getSubjectsOfCareer(),
+						'label' => 'Semestre ',
+						'empty_option' => 'Seleccione su semestre..',
+						'value_options' => array('1'=>'1')//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
-				),	
+				),
 		),
 				array (
 						'priority' => 290,
 				)
 		);
-	
-
-	
+		
 		$this->add(array(
-				'name' => 'seccion',
-				'type' => 'Zend\Form\Element\Text',
+				'name' => 'asignatura',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Sección',
-						
-						),
+						'label' => 'Asignatura:',
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => array('2'=>'2')//$this->getSubjectsOfCareer(),
+				),
 				'attributes' => array(
 						'required' => 'required',
 				),
@@ -48,87 +47,61 @@ class SolicitudTraspasoPago extends Solicitud
 				array (
 						'priority' => 280,
 				)
-		);
-		
+				);
+	
 		$this->add(array(
-				'name' => 'oportunidad_pagada',
+				'name' => 'semestre_asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Oportunidad pagada',
-						'value_options' => array(
-								'1' => '1',
-								'2' => '2',				
+						'label' => 'Semestre de Asignatura ',
+						'empty_option' => 'Seleccione su semestre..',
+						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
 				),
-			),
 		),
 				array (
 						'priority' => 270,
 				)
 		);
 		
-		
 		$this->add(array(
-				'name' => 'fecha_oportunidad_pagada',
+				'name' => 'prerrequisito',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Fecha de Oportunidad pagada',
-						'value_options' => array(
-								'2014-05-21' => '2014-05-21',
-						)							
+						'label' => 'Asignatura Prerrequisito ',
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
-						'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
 				),
-		
 		),
 				array (
 						'priority' => 260,
 				)
 		);
-	
+		
 		$this->add(array(
-				'name' => 'oportunidad_a_pagar',
+				'name' => 'semestre_prerrequisito',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Oportunidad a pagar',
-						'value_options' => array(
-								'2' => '2',
-								'3' => '3',
-						),		
+						'label' => 'Semestre de Asignatura Prerrequisito ',
+						'empty_option' => 'Seleccione su semestre..',
+						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
 				),
-			),
-			array (
-					'priority' => 250,
-			)
-		);
-		
-		
-		$this->add(array(
-				'name' => 'fecha_oportunidad_a_pagar',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Fecha de Oportunidad a pagar',
-						'value_options' => array(
-								'2014-05-21' => '2014-05-21',
-						)									
-				),
-				'attributes' => array(
-						'value' =>  'dd/mm/aaaa',
-						'required' => 'required',
-				),
-		
 		),
 				array (
-						'priority' => 240,
+						'priority' => 250,
 				)
 		);
+	
+
+	
 
 	
 		// This is the special code that protects our form beign submitted from automated scripts
@@ -148,6 +121,24 @@ class SolicitudTraspasoPago extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
+                    'name' => 'semestre',
+                    'filters' => array(
+                            array ( 'name' => 'digits' ),
+    
+                    ),
+                    'validators' => array (
+                            array (
+                                    'name' => 'digits',
+                                    'options' => array (
+                                            'messages' => array(
+                                    						'notDigits' => 'Solo especifique en números',	
+                                    		),
+                                    )
+                            ),
+                    )
+            )));
+			
+			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'asignatura',
 					'filters' => array (
 							array (
@@ -159,7 +150,7 @@ class SolicitudTraspasoPago extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'NotEmpty',
+									'name' => 'notEmpty',
 							),
 							array (
 									'name' => 'alnum',
@@ -175,7 +166,25 @@ class SolicitudTraspasoPago extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'seccion',
+					'name' => 'semestre_asignatura',
+					'filters' => array(
+							array ( 'name' => 'digits' ),
+			
+					),
+					'validators' => array (
+							array (
+									'name' => 'digits',
+									'options' => array (
+											'messages' => array(
+													'notDigits' => 'Solo especifique en números',
+											),
+									)
+							),
+					)
+			)));
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'prerrequisito',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -186,9 +195,6 @@ class SolicitudTraspasoPago extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'NotEmpty',
-							),
-							array (
 									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
@@ -197,62 +203,29 @@ class SolicitudTraspasoPago extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-							
+			
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'oportunidad_pagada',
+					'name' => 'semestre_prerrequisito',
+					'filters' => array(
+							array ( 'name' => 'digits' ),
+								
+					),
 					'validators' => array (
 							array (
-								'name' => 'between',
-								'options' => array(
-										'min' => 0,
-										'max' => 3,
-										'inclusive' => true
-								)
-							),
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_oportunidad_pagada',
-					'validators' => array (
-							array (
-									'name' => 'Date',
-							),						
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'oportunidad_a_pagar',
-					'validators' => array (
-							array (
-									'name' => 'between',
-									'options' => array(
-											'min' => 1,
-											'max' => 3,
-											'inclusive' => true
+									'name' => 'digits',
+									'options' => array (
+											'messages' => array(
+													'notDigits' => 'Solo especifique en números',
+											),
 									)
 							),
 					)
-			) ) );
+			)));
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_oportunidad_a_pagar',
-					'validators' => array (
-							array (
-									'name' => 'Date',
-							),
-					)
-			) ) );
-			
-			
-			
-			
-	
-			// @todo: posiblemente agregar filtros a los demas campos
-	
+
 			$this->filter = $inputFilter;
 		}
 	
@@ -283,15 +256,14 @@ class SolicitudTraspasoPago extends Solicitud
 	
 	}
 	
-	public function getProfesoresDeAsignatura()
+	public function getPrerrequisitoDeMateria()
 	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
+		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
+		$carreraElegida = $this->get('carrera')->getAttribute('value');
+	
 	}
 	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
+
 	
 
 	

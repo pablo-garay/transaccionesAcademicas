@@ -1,119 +1,87 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudInscripcionTardia extends Solicitud
+class SolicitudHomologacionMaterias extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudInscripcionTardia', $dbadapter);
+		parent::__construct($name = 'solicitudHomologacionMaterias', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
-		
+
 		$this->add(array(
-				'name' => 'asignatura',
+				'name' => 'carrera_anterior',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Asignatura:',
-						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('Prueba'=>'Prueba')//$this->getSubjectsOfCareer(),
+						'label' => 'Carrera a homologar ',
+						'empty_option' => 'Seleccione una carrera..',
+						'value_options' => array('Carrera3'=>'Carrera3')//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
-				),
+				),	
 		),
-		
 				array (
 						'priority' => 290,
 				)
-		);
-		
+				);
+	
 		$this->add(array(
-				'name' => 'fecha_de_examen',
+				'name' => 'plan_de_estudio_previo',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Fecha de Examen',
-						'value_options' => array(
-								'2014-05-21' => '2014-05-21',
-						)
+						'label' => 'Plan de estudio de carrera a homologar ',
+						'value_options' => array('1970'=>'1970'),
+					
 				),
 				'attributes' => array(
-						'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
-				),
-		
+				),	
 		),
 				array (
 						'priority' => 280,
 				)
-		);
-		
+						);
+	
 		$this->add(array(
-				'type' => 'Zend\Form\Element\Select',
-				'name' => 'oportunidad',
-				'options' => array(
-						'label' => 'Oportunidad ',
-						'empty_option' => 'Elija una Oportunidad..',
-						'value_options' => array(
-								'1' => '1',
-								'2' => '2',
-								'3' => '3',
-								'E' => 'Extraordinario'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 270,
-				)
-		);
-		
-		$this->add(array(
+				'name' => 'documento_adjunto',
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'motivo',
 				'options' => array(
-						'label' => 'Motivo',
+						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'Enfermedad' => 'Enfermedad',
-								'Duelo' => 'Duelo',
-								'Trabajo' => 'Trabajo',
-								'Repitente' => 'Repitente',
+								'Certificado de Estudios' => 'Certificado de Estudios',
 								'Otro' => 'Otro'
 						),
 				),
-				'attributes' => array(
-						'required' => 'required',
-				),
+	
 		),
 				array (
-						'priority' => 260,
+						'priority' => 240,
 				)
-		);
-		
+						);
+	
 		$this->add(array(
-				'name' => 'especificacion_motivo',
+				'name' => 'especificacion_adjunto',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						'label' => 'Especificación de documento adjunto'
 				),
 				'attributes' => array(
-						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => 'required',
+						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
+						'required' => false,
+						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
 				)
 		),
 				array (
-						'priority' => 250,
+						'priority' => 230,
 				)
-		);
-	
-	
+				);
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -132,43 +100,7 @@ class SolicitudInscripcionTardia extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'asignatura',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'notEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-							
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'fecha_de_examen',
-					'validators' => array (
-							array (
-									'name' => 'Date',
-							),
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'oportunidad',
+					'name' => 'carrera_anterior',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -180,21 +112,58 @@ class SolicitudInscripcionTardia extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
+													'isEmpty' => 'Carrera requerida'
+											)
+									),
+									array (
+											'name' => 'alnum',
+											'options' => array (
+													'messages' => array (
+															'notAlnum' => 'Se requieren sólo números y letras'
+													),
+													'allowWhiteSpace' => true,
+											)
+									),
+							)
 					)
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'motivo',
+					'name' => 'plan_de_estudio_previo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Carrera requerida'
+											)
+									),
+									array (
+											'name' => 'alnum',
+											'options' => array (
+													'messages' => array (
+															'notAlnum' => 'Se requieren sólo números y letras'
+													),
+													'allowWhiteSpace' => true,
+											)
+									),
+							)
+					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'documento_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -216,10 +185,9 @@ class SolicitudInscripcionTardia extends Solicitud
 			
 					)
 			) ) );
-
-			
+				
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'especificacion_motivo',
+					'name' => 'especificacion_adjunto',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -238,11 +206,15 @@ class SolicitudInscripcionTardia extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-					
+			
 					)
+						
 			) ) );
-
-			// @todo: validar fecha no pase dia actual
+			
+			
+			
+	
+			// @todo: posiblemente agregar filtros a los demas campos
 	
 			$this->filter = $inputFilter;
 		}
@@ -274,11 +246,15 @@ class SolicitudInscripcionTardia extends Solicitud
 	
 	}
 	
-	public function getFechaDeExamen()
+	public function getProfesoresDeAsignatura()
 	{
-		//@todo: Rescatar fecha de examen
+		//@todo: Rescatar profesores titulares según la asignatura elegida
 	}
 	
+	public function getFechaDeExtraordinario()
+	{
+		//@todo: Rescatar los datos de usuario según la asignatura elegida
+	}
 	
 
 	

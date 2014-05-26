@@ -1,109 +1,103 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudTesis extends Solicitud
+class SolicitudMateriaFueraMallaCurricular extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudTesis', $dbadapter);
+		parent::__construct($name = 'solicitudMateriaFueraMallaCurricular', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'tema_tesis',
-				'type' => 'Zend\Form\Element\Text',
+				'name' => 'Carrera_asignatura',//de la tabla asignatura
+				'type' => 'Zend\Form\Element\Select',
+		
 				'options' => array(
-						'label' => 'Tema de Tesis ',			
+						'label' => 'Carrera',
+						'empty_option' => 'Elija su carrera',
+						'value_options' => array(
+								'Carrera1' => 'Carrera1',
+								'Carrera2' => 'Carrera2',
+								'Carrera3' => 'Carrera3',
+								'Carrera4' => 'Carrera4',
+		
+						),
+		
 				),
 				'attributes' => array(
 						'required' => 'required',
 				),
+		),
+				array (
+						'priority' => 295,
+				)
+		);
+		
+		$this->add(array(
+				'name' => 'Asignatura',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Asignatura:',
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => array('Calculo'=>'Calculo')//$this->getSubjectsOfCareer(),
+				),
+				'attributes' => array(
+						'required' => 'required',
+				),
+	
 		),
 				array (
 						'priority' => 290,
 				)
 				);
-		
-		
-		$this->add(array(
-				'name' => 'integrante',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Integrante:',
-						'empty_option' => 'Elija Integrante',
-						'value_options' => array(
-								'Alumno1' => 'Alumno1',
-								'Alumno2' => 'Alumno2'
-						),
-				),
-		
-		),
-				array (
-						'priority' => 270,
-				)
-		);
-		
-		$this->add(array(
-				'name' => 'profesor',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Profesor:',
-						'empty_option' => 'Elija Tutor..',
-						'value_options' => array(
-								'Profesor1' => 'Profesor1',
-								'Profesor2' => 'Profesor2'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),	
-		),
-				array (
-						'priority' => 270,
-				)
-		);
+
 	
 
 	
 		$this->add(array(
-				'name' => 'documento_adjunto',
 				'type' => 'Zend\Form\Element\Radio',
+				'name' => 'motivo',
 				'options' => array(
-						'label' => 'Documento Adjunto',
+						'label' => 'Motivo',
 						'value_options' => array(
-								'Descripción de Tema de Tesis' => 'Descripción de Tema de Tesis',
+								'Créditos' => 'Créditos',
 								'Otro' => 'Otro'
 						),
+				),
+				'attributes' => array(
+						'required' => 'required',								
 				),
 	
 		),
 				array (
-						'priority' => 240,
+						'priority' => 260,
 				)
 						);
 	
 		$this->add(array(
-				'name' => 'especificacion_adjunto',
+				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de documento adjunto'
+						'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
-						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
+						'placeholder' => 'Agregue alguna información adicional aquí...',
 						'required' => false,
-						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
 				)
 		),
 				array (
-						'priority' => 230,
+						'priority' => 250,
 				)
 				);
+	
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -122,7 +116,7 @@ class SolicitudTesis extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'tema_tesis',
+					'name' => 'Asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -133,9 +127,6 @@ class SolicitudTesis extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'NotEmpty',
-							),
-							array (
 									'name' => 'alnum',
 									'options' => array (
 											'messages' => array (
@@ -144,69 +135,13 @@ class SolicitudTesis extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
+							
 					)
 			) ) );
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'integrante',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-					)
-			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-									'options' => array (
-											'messages' => array (
-													'isEmpty' => 'El Profesor es requerido'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'documento_adjunto',
+					'name' => 'motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -227,10 +162,13 @@ class SolicitudTesis extends Solicitud
 							),
 								
 					)
-			) ) );		
+			) ) );
+			
+
+
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'especificacion_adjunto',
+					'name' => 'especificacion_motivo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -239,20 +177,21 @@ class SolicitudTesis extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
-					'validators' => array (
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-								
-					)
-			
+
 			) ) );
+			
+// 			$inputFilter->add ( $factory->createInput ( array (
+// 					'name' => 'Especificacion_adjunto',
+// 					'filters' => array (
+// 							array (
+// 									'name' => 'StripTags'
+// 							),
+// 							array (
+// 									'name' => 'StringTrim'
+// 							)
+// 					),
+			
+// 			) ) );
 			
 			
 			

@@ -1,5 +1,5 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -19,7 +19,7 @@ class DecanoSolicitudExtraordinario extends Form
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'Observaciones', // de la tabla solicitudes
+				'name' => 'observaciones', // de la tabla solicitudes
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 					//	'label' => 'Observaciones',
@@ -156,7 +156,8 @@ class DecanoSolicitudExtraordinario extends Form
 			$factory = new InputFactory ();
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Observaciones',
+					'allow_empty' => true,
+					'name' => 'observaciones',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

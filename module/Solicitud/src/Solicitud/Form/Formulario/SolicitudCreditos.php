@@ -1,95 +1,88 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudColaboradorCatedra extends Solicitud
+class SolicitudCreditos extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudColaboradorCatedra', $dbadapter);
+		parent::__construct($name = 'solicitudCreditos', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
-
-
 	
 		$this->add(array(
-				'name' => 'profesor',
+				'name' => 'tipo_actividad',
 				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Profesor:',
-						'empty_option' => 'Elija un Profesor..',
-						'value_options' => array(
-								'Profesor1' => 'Profesor1',
-								'Profesor2' => 'Profesor2'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),	
-		),
-				array (
-						'priority' => 850,
-				)
-						);
-		
-	
-		$this->add(array(
-				'name' => 'asignatura',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Asignatura:',
-						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('Asignatura1'=>'Asignatura1')//$this->getSubjectsOfCareer(),
-				),
 				'attributes' => array(
 						'required' => 'required',
 				),
-		),
-				array (
-						'priority' => 840,
-				)
-		);
-		$this->add(array(
-				'name' => 'carreras_profesor',
-				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Carreras',
-		
-							
-				),
-				'attributes' => array(
-						'value' =>  'Ingeniería Informática y Electrónica',
-						'required' => 'required',
-// 						'disabled' => 'disabled'
+						'label' => 'Tipo de actividad',
+						'empty_option' => 'Seleccione una actividad ',
+						'value_options' => array('Materias'=>'Materias',
+								'Cursos' => 'Cursos',
+								' ' => ' ')//$this->getSubjectsOfCareer(),
 				),
 		
 		),
 				array (
-						'priority' => 830,
+						'priority' => 290,
 				)
 		);
 		
-	
+		
 		$this->add(array(
+				'name' => 'fecha_inicio',
+				'type' => 'Zend\Form\Element\Date',
+				'attributes' => array(
+						'required' => 'required',
+				),
+				'options' => array(
+						'label' => 'Fecha de Inicio de la Actividad',
+				),
+		),
+				array (
+						'priority' => 280,
+				)
+		);
+		
+		
+		$this->add(array(
+				'name' => 'fecha_fin',
+				'type' => 'Zend\Form\Element\Date',
+				'attributes' => array(
+						'required' => 'required',
+				),
+				'options' => array(
+						'label' => 'Fecha de Fin de la Actividad',
+				),
+		),
+				array (
+						'priority' => 270,
+				)
+		);
+		
+		
+		$this->add ( array (
 				'name' => 'descripcion_actividades',
 				'type' => 'Zend\Form\Element\Textarea',
-				'options' => array(
-						'label' => 'Descripción de actividades',
-
-				),
-				'attributes' => array(
+				'attributes' => array (
+						'placeholder' => 'Describa la actividad realizada...',
 						'required' => 'required',
 				),
+				'options' => array (
+						'label' => 'Descripción de la Actividad'
+				)
 		),
 				array (
-						'priority' => 240,
-				)
-						);
+						'priority' => 260,
+		) );	
+
 	
 	
 		// This is the special code that protects our form beign submitted from automated scripts
@@ -108,9 +101,8 @@ class SolicitudColaboradorCatedra extends Solicitud
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
 			
-			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'profesor',
+					'name' => 'tipo_actividad',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -134,63 +126,29 @@ class SolicitudColaboradorCatedra extends Solicitud
 							),
 								
 					)
-			
 			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fecha_inicio',
+					'validators' => array (
+							array (
+									'name' => 'Date',
+							),
+					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'fecha_fin',
+					'validators' => array (
+							array (
+									'name' => 'Date',
+							),
+					)
+			) ) );				
 	
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'asignatura',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-							
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'carreras_profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-							
-					)
-			) ) );
-			
+
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'descripcion_actividades',
 					'filters' => array (
@@ -213,15 +171,14 @@ class SolicitudColaboradorCatedra extends Solicitud
 											),
 											'allowWhiteSpace' => true,
 									)
-							),
-			
+							),								
 					)
-						
 			) ) );
 			
 			
 			
-
+			//@todo verificar, validar fechas no sean futuro
+			
 	
 			$this->filter = $inputFilter;
 		}
@@ -253,15 +210,11 @@ class SolicitudColaboradorCatedra extends Solicitud
 	
 	}
 	
-	public function getProfesoresDeAsignatura()
+	public function getFechaDeExamen()
 	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
+		//@todo: Rescatar fecha de examen
 	}
 	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
 	
 
 	

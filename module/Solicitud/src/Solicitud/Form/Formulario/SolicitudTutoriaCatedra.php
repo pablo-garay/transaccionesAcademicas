@@ -1,31 +1,33 @@
 <?php
-namespace Solicitud\Form;
+namespace Solicitud\Form\Formulario;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
-class SolicitudPasantia extends Solicitud
+class SolicitudTutoriaCatedra extends Solicitud
 {
 	
 	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudPasantia', $dbadapter);
+		parent::__construct($name = 'solicitudTutoriaCatedra', $dbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
-				'name' => 'lugar',
-				'type' => 'Zend\Form\Element\Text',
+				'name' => 'asignatura',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Lugar de Pasantía',
-						
+						'label' => 'Asignatura:',
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => array(
+												'Asignatura0'=>'Asignatura0'
+											)
 				),
 				'attributes' => array(
 						'required' => 'required',
-				),
-	
+				),	
 		),
 				array (
 						'priority' => 290,
@@ -33,53 +35,24 @@ class SolicitudPasantia extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'direccion',
-				'type' => 'Zend\Form\Element\Text',
+				'name' => 'profesor',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Dirección',
-						
+						'label' => 'Profesor:',
+						'empty_option' => 'Elija un Profesor..',
+						'value_options' => array(
+								'Profesor1' => 'Profesor1',
+								'Profesor2' => 'Profesor2'
+						),
 				),
 				'attributes' => array(
 						'required' => 'required',
-				),	
+				),
 		),
 				array (
-						'priority' => 280,
+						'priority' => 270,
 				)
-				);
-	
-        $this->add(array(
-        		'name' => 'correo_electronico',
-        		'type' => 'Zend\Form\Element\Email',
-        		'options' => array(
-        				'label' => 'Email de empresa',
-        		),
-        		'attributes' => array(
-        				'required' => 'required',
-        		),
-        ),
-        		array (
-        				'priority' => 270,
-        		)
-        );
-        
-        $this->add(array(
-        		'name' => 'telefono',
-        		'type' => 'Zend\Form\Element\Text',
-        		'options' => array(
-        				'label' => 'Teléfono del lugar',
-        
-        		),
-        		'attributes' => array (
-        				'required' => 'required',
-        				//'value' => '0981334566', // @todo getphone
-        		),
-        
-        ),
-        		array (
-        				'priority' => 265,
-        		)
-        );
+						);
 	
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -89,6 +62,7 @@ class SolicitudPasantia extends Solicitud
 						'value_options' => array(
 								'Créditos' => 'Créditos',
 								'Experiencia' => 'Experiencia',
+								'Trabajo' => 'Trabajo',
 								'Otro' => 'Otro'
 						),
 				),
@@ -105,7 +79,7 @@ class SolicitudPasantia extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						'label' => 'Especificación de motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
@@ -119,18 +93,19 @@ class SolicitudPasantia extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'documento_adjunto',
+				'name' => 'tipo', // de la tabla documentos adjuntos
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'Datos Adicionales de la Empresa' => 'Datos Adicionales de la Empresa',
+								'Autorización Profesor' => 'Autorización Profesor',
 								'Otro' => 'Otro'
 						),
 				),
 				'attributes' => array(
 						'required' => 'required',
-				),	
+				),
+	
 		),
 				array (
 						'priority' => 240,
@@ -138,7 +113,7 @@ class SolicitudPasantia extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'especificacion_adjunto',
+				'name' => 'especificacion_adjunto', //de la tabla documentos adjuntos
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
 						'label' => 'Especificación de documento adjunto'
@@ -171,7 +146,32 @@ class SolicitudPasantia extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'lugar',
+					'name' => 'asignatura',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+							
+					)
+			) ) );
+		
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'profesor',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -185,90 +185,13 @@ class SolicitudPasantia extends Solicitud
 									'name' => 'NotEmpty',
 									'options' => array (
 											'messages' => array (
-													'isEmpty' => 'Nombre de lugar requerido'
-											)
-									)
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
+													'isEmpty' => 'El Profesor es requerido'
 											),
 											'allowWhiteSpace' => true,
-									)
-							),
-					)
-			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'direccion',
-					'filters' => array(
-							array ( 'name' => 'StripTags' ),
-							array ( 'name' => 'StringTrim' ),
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									// @validate que sea Alphanum
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-					)
-			)));
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'correo_electronico',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'EmailAddress',
-									'options' => array (
-											'messages' => array (
-													'emailAddressInvalidFormat' => 'Dirección de email no válida'
-											)
-									)
-							),
-							array (
-									'name' => 'NotEmpty',
-									'options' => array (
-											'messages' => array (
-													'isEmpty' => 'Se requiere email'
-											)
 									)
 							)
 					)
 			) ) );
-			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'telefono',
-					'filters' => array(
-							array ( 'name' => 'digits' ),
-							array ( 'name' => 'stringtrim' ),
-					),
-					'validators' => array (
-							array (
-									'name' => 'regex',
-									'options' => array (
-											'pattern' => '/^[\d-\/]+$/',
-									)
-							),
-					)
-			)));		
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'motivo',
@@ -317,7 +240,7 @@ class SolicitudPasantia extends Solicitud
 											'allowWhiteSpace' => true,
 									)
 							),
-					
+								
 					)
 			) ) );
 			
@@ -342,8 +265,7 @@ class SolicitudPasantia extends Solicitud
 									)
 							),
 								
-					)
-			
+					)			
 			) ) );
 			
 			
@@ -384,11 +306,6 @@ class SolicitudPasantia extends Solicitud
 	public function getProfesoresDeAsignatura()
 	{
 		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
 	}
 	
 

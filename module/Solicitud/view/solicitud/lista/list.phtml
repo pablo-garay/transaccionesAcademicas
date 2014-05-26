@@ -1,0 +1,56 @@
+<?php
+$title = 'Lista de solicitudes';
+$this->headTitle($title);
+?>
+
+<?php if (count($this->solicitudes)): ?>
+
+<table class="table table-hover">
+<thead>
+    <tr>
+        <th><?= $this->translate('Tipo de solicitud') ?></th>
+        <th><?= $this->translate('Fecha solicitada') ?></th>
+        <th><?= $this->translate('Estado') ?></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+<?php foreach ($this->solicitudes as $solicitud): ?>
+   <tr>
+            <td><?= $this->escapehtml($solicitud['tipo_solicitud']) ?></td>
+            <td><?= $this->escapehtml($solicitud['fecha_solicitada']) ?></td>
+            <td><?= $this->escapehtml($solicitud['estado_solicitud']) ?> </td>
+            <td><a href="<?= $this->url('solicitud/actor', 
+            		array('controller'=> 'actor', 'action'=>'recepcion', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Visualizar') ?></a></td>
+            <td><?php
+//                 if($this->user->getId() == $solicitud['id'] || $this->acl->isAllowed($this->user->getRole(),'actor','edit')) :
+//             ?>
+            <a href="<?= $this->url('solicitud/actor', 
+            		array('controller'=> 'actor', 'action'=>'edit', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Editar') ?></a>
+            <?php
+//                 endif;
+//             ?>
+<!--             </td> -->
+            <td><?php
+//                 if($this->acl->isAllowed($this->user->getRole(),'actor','delete')) :
+//             ?>
+            <a href="<?= $this->url('solicitud/actor', array('controller'=> 'actor', 'action'=>'delete', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Eliminar') ?></a>
+            <?php
+//                 endif;
+//             ?>
+<!--             </td> -->
+    </tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php endif; ?>
+
+<br><p>&nbsp;&nbsp;</p>
+
+<?php echo $this->paginationControl($this->solicitudes,
+                                    'Sliding',
+                                    'paginator/sliding',
+                                    array('route' => 'solicitud/list')
+                                    );
