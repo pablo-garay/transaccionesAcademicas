@@ -1,5 +1,5 @@
 <?php
-namespace Solicitud\Form\Formulario;
+namespace Solicitud\Form\Actor;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -8,7 +8,7 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
 
-class ResultadoRequisitos extends Form
+class AlumnoSolicitud extends Form
 {
 
 	protected $adapter;
@@ -30,7 +30,7 @@ class ResultadoRequisitos extends Form
 				),
 		),
 				array (
-						'priority' => 480,
+						'priority' => 490,
 				)
 		);
 		$this->add(array(
@@ -64,7 +64,7 @@ class ResultadoRequisitos extends Form
 			$factory = new InputFactory ();
 
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Observaciones',
+					'name' => 'observaciones',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

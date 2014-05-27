@@ -1,5 +1,5 @@
 <?php
-namespace Solicitud\Form\Formulario;
+namespace Solicitud\Form\Actor;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -8,7 +8,7 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
 
-class RecepcionSolicitudExtraordinario extends Form
+class RecepcionSolicitud extends Form
 {
 
 	protected $adapter;
@@ -21,6 +21,19 @@ class RecepcionSolicitudExtraordinario extends Form
 
 		//This is the submit button
 
+		$this->add(array(
+				'name' => 'VistoBueno',
+				'type' => 'Zend\Form\Element\Submit',
+				'attributes' => array(
+						'value' => 'Visto Bueno y Derivar',
+						'required' => 'false',
+		
+				),
+		),
+				array (
+						'priority' => 490,
+				)
+		);
 
 		$this->add(array(
 				'name' => 'Anular',
@@ -50,19 +63,6 @@ class RecepcionSolicitudExtraordinario extends Form
 				)
 		);
 
-		$this->add(array(
-				'name' => 'VistoBueno',
-				'type' => 'Zend\Form\Element\Submit',
-				'attributes' => array(
-						'value' => 'Visto Bueno y Derivar',
-						'required' => 'false',
-
-				),
-		),
-				array (
-						'priority' => 460,
-				)
-		);
 
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(

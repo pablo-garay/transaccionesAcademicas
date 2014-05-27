@@ -110,46 +110,58 @@ return array(
 			array(
 				'label' => 'Solicitudes',
 				'route' => 'solicitud/default',
-				'controller'=> 'formulario',
+				'controller'=> 'lista',
 				'pages' => array(
 					array(
 						'label' => 'Lista de Solicitudes',
-						'route' => 'solicitud/list',
+						'route' => 'solicitud/default',
+						'controller' => 'lista',
+						'action' => 'todas',
 // 						// acl
 // 						'resource'   => 'test',
 // 						'privilege'  => 'list',
 					),
 					array(
 						'label' => 'Lista de Solicitudes Pendientes',
-						'route' => 'solicitud/list',
+						'route' => 'solicitud/default',
+						'controller' => 'lista',
+						'action' => 'pendientes',
 // 						// acl
 // 						'resource'   => 'test',
 // 						'privilege'  => 'list',
 					),
 					array(
 						'label' => 'Lista de Solicitudes Nuevas',
-						'route' => 'solicitud/list',
+						'route' => 'solicitud/default',
+						'controller' => 'lista',
+						'action' => 'nuevas',
 // 						// acl
 // 						'resource'   => 'test',
 // 						'privilege'  => 'list',
 					),					
 					array(
 						'label' => 'Lista de Solicitudes Aprobadas',
-						'route' => 'solicitud/list',
+						'route' => 'solicitud/default',
+						'controller' => 'lista',
+						'action' => 'aprobadas',							
 // 						// acl
 // 						'resource'   => 'test',
 // 						'privilege'  => 'list',
 					),
 					array(
 						'label' => 'Lista de Solicitudes Rechazadas',
-						'route' => 'solicitud/list',
+						'route' => 'solicitud/default',
+						'controller' => 'lista',
+						'action' => 'rechazadas',							
 // 						// acl
 // 						'resource'   => 'test',
 // 						'privilege'  => 'list',
 					),
 					array(
 						'label' => 'Lista de Solicitudes Anuladas',
-						'route' => 'solicitud/list',
+						'route' => 'solicitud/default',
+						'controller' => 'lista',
+						'action' => 'anuladas',							
 // 						// acl
 // 						'resource'   => 'test',
 // 						'privilege'  => 'list',

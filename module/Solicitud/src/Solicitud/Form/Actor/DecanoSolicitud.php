@@ -1,5 +1,5 @@
 <?php
-namespace Solicitud\Form\Formulario;
+namespace Solicitud\Form\Actor;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -8,7 +8,7 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
 
-class DecanoSolicitudExtraordinario extends Form
+class DecanoSolicitud extends Form
 {
 
 	protected $adapter;
