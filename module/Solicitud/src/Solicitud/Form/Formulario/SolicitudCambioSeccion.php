@@ -36,7 +36,10 @@ class SolicitudCambioSeccion extends Solicitud
 						'empty_option' => 'Seleccione una asignatura..',
 						'value_options' => $selectDataMat,
 				),
-
+				'attributes' => array(
+						// Below: HTML5 way to specify that the input will be phone number
+						'required' => 'required',
+				),
 		),
 				array (
 						'priority' => 350,
@@ -69,7 +72,6 @@ class SolicitudCambioSeccion extends Solicitud
 						),
 				),
 				'attributes' => array(
-						// Below: HTML5 way to specify that the input will be phone number
 						'required' => 'required',
 				),
 		
