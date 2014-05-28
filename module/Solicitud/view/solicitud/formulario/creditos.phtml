@@ -24,6 +24,7 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
+			
         ?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
@@ -33,13 +34,14 @@ foreach ($this->form1 as $element) {
 	    </div>
 </div>
 <?php
-	if ( ($element->getName() == 'Telefono')) {
+	if ( ($element->getName() == 'carrera')) {
 ?>
 	<h4 align = 'left'> Solicita el otorgamiento de créditos por las siguientes actividades </h4>
+	<br> <br>
 <?php 
 	echo "\n";
 	}
-	else if ( ($element->getName() == 'Resultado_requisitos')) {
+	else if ( ($element->getName() == 'resultado_requisitos')) {
 ?>
 	<h4 align="center"> Atentamente. </h4>
 <?php 

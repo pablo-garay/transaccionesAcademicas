@@ -25,6 +25,16 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
+	
+		if ( ($element->getName() == 'profesor')) {
+			?>
+		<h5 align="left"> Decano <br> Facultad de Ciencias y Tecnología <br> UNIVERSIDAD CATÓLICA <br></h5>
+		
+		
+		<h5 align ="left"> De mi consideración <br>
+		El que suscribe,  </h5>
+		<?php
+			}
         ?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
@@ -34,15 +44,7 @@ foreach ($this->form1 as $element) {
 	    </div>
 </div>
 <?php 
-	if ( ($element->getName() == 'fecha_solicitada')) {
-?>
-<h5 align="left"> Decano <br> Facultad de Ciencias y Tecnología <br> UNIVERSIDAD CATÓLICA <br></h5>
-
-
-<h5 align ="left"> De mi consideración <br>
-El que suscribe,  </h5>
-<?php
-	}else if ( ($element->getName() == 'profesor')) {
+ if ( ($element->getName() == 'profesor')) {
 ?>
 	<h5 align = 'left'> en calidad de profesor/a cuyo nombramiento fue propuesto <br>
 	por el Consejo de Facultad para el presente semestre lectivo en la asignatura:</h5>
@@ -59,7 +61,7 @@ El que suscribe,  </h5>
 	Alumno/a Colaborador/a de Cátedra. <br>
 	En tal sentido, propongo a:</h5>
 <?php 
-	} else if ( ($element->getName() == 'email')){
+	} else if ( ($element->getName() == 'carrera')){
 ?>
 	<h5 align="left"> como Alumno/a Colaborador/a de Cátedra, para el presente semestre lectivo <br>
 	en la asignatura de referencia. <br>

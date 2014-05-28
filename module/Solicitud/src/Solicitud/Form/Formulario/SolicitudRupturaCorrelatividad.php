@@ -9,19 +9,38 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudRupturaCorrelatividad extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudRupturaCorrelatividad', $dbadapter);
+		parent::__construct($name = 'solicitudRupturaCorrelatividad', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		
+		//BD sapientia
+		
+		$sql       = "Select m.nombre AS n_materia FROM materias AS m";
+		//$usuarioLogueado
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataMat = array();
+		
+		foreach ($result as $res) {
+			$selectDataMat[$res['n_materia']] = $res['n_materia'];
+			
+				
+		}
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
 	
 		$this->add(array(
 				'name' => 'semestre',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Semestre ',
-						'empty_option' => 'Seleccione su semestre..',
-						'value_options' => array('1'=>'1')//$this->getSubjectsOfCareer(),
+						'empty_option' => 'Seleccione su semestre carrera..',
+						'value_options' => array('1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4',
+									'5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10'),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -38,7 +57,7 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('2'=>'2')//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -54,8 +73,9 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Semestre de Asignatura ',
-						'empty_option' => 'Seleccione su semestre..',
-						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
+						'empty_option' => 'Seleccione el semestre..',
+						'value_options' => array('1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4',
+									'5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10'),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -71,8 +91,8 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura Prerrequisito ',
-						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
+						'empty_option' => 'Seleccione el prerrequisito..',
+						'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -88,8 +108,9 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Semestre de Asignatura Prerrequisito ',
-						'empty_option' => 'Seleccione su semestre..',
-						'value_options' => array('7'=>'7')//$this->getSubjectsOfCareer(),
+						'empty_option' => 'Seleccione el semestre..',
+						'value_options' => array('1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4',
+									'5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10'),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -231,41 +252,6 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getPrerrequisitoDeMateria()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-
-	
-
 	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)

@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudPasantia extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudPasantia', $dbadapter);
+		parent::__construct($name = 'solicitudPasantia', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
@@ -356,43 +356,7 @@ class SolicitudPasantia extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
-	
 
-	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)
 	{

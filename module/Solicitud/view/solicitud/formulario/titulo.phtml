@@ -25,16 +25,7 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-        ?>
-<div class="control-group">
-	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
-	<div class="controls">
-            <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
-	    </div>
-</div>
-<?php 
-	if ( ($element->getName() == 'Fecha_solicitada')) {
+		if ( ($element->getName() == 'nombres')) {
 ?>
 
 <h5 align ="left"> Presbítero Doctor <br>
@@ -45,20 +36,44 @@ Asunción - Paraguay <br> <br>
 De mi consideración: <br>
 El/la que suscribe  </h5>
 <?php
-	}else if ( ($element->getName() == 'Email')) {
+		}
+        ?>
+<div class="control-group">
+	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
+	<div class="controls">
+            <?= $this->formElement($element)?>
+            <?= $this->formElementErrors($element)?>
+	    </div>
+</div>
+<?php 
+	
+
+	if ( ($element->getName() == 'carrera')) {
 ?>
 	<h5 align = 'left'>; adjuntando el Certificado de Estudios Legalizado, se dirige a usted <br>
 	 a fin de solicitar el Título que lo habilita como:</h5>
 <?php
 	echo "\n";
 	}
-	else if ( ($element->getName() == 'Nombre_titulo')) {
+	else if ( ($element->getName() == 'nombre_titulo')) {
 ?>
 	<h5 align="left"> Atentamente. <br> <br>
 	Se adjuntan los siguientes documentos: </h5>
 
 <?php 
+	}else if ( ($element->getName() == 'fotocopia_certificado_matrimonio')) {
+?>
+	<h5 align="left"> Para el caso de Post-Grados: <br> 
+	 </h5>
+
+<?php 
+	}else if ( ($element->getName() == 'fotocopia_simple_de_titulo')) {
+?>
+	<h5 align="left"> Otros Documentos Adicionales, especificar: <br> </h5>
+
+<?php 
 	}
+	
 	
     } else if ($element->getName() == 'enviar')  {
         $element->setAttribute('class', 'btn btn-primary'); 

@@ -5,15 +5,45 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-
+require_once "funcionesDB.php";
 class SolicitudInscripcionTardia extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudInscripcionTardia', $dbadapter);
+		parent::__construct($name = 'solicitudInscripcionTardia', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// rescatar su cedula
+		$usuarioLogueado = 1;
+		
+		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$cedulaUsuario = $datos['cedula'];
+		
+		
+		
+		$sql       = "SELECT m.materia, m.nombre AS n_materia, h.fecha_de_examen  FROM materias AS m
+						INNER JOIN cursos AS c ON m.materia = c.materia
+						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso
+						AND axc.numero_de_documento = ".$cedulaUsuario." AND axc.curso_actual = TRUE
+						INNER JOIN inscripcion_examen_por_alumno AS ie ON axc.curso = ie.curso
+						INNER JOIN Horarios_de_examen AS h ON h.curso = ie.curso";
+		
+		//$usuarioLogueado
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataMat = array();
+		$selectDataFech = array();
+		foreach ($result as $res) {
+			$selectDataMat[$res['n_materia']] = $res['n_materia'];
+			$selectDataFech[$res['fecha_de_examen']] = $res['fecha_de_examen'];
+		}
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+		
 		
 		$this->add(array(
 				'name' => 'asignatura',
@@ -21,7 +51,7 @@ class SolicitudInscripcionTardia extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('Prueba'=>'Prueba')//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -38,9 +68,7 @@ class SolicitudInscripcionTardia extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Fecha de Examen',
-						'value_options' => array(
-								'2014-05-21' => '2014-05-21',
-						)
+						'value_options' =>$selectDataFech,
 				),
 				'attributes' => array(
 						'value' =>  'dd/mm/aaaa',
@@ -249,38 +277,6 @@ class SolicitudInscripcionTardia extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getFechaDeExamen()
-	{
-		//@todo: Rescatar fecha de examen
-	}
-	
-	
-
 	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)

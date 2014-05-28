@@ -58,6 +58,10 @@ foreach ($this->form1 as $element) {
 ?>
 	<h5 align="center"> Sin otro particular me despido atentamente </h5>
 <?php 
+	} else if ( ($element->getName() == 'matricula')){
+?>
+	<h5 align="left"> Certificado de estudio para la:  </h5>
+<?php 
 	}
     } else if ($element->getName() == 'enviar')  {
 	$element->setAttribute('class', 'btn btn-primary');

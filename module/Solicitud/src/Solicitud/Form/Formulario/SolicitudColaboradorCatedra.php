@@ -9,13 +9,36 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudColaboradorCatedra extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudColaboradorCatedra', $dbadapter);
+		parent::__construct($name = 'solicitudColaboradorCatedra', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
-
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		
+		$sql       = "SELECT p.nombre AS n_profesor, m.nombre AS n_materia, carr.nombre AS n_carrera 
+				FROM profesores AS p 
+				INNER JOIN profesores_por_curso AS pxc ON p.profesor = pxc.profesor
+				INNER JOIN cursos AS c ON pxc.curso = c.curso 
+				INNER JOIN materias AS m ON c.materia = m.materia
+				INNER JOIN materias_por_carrera AS mxc ON m.materia = mxc.materia
+				INNER JOIN carreras AS carr ON carr.carrera = mxc.carrera";
+		//$usuarioLogueado
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataMat = array();
+		$selectDataProf = array();
+		$selectDataCarr = array();
+		foreach ($result as $res) {
+			$selectDataMat[$res['n_materia']] = $res['n_materia'];
+			$selectDataProf[$res['n_profesor']] = $res['n_profesor'];
+			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'];
+		}
+		$carreras = implode("'\n'", $selectDataCarr);
+		$carreras = str_replace("  ", "", $carreras);
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
 	
 		$this->add(array(
 				'name' => 'profesor',
@@ -23,10 +46,7 @@ class SolicitudColaboradorCatedra extends Solicitud
 				'options' => array(
 						'label' => 'Profesor:',
 						'empty_option' => 'Elija un Profesor..',
-						'value_options' => array(
-								'Profesor1' => 'Profesor1',
-								'Profesor2' => 'Profesor2'
-						),
+						'value_options' => $selectDataProf,
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -44,7 +64,7 @@ class SolicitudColaboradorCatedra extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('Asignatura1'=>'Asignatura1')//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat//asignar dinámicamente
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -63,7 +83,7 @@ class SolicitudColaboradorCatedra extends Solicitud
 							
 				),
 				'attributes' => array(
-						'value' =>  'Ingeniería Informática y Electrónica',
+						'value' =>  $carreras,
 						'required' => 'required',
 // 						'disabled' => 'disabled'
 				),
@@ -228,23 +248,7 @@ class SolicitudColaboradorCatedra extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
+
 	
 	public function getAsignaturasDeCarrera()
 	{
@@ -253,14 +257,65 @@ class SolicitudColaboradorCatedra extends Solicitud
 	
 	}
 	
-	public function getProfesoresDeAsignatura()
+	public function getProfesores()	
 	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// recatar su cedula
+		$sql = 'SELECT nombre FROM Profesores'; // $usuarioLogueado
+		
+		
+		$statement = $this->sapientiaDbAdapter->query($sql);
+		$result    = $statement->execute();
+	
+		$selectData = array();
+	
+		foreach ($result as $res) {
+			$selectData[$res['nombre']] = $res['nombre'];
+		}
+			return $selectData;
 	}
 	
-	public function getFechaDeExtraordinario()
+	
+	
+	public function getAsignaturaDeProfesor() // debe ser dinámico
 	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// recatar su cedula
+		$sql = 'SELECT m.nombre FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
+				INNER JOIN profesores_por_curso AS pxc ON c.curso = pxc.curso'; // $usuarioLogueado
+	
+	
+		$statement = $this->sapientiaDbAdapter->query($sql);
+		$result    = $statement->execute();
+	
+		$selectData = array();
+	
+		foreach ($result as $res) {
+			$selectData[$res['nombre']] = $res['nombre'];
+		}
+		return $selectData;
+	}
+	
+	public function getCarrerasDeProfesor()
+	{
+	
+		$sql = 'SELECT c.nombre FROM carreras AS c INNER JOIN carrera_por_materias AS cm ON c.carrera = cm.carrera
+				INNER JOIN cursos AS cr ON cr.materia = cm.materia'; // $usuarioLogueado
+	
+	
+		$statement = $this->sapientiaDbAdapter->query($sql);
+		$result    = $statement->execute();
+	
+		$selectData = array();
+	
+		foreach ($result as $res) {
+			$selectData[$res['nombre']] = $res['nombre'];
+		}
+		$string = implode ("'\n'", $selectData);
+		
+		$string = str_replace("  ", "", $string);
+		
+		return $string;
 	}
 	
 

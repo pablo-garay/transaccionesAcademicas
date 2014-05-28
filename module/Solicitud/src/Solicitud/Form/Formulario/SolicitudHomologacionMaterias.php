@@ -5,14 +5,42 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-
+require_once "funcionesDB.php";
 class SolicitudHomologacionMaterias extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudHomologacionMaterias', $dbadapter);
+		parent::__construct($name = 'solicitudHomologacionMaterias', $dbadapter, $sapientiaDbadapter);
 	
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// rescatar su cedula
+		$usuarioLogueado = 1;
+		
+		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$cedulaUsuario = $datos['cedula'];
+		
+		// Bd Sapientia
+		
+		$sql       = "SELECT c.carrera, c.plan_de_estudio, c.nombre AS n_carrera  FROM carreras AS c
+						INNER JOIN matriculas_por_carrera AS mxc ON mxc.carrera = c.carrera
+						INNER JOIN matriculas_por_alumno AS axm ON axm.matricula = mxc.matricula
+						AND axm.numero_de_documento =".$cedulaUsuario;
+		
+		//$usuarioLogueado
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataCarr = array();
+		$selectDataPlan = array();
+		foreach ($result as $res) {
+			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'];
+			$selectDataPlan[$res['plan_de_estudio']] = $res['plan_de_estudio'];
+		}
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+		
+		
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
@@ -21,7 +49,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 				'options' => array(
 						'label' => 'Carrera a homologar ',
 						'empty_option' => 'Seleccione una carrera..',
-						'value_options' => array('Carrera3'=>'Carrera3')//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataCarr//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -37,7 +65,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Plan de estudio de carrera a homologar ',
-						'value_options' => array('1970'=>'1970'),
+						'value_options' => $selectDataPlan,
 					
 				),
 				'attributes' => array(
@@ -221,43 +249,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
-	
 
-	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)
 	{

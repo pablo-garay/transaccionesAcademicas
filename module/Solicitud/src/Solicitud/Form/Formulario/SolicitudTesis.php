@@ -5,16 +5,61 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
+use User\Controller\AccountController;
 
 class SolicitudTesis extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudTesis', $dbadapter);
+		parent::__construct($name = 'solicitudTesis', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
+	
+		
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// rescatar su cedula
+		$usuarioLogueado = 1;
+		
+		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$cedulaUsuario = $datos['cedula'];
+		
+		//BD sapientia
+		
+		$sql       = "SELECT m.materia, m.nombre AS n_materia, p.profesor , p.nombre AS n_profesor FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
+				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = ".$cedulaUsuario." 
+				INNER JOIN profesores_por_curso AS pxc ON  pxc.curso = c.curso  INNER JOIN profesores AS p ON pxc.profesor = p.profesor";
 
+
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		
+		$selectDataProf = array();
+		foreach ($result as $res) {
+			$selectDataProf[$res['n_profesor']] = $res['n_profesor'];
+				
+		}
+		
+		$sql = "SELECT a.cedula, u.nombres, u.apellidos
+				FROM usuarios AS u 
+				INNER JOIN alumnos AS a ON a.usuario = u.usuario";
+		
+		$statement = $dbadapter->query($sql);
+		$result    = $statement->execute();
+
+		
+		$selectDataAlumnos = array();
+		
+		foreach ($result as $res) {
+			$selectDataAlumnos[$res['cedula']] = $res['nombres']." ".$res['apellidos'];
+				
+		}
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+				
+		
 		$this->add(array(
 				'name' => 'tema_tesis',
 				'type' => 'Zend\Form\Element\Text',
@@ -32,15 +77,42 @@ class SolicitudTesis extends Solicitud
 		
 		
 		$this->add(array(
-				'name' => 'integrante',
+				'name' => 'cedula1',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Integrante:',
+						'label' => 'Integrante1:',
 						'empty_option' => 'Elija Integrante',
-						'value_options' => array(
-								'Alumno1' => 'Alumno1',
-								'Alumno2' => 'Alumno2'
-						),
+						'value_options' => $selectDataAlumnos,
+				),
+		
+		),
+				array (
+						'priority' => 270,
+				)
+		);
+		
+		$this->add(array(
+				'name' => 'cedula2',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Integrante 2:',
+						'empty_option' => 'Elija Integrante',
+						'value_options' => $selectDataAlumnos,
+				),
+		
+		),
+				array (
+						'priority' => 270,
+				)
+		);
+		
+		$this->add(array(
+				'name' => 'cedula3',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Integrante 3:',
+						'empty_option' => 'Elija Integrante',
+						'value_options' => $selectDataAlumnos,
 				),
 		
 		),
@@ -55,10 +127,7 @@ class SolicitudTesis extends Solicitud
 				'options' => array(
 						'label' => 'Profesor:',
 						'empty_option' => 'Elija Tutor..',
-						'value_options' => array(
-								'Profesor1' => 'Profesor1',
-								'Profesor2' => 'Profesor2'
-						),
+						'value_options' => $selectDataProf,
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -264,42 +333,6 @@ class SolicitudTesis extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
-	
-
 	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)

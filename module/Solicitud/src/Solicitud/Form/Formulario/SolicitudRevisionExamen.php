@@ -5,23 +5,58 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
+require_once "funcionesDB.php";
+
 
 class SolicitudRevisionExamen extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudRevisionExamen', $dbadapter);
+		parent::__construct($name = 'solicitudRevisionExamen', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
-
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// rescatar su cedula
+		$usuarioLogueado = 1;
+		
+		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$cedulaUsuario = $datos['cedula'];
+		
+		
+		
+		$sql       = "SELECT m.materia, m.nombre AS n_materia, p.nombre AS n_profesor, h.fecha_de_examen  FROM materias AS m
+						INNER JOIN cursos AS c ON m.materia = c.materia
+						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso
+						AND axc.numero_de_documento = ".$cedulaUsuario." AND axc.curso_actual = TRUE
+						INNER JOIN Horarios_de_examen AS h ON h.curso = axc.curso
+						INNER JOIN profesores_por_curso AS pxc ON pxc.curso = axc.curso
+						INNER JOIN profesores AS p ON p.profesor = pxc.profesor";
+		
+		//$usuarioLogueado
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataMat = array();
+		$selectDataFech = array();
+		$selectDataProf = array();
+		
+		foreach ($result as $res) {
+			$selectDataMat[$res['n_materia']] = $res['n_materia'];
+			$selectDataFech[$res['fecha_de_examen']] = $res['fecha_de_examen'];
+			$selectDataProf[$res['n_profesor']] = $res['n_profesor'];
+		}
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+		
 		$this->add(array(
 				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
-						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('A1'=>'A1')//$this->getSubjectsOfCareer(),
+						'empty_option' => 'Elija una asignatura..',
+						'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -36,10 +71,9 @@ class SolicitudRevisionExamen extends Solicitud
 				'name' => 'fecha_examen',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
+						'empty_option' => 'Elija la fecha de examen...',
 						'label' => 'Fecha de Examen:',
-						'value_options' => array(
-								'2014-05-21' => '2014-05-21',
-						)					
+						'value_options' => $selectDataFech,					
 				),
 				'attributes' => array(
 					'value' =>  'dd/mm/aaaa',
@@ -57,11 +91,8 @@ class SolicitudRevisionExamen extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Profesor:',
-						'empty_option' => 'Elija un Profesor..',
-						'value_options' => array(
-								'Profesor1' => 'Profesor1',
-								'Profesor2' => 'Profesor2'
-						),
+						'empty_option' => 'Elija el Profesor..',
+						'value_options' => $selectDataProf,
 				),
 				'attributes' => array(
 					'required' => 'required',
@@ -99,11 +130,11 @@ class SolicitudRevisionExamen extends Solicitud
 				'options' => array(
 						'label' => 'Calificación obtenida ',
 						'value_options' => array(
-								'1' => '1',
-								'2' => '2',
-								'3' => '3',
-								'4' => '4',
-								'5' => '5'
+								'0' => '1',
+								'1' => '2',
+								'2' => '3',
+								'3' => '4',
+								'4' => '5'
 						),
 				),
 				'attributes' => array(
@@ -282,43 +313,7 @@ class SolicitudRevisionExamen extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
-	
 
-	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)
 	{

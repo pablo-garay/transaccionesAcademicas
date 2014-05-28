@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudCreditos extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudCreditos', $dbadapter);
+		parent::__construct($name = 'solicitudCreditos', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 	
@@ -24,8 +24,10 @@ class SolicitudCreditos extends Solicitud
 				'options' => array(
 						'label' => 'Tipo de actividad',
 						'empty_option' => 'Seleccione una actividad ',
-						'value_options' => array('Materias'=>'Materias',
-								'Cursos' => 'Cursos',
+						'value_options' => array('Materia de Otra Carrera'=>'Materia de Otra Carrera',
+								'Curso de Extensión' => 'Curso de Extensión',
+								'Seminario' => 'Seminario',
+								'Trabajo' => 'Trabajo',
 								' ' => ' ')//$this->getSubjectsOfCareer(),
 				),
 		
@@ -185,38 +187,6 @@ class SolicitudCreditos extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getFechaDeExamen()
-	{
-		//@todo: Rescatar fecha de examen
-	}
-	
-	
-
 	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)

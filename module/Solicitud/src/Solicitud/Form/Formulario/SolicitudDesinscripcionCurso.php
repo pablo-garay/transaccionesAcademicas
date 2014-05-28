@@ -5,23 +5,51 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
+require_once 'funcionesDB.php';
+
 
 class SolicitudDesinscripcionCurso extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudDesinscripcionCurso', $dbadapter);
+		parent::__construct($name = 'solicitudDesinscripcionCurso', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
-
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// rescatar su cedula
+		$usuarioLogueado = 1;
+		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$cedulaUsuario = $datos['cedula'];
+		
+		
+		$sql       = "SELECT m.materia, m.nombre AS n_materia  FROM materias AS m 
+						INNER JOIN cursos AS c ON m.materia = c.materia
+						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso 
+						AND axc.numero_de_documento = ".$cedulaUsuario." AND axc.curso_actual = TRUE";
+		
+		//$usuarioLogueado
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataMat = array();
+		
+		foreach ($result as $res) {
+			$selectDataMat[$res['n_materia']] = 'Asignatura: '.$res['n_materia'].' Código: '.$res['materia'];		
+		}
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
 	
 		$this->add(array(
 				'name' => 'curso_completo',
-				'type' => 'Zend\Form\Element\Checkbox',
+				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
-						'label' => 'Curso completo ',
+						'label' => 'Tipo de Desinscripción ',
+						'value_options' => array(
+								'Curso completo' => 'Curso completo',
+								'Por asignatura' => 'Por asignatura'
+						),
 						//'value_options' => 'Curso completo',
 				),	
 		),
@@ -29,32 +57,7 @@ class SolicitudDesinscripcionCurso extends Solicitud
 						'priority' => 280,
 				)
 						);
-		
-		$this->add(array(
-				'name' => 'por_asignatura',
-				'type' => 'Zend\Form\Element\Checkbox',
-				'options' => array(
-						'label' => 'Por asignatura',						
-				),		
-		),
-				array (
-						'priority' => 275,
-				)
-		);
-		
-		$this->add(array(
-				'name' => 'cod_asignatura',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Código Asignatura:',
-						'empty_option' => 'Seleccione código de asignatura ',
-						'value_options' => array('123'=>'123')//$this->getSubjectsOfCareer(),
-				),		
-		),
-				array (
-						'priority' => 270,
-				)
-		);
+
 		
 		$this->add(array(
 				'name' => 'asignatura',
@@ -62,13 +65,29 @@ class SolicitudDesinscripcionCurso extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array(''=>'')//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat,//$this->getSubjectsOfCareer(),
+				),
+		),
+				array (
+						'priority' => 270,
+				)
+		);
+		
+		
+		$this->add(array(
+				'name' => 'cod_asignatura',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Código Asignatura:',
+						'empty_option' => 'Seleccione código de asignatura ',
+						'value_options' => $this->getCodigoDeAsignatura(),//$this->getSubjectsOfCareer(),
 				),		
 		),
 				array (
 						'priority' => 260,
 				)
 		);
+		
 
 		
 	
@@ -174,39 +193,46 @@ class SolicitudDesinscripcionCurso extends Solicitud
 	
 		return $this->filter;
 	}
+
 	
-	public function getOptionsForSelect()
+	public function getCodigoDeAsignatura() //@todo debe ser dinamico
 	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// recatar su cedula
+		$dbAdapter = $this->sapientiaDbAdapter;
+		$sql       = 'SELECT m.materia FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
+				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = 4490334 AND c.anho = 2014 AND c.semestre_anho = 1';
+																									//$usuarioLogueado
+		$statement = $dbAdapter->query($sql);
+		$result    = $statement->execute();
+
+		$selectData = array();
+
+		foreach ($result as $res) {
+			$selectData[$res['materia']] = $res['materia'];
+		}
+		return $selectData;
+
+	}
 	
+	public function getAsignaturas()
+	{
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// recatar su cedula
+		$dbAdapter = $this->sapientiaDbAdapter;
+		$sql       = 'SELECT m.nombre FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
+				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = 4490334 AND c.anho = 2014 AND c.semestre_anho = 1';
+		//$usuarioLogueado
 		$statement = $dbAdapter->query($sql);
 		$result    = $statement->execute();
 	
 		$selectData = array();
 	
 		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
+			$selectData[$res['nombre']] = $res['nombre'];
 		}
 		return $selectData;
-	}
 	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
 	}
 	
 

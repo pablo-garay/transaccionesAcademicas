@@ -409,99 +409,11 @@ class SolicitudConvalidacionMaterias extends Form
 
 		return $this->filter;
 	}
+	
 
 	public function setInputFilter(InputFilterInterface $inputFilter)
 	{
 		throw new \Exception('It is not allowed to set the input filter');
-	}
-
-	public function getNombres()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, nombres FROM usuarios LIMIT 1';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			// retornar nombre del usuario
-			return $res['nombres'];
-		}
-
-		return FALSE; // no se encontraron resultados
-	}
-
-	public function getApellidos()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, apellidos FROM usuarios ORDER BY usuario DESC LIMIT 1';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			// retornar nombre del usuario
-			return $res['apellidos'];
-		}
-
-		return FALSE; // no se encontraron resultados
-	}
-
-	public function getMatricula()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, telefono FROM usuarios';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			$selectData[$res['telefono']] = $res['telefono'];
-		}
-			return array("061039" => "061039");
-	}
-
-	public function getTelefono()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, telefono FROM usuarios';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			return $res['telefono'];
-		}
-		return FALSE;
-	}
-
-	public function getCarrera()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, telefono FROM usuarios';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			$selectData[$res['telefono']] = $res['telefono'];
-		}
-		return array("Ingeniería Informática" => "Ingeniería Informática");;
 	}
 
 

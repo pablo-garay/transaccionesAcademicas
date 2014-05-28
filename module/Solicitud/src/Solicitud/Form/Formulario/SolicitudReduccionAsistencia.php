@@ -5,23 +5,36 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-
+require_once 'funcionesDB.php';
 class SolicitudReduccionAsistencia extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudReduccionAsistencia', $dbadapter);
+		parent::__construct($name = 'solicitudReduccionAsistencia', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// rescatar su cedula
+		$usuarioLogueado = 1;
+		
+		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$cedulaUsuario = $datos['cedula'];
 
+		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $cedulaUsuario, $actual=FALSE);
+		$selectDataMat = $datosAlumno['materias'] ;
+		
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+		
 		$this->add(array(
 				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('Prueba'=>'Prueba')//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat,//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -228,42 +241,6 @@ class SolicitudReduccionAsistencia extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
-	
-
 	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)

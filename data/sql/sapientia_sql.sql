@@ -1,20 +1,12 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     21/05/2014 07:01:58 p.m.                     */
+/* Created on:     27/05/2014 12:14:19 a.m.                     */
 /*==============================================================*/
 
--- 
+
 -- drop index ALUMNOS_PK;
 -- 
 -- drop table ALUMNOS;
--- 
--- drop index SIGUE_FK3;
--- 
--- drop index SIGUE_FK2;
--- 
--- drop index SIGUE_PK;
--- 
--- drop table ALUMNO_POR_CARRERA;
 -- 
 -- drop index INSCRIPTO_A_FK3;
 -- 
@@ -22,7 +14,7 @@
 -- 
 -- drop index INSCRIPTO_A_PK;
 -- 
--- drop table ALUMNO_POR_CURSO;
+-- drop table ALUMNOS_POR_CURSO;
 -- 
 -- drop index TIENE_FK6;
 -- 
@@ -45,14 +37,6 @@
 -- drop index CARRERAS_PK;
 -- 
 -- drop table CARRERAS;
--- 
--- drop index TIENE_FK9;
--- 
--- drop index TIENE_FK8;
--- 
--- drop index TIENE_PK;
--- 
--- drop table CARRERA_POR_MATERIA;
 -- 
 -- drop index MATERIA_CORRELATIVA_FK;
 -- 
@@ -106,6 +90,28 @@
 -- 
 -- drop table MATERIAS;
 -- 
+-- drop index TIENE_FK11;
+-- 
+-- drop index TIENE_FK10;
+-- 
+-- drop index TIENE2_PK;
+-- 
+-- drop table MATERIAS_POR_CARRERA;
+-- 
+-- drop index TIENE_FK9;
+-- 
+-- drop index TIENE_FK8;
+-- 
+-- drop index TIENE_PK;
+-- 
+-- drop table MATRICULAS_POR_ALUMNO;
+-- 
+-- drop index PERTENECE_FK;
+-- 
+-- drop index MATRICULAS_PK;
+-- 
+-- drop table MATRICULAS_POR_CARRERA;
+-- 
 -- drop index PROFESORES_PK;
 -- 
 -- drop table PROFESORES;
@@ -135,6 +141,8 @@
 -- drop domain D_CARRERA;
 -- 
 -- drop domain D_CEDULA;
+-- 
+-- drop domain D_COMPROBANTE;
 -- 
 -- drop domain D_CONTRASENA;
 -- 
@@ -180,6 +188,8 @@
 -- 
 -- drop domain D_HORARIO;
 -- 
+-- drop domain D_INSCRIPCION;
+-- 
 -- drop domain D_MATERIA;
 -- 
 -- drop domain D_MATRICULA;
@@ -218,6 +228,8 @@
 -- 
 -- drop domain D_OPORTUNIDAD;
 -- 
+-- drop domain D_ORIGEN_DOCUMENTO;
+-- 
 -- drop domain D_PARAMETRO;
 -- 
 -- drop domain D_PERMISO;
@@ -245,6 +257,8 @@
 -- drop domain D_TIME;
 -- 
 -- drop domain D_TIPO_CERTIFICADO;
+-- 
+-- drop domain D_TIPO_DOCUMENTO;
 -- 
 -- drop domain D_TIPO_TITULO;
 -- 
@@ -294,6 +308,11 @@ create domain D_CARRERA as INT4;
 /* Domain: D_CEDULA                                             */
 /*==============================================================*/
 create domain D_CEDULA as INT4;
+
+/*==============================================================*/
+/* Domain: D_COMPROBANTE                                        */
+/*==============================================================*/
+create domain D_COMPROBANTE as VARCHAR(120);
 
 /*==============================================================*/
 /* Domain: D_CONTRASENA                                         */
@@ -386,6 +405,11 @@ create domain D_FECHA as DATE;
 create domain D_FECHAHORA as DATE;
 
 /*==============================================================*/
+/* Domain: D_FILE                                               */
+/*==============================================================*/
+--create domain D_FILE as FILE;
+
+/*==============================================================*/
 /* Domain: D_HISTORIAL                                          */
 /*==============================================================*/
 create domain D_HISTORIAL as INT4;
@@ -399,6 +423,11 @@ create domain D_HORA as TIME;
 /* Domain: D_HORARIO                                            */
 /*==============================================================*/
 create domain D_HORARIO as INT4;
+
+/*==============================================================*/
+/* Domain: D_INSCRIPCION                                        */
+/*==============================================================*/
+create domain D_INSCRIPCION as INT4;
 
 /*==============================================================*/
 /* Domain: D_MATERIA                                            */
@@ -496,6 +525,11 @@ create domain D_OBSERVACIONES as TEXT;
 create domain D_OPORTUNIDAD as INT4;
 
 /*==============================================================*/
+/* Domain: D_ORIGEN_DOCUMENTO                                   */
+/*==============================================================*/
+create domain D_ORIGEN_DOCUMENTO as VARCHAR(80);
+
+/*==============================================================*/
 /* Domain: D_PARAMETRO                                          */
 /*==============================================================*/
 create domain D_PARAMETRO as INT4;
@@ -566,6 +600,11 @@ create domain D_TIME as TIME;
 create domain D_TIPO_CERTIFICADO as CHAR(1);
 
 /*==============================================================*/
+/* Domain: D_TIPO_DOCUMENTO                                     */
+/*==============================================================*/
+create domain D_TIPO_DOCUMENTO as TEXT;
+
+/*==============================================================*/
 /* Domain: D_TIPO_TITULO                                        */
 /*==============================================================*/
 create domain D_TIPO_TITULO as CHAR(15);
@@ -579,76 +618,56 @@ create domain D_USUARIO as INT4;
 /* Table: ALUMNOS                                               */
 /*==============================================================*/
 create table ALUMNOS (
-   CEDULA               D_MATRICULA          not null,
-   constraint PK_ALUMNOS primary key (CEDULA)
+   NUMERO_DE_DOCUMENTO  D_DOCUMENT_ID        not null,
+   TIPO_DE_DOCUMENTO    D_TIPO_DOCUMENTO     not null,
+   ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   not null,
+   constraint PK_ALUMNOS primary key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
 );
 
 /*==============================================================*/
 /* Index: ALUMNOS_PK                                            */
 /*==============================================================*/
 create unique index ALUMNOS_PK on ALUMNOS (
-CEDULA
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO
 );
 
 /*==============================================================*/
-/* Table: ALUMNO_POR_CARRERA                                    */
+/* Table: ALUMNOS_POR_CURSO                                     */
 /*==============================================================*/
-create table ALUMNO_POR_CARRERA (
-   CEDULA               D_MATRICULA          not null,
-   CARRERA              D_CARRERA            not null,
-   constraint PK_ALUMNO_POR_CARRERA primary key (CEDULA, CARRERA)
-);
-
-/*==============================================================*/
-/* Index: SIGUE_PK                                              */
-/*==============================================================*/
-create unique index SIGUE_PK on ALUMNO_POR_CARRERA (
-CEDULA,
-CARRERA
-);
-
-/*==============================================================*/
-/* Index: SIGUE_FK2                                             */
-/*==============================================================*/
-create  index SIGUE_FK2 on ALUMNO_POR_CARRERA (
-CEDULA
-);
-
-/*==============================================================*/
-/* Index: SIGUE_FK3                                             */
-/*==============================================================*/
-create  index SIGUE_FK3 on ALUMNO_POR_CARRERA (
-CARRERA
-);
-
-/*==============================================================*/
-/* Table: ALUMNO_POR_CURSO                                      */
-/*==============================================================*/
-create table ALUMNO_POR_CURSO (
-   CEDULA               D_MATRICULA          not null,
+create table ALUMNOS_POR_CURSO (
+   NUMERO_DE_DOCUMENTO  D_DOCUMENT_ID        not null,
+   TIPO_DE_DOCUMENTO    D_TIPO_DOCUMENTO     not null,
+   ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   not null,
    CURSO                D_CURSO              not null,
-   constraint PK_ALUMNO_POR_CURSO primary key (CEDULA, CURSO)
+   CURSO_ACTUAL         BOOL                 null,
+   constraint PK_ALUMNOS_POR_CURSO primary key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO, CURSO)
 );
 
 /*==============================================================*/
 /* Index: INSCRIPTO_A_PK                                        */
 /*==============================================================*/
-create unique index INSCRIPTO_A_PK on ALUMNO_POR_CURSO (
-CEDULA,
+create unique index INSCRIPTO_A_PK on ALUMNOS_POR_CURSO (
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO,
 CURSO
 );
 
 /*==============================================================*/
 /* Index: INSCRIPTO_A_FK2                                       */
 /*==============================================================*/
-create  index INSCRIPTO_A_FK2 on ALUMNO_POR_CURSO (
-CEDULA
+create  index INSCRIPTO_A_FK2 on ALUMNOS_POR_CURSO (
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO
 );
 
 /*==============================================================*/
 /* Index: INSCRIPTO_A_FK3                                       */
 /*==============================================================*/
-create  index INSCRIPTO_A_FK3 on ALUMNO_POR_CURSO (
+create  index INSCRIPTO_A_FK3 on ALUMNOS_POR_CURSO (
 CURSO
 );
 
@@ -656,11 +675,13 @@ CURSO
 /* Table: ASISTENCIAS_POR_ALUMNO                                */
 /*==============================================================*/
 create table ASISTENCIAS_POR_ALUMNO (
-   ASISTENCIA           D_ASISTENCIA         not null,
-   CEDULA               D_MATRICULA          null,
+   ASISTENCIA           SERIAL not null,
+   NUMERO_DE_DOCUMENTO  D_DOCUMENT_ID        null,
+   TIPO_DE_DOCUMENTO    D_TIPO_DOCUMENTO     null,
+   ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   null,
    CURSO                D_CURSO              null,
-   FECHA_HORA           D_FECHAHORA          not null,
-   PRESENCIA            D_BOOLEAN            null,
+   FECHA                D_FECHA              not null,
+   PRESENCIA            D_BOOLEAN            not null,
    constraint PK_ASISTENCIAS_POR_ALUMNO primary key (ASISTENCIA)
 );
 
@@ -682,24 +703,30 @@ CURSO
 /* Index: TIENE_FK6                                             */
 /*==============================================================*/
 create  index TIENE_FK6 on ASISTENCIAS_POR_ALUMNO (
-CEDULA
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO
 );
 
 /*==============================================================*/
 /* Table: CALIFICACIONES_POR_ALUMNO                             */
 /*==============================================================*/
 create table CALIFICACIONES_POR_ALUMNO (
-   CEDULA               D_MATRICULA          not null,
+   NUMERO_DE_DOCUMENTO  D_DOCUMENT_ID        not null,
+   TIPO_DE_DOCUMENTO    D_TIPO_DOCUMENTO     not null,
+   ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   not null,
    CURSO                D_CURSO              not null,
    CALIFICACION         D_CALIFICACION       not null,
-   constraint PK_CALIFICACIONES_POR_ALUMNO primary key (CEDULA, CURSO)
+   constraint PK_CALIFICACIONES_POR_ALUMNO primary key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO, CURSO)
 );
 
 /*==============================================================*/
 /* Index: CALIFICACIONES_POR_ALUMNO_PK                          */
 /*==============================================================*/
 create unique index CALIFICACIONES_POR_ALUMNO_PK on CALIFICACIONES_POR_ALUMNO (
-CEDULA,
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO,
 CURSO
 );
 
@@ -707,7 +734,9 @@ CURSO
 /* Index: TIENE_FK2                                             */
 /*==============================================================*/
 create  index TIENE_FK2 on CALIFICACIONES_POR_ALUMNO (
-CEDULA
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO
 );
 
 /*==============================================================*/
@@ -721,10 +750,11 @@ CURSO
 /* Table: CARRERAS                                              */
 /*==============================================================*/
 create table CARRERAS (
-   CARRERA              D_CARRERA            not null,
+   CARRERA              SERIAL not null,
    DEPARTAMENTO         D_DEPARTAMENTO       not null,
    NOMBRE               D_NOMBRE_CARRERA     not null,
    CREDITOS_REQUERIDOS  D_CANTIDAD           null,
+   PLAN_DE_ESTUDIO      INT4                 null,
    constraint PK_CARRERAS primary key (CARRERA)
 );
 
@@ -743,45 +773,14 @@ DEPARTAMENTO
 );
 
 /*==============================================================*/
-/* Table: CARRERA_POR_MATERIA                                   */
-/*==============================================================*/
-create table CARRERA_POR_MATERIA (
-   CARRERA              D_CARRERA            not null,
-   MATERIA              D_MATERIA            not null,
-   constraint PK_CARRERA_POR_MATERIA primary key (CARRERA, MATERIA)
-);
-
-/*==============================================================*/
-/* Index: TIENE_PK                                              */
-/*==============================================================*/
-create unique index TIENE_PK on CARRERA_POR_MATERIA (
-CARRERA,
-MATERIA
-);
-
-/*==============================================================*/
-/* Index: TIENE_FK8                                             */
-/*==============================================================*/
-create  index TIENE_FK8 on CARRERA_POR_MATERIA (
-CARRERA
-);
-
-/*==============================================================*/
-/* Index: TIENE_FK9                                             */
-/*==============================================================*/
-create  index TIENE_FK9 on CARRERA_POR_MATERIA (
-MATERIA
-);
-
-/*==============================================================*/
 /* Table: CORRELATIVA_POR_CARRERA                               */
 /*==============================================================*/
 create table CORRELATIVA_POR_CARRERA (
    CARRERA              D_CARRERA            not null,
    MATERIA              D_MATERIA            not null,
-   MAT_MATERIA          D_MATERIA            not null,
+   MATERIA_CORRELATIVA  D_MATERIA            not null,
    SEMESTRE_CARRERA     D_SEMESTRE           not null,
-   constraint PK_CORRELATIVA_POR_CARRERA primary key (CARRERA, MATERIA, MAT_MATERIA)
+   constraint PK_CORRELATIVA_POR_CARRERA primary key (CARRERA, MATERIA, MATERIA_CORRELATIVA)
 );
 
 /*==============================================================*/
@@ -790,7 +789,7 @@ create table CORRELATIVA_POR_CARRERA (
 create unique index CORRELATIVA_POR_CARRERA_PK on CORRELATIVA_POR_CARRERA (
 CARRERA,
 MATERIA,
-MAT_MATERIA
+MATERIA_CORRELATIVA
 );
 
 /*==============================================================*/
@@ -811,14 +810,14 @@ MATERIA
 /* Index: MATERIA_CORRELATIVA_FK                                */
 /*==============================================================*/
 create  index MATERIA_CORRELATIVA_FK on CORRELATIVA_POR_CARRERA (
-MAT_MATERIA
+MATERIA_CORRELATIVA
 );
 
 /*==============================================================*/
 /* Table: CURSOS                                                */
 /*==============================================================*/
 create table CURSOS (
-   CURSO                D_CURSO              not null,
+   CURSO                SERIAL not null,
    MATERIA              D_MATERIA            not null,
    SEMESTRE_CARRERA     D_SEMESTRE           not null,
    SEMESTRE_ANHO        D_SEMESTRE           not null,
@@ -845,7 +844,7 @@ MATERIA
 /* Table: DEPARTAMENTOS                                         */
 /*==============================================================*/
 create table DEPARTAMENTOS (
-   DEPARTAMENTO         D_DEPARTAMENTO       not null,
+   DEPARTAMENTO         SERIAL not null,
    NOMBRE               D_NOMBRE_DEPARTAMENTO not null,
    constraint PK_DEPARTAMENTOS primary key (DEPARTAMENTO)
 );
@@ -861,10 +860,12 @@ DEPARTAMENTO
 /* Table: HISTORIAL_EXTRAORDINARIOS                             */
 /*==============================================================*/
 create table HISTORIAL_EXTRAORDINARIOS (
-   HISTORIAL            D_HISTORIAL          not null,
-   CEDULA               D_MATRICULA          not null,
+   HISTORIAL            SERIAL not null,
+   NUMERO_DE_DOCUMENTO  D_DOCUMENT_ID        not null,
+   TIPO_DE_DOCUMENTO    D_TIPO_DOCUMENTO     not null,
+   ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   not null,
    CURSO                D_CURSO              not null,
-   FECHA_HORA           D_FECHAHORA          not null,
+   FECHA                D_FECHA              not null,
    constraint PK_HISTORIAL_EXTRAORDINARIOS primary key (HISTORIAL)
 );
 
@@ -879,7 +880,9 @@ HISTORIAL
 /* Index: TIENE_FK4                                             */
 /*==============================================================*/
 create  index TIENE_FK4 on HISTORIAL_EXTRAORDINARIOS (
-CEDULA
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO
 );
 
 /*==============================================================*/
@@ -893,7 +896,7 @@ CURSO
 /* Table: HORARIOS_DE_CLASE                                     */
 /*==============================================================*/
 create table HORARIOS_DE_CLASE (
-   HORARIO              D_HORARIO            not null,
+   HORARIO              SERIAL not null,
    CURSO                D_CURSO              not null,
    DIA                  D_DIA                not null,
    HORA_INICIO          D_HORA               not null,
@@ -919,9 +922,10 @@ CURSO
 /* Table: HORARIOS_DE_EXAMEN                                    */
 /*==============================================================*/
 create table HORARIOS_DE_EXAMEN (
-   HORARIO_DE_EXAMEN    D_HORARIO            not null,
+   HORARIO_DE_EXAMEN    SERIAL not null,
    CURSO                D_CURSO              null,
-   FECHA_HORA           D_FECHAHORA          not null,
+   FECHA_DE_EXAMEN      D_FECHA              not null,
+   HORA_DE_EXAMEN       D_HORA               not null,
    OPORTUNIDAD          D_OPORTUNIDAD        not null,
    constraint PK_HORARIOS_DE_EXAMEN primary key (HORARIO_DE_EXAMEN)
 );
@@ -944,28 +948,36 @@ CURSO
 /* Table: INSCRIPCION_EXAMEN_POR_ALUMNO                         */
 /*==============================================================*/
 create table INSCRIPCION_EXAMEN_POR_ALUMNO (
-   CEDULA               D_MATRICULA          not null,
+   NUMERO_DE_DOCUMENTO  D_DOCUMENT_ID        not null,
+   TIPO_DE_DOCUMENTO    D_TIPO_DOCUMENTO     not null,
+   ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   not null,
    CURSO                D_CURSO              not null,
+   INSCRIPCION          D_INSCRIPCION        not null,
    OPORTUNIDAD          D_OPORTUNIDAD        not null,
-   FECHA_HORA_EXAMEN    D_FECHAHORA          not null,
    PRESENCIA            D_BOOLEAN            null,
-   constraint PK_INSCRIPCION_EXAMEN_POR_ALUM primary key (CEDULA, CURSO, OPORTUNIDAD)
+   FECHA_DE_ABONO       D_FECHA              null,
+   COMPROBANTE          D_COMPROBANTE        null,
+   constraint PK_INSCRIPCION_EXAMEN_POR_ALUM primary key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO, CURSO, INSCRIPCION)
 );
 
 /*==============================================================*/
 /* Index: INSCRIPCION_EXAMEN_POR_ALUMNO_PK                      */
 /*==============================================================*/
 create unique index INSCRIPCION_EXAMEN_POR_ALUMNO_PK on INSCRIPCION_EXAMEN_POR_ALUMNO (
-CEDULA,
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO,
 CURSO,
-OPORTUNIDAD
+INSCRIPCION
 );
 
 /*==============================================================*/
 /* Index: INSCRIPTO_A_FK                                        */
 /*==============================================================*/
 create  index INSCRIPTO_A_FK on INSCRIPCION_EXAMEN_POR_ALUMNO (
-CEDULA
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO
 );
 
 /*==============================================================*/
@@ -979,8 +991,8 @@ CURSO
 /* Table: MATERIAS                                              */
 /*==============================================================*/
 create table MATERIAS (
-   MATERIA              D_MATERIA            not null,
-   NOMBRE               D_NOMBRE_MATERIA     null,
+   MATERIA              SERIAL not null,
+   NOMBRE               D_NOMBRE_MATERIA     not null,
    constraint PK_MATERIAS primary key (MATERIA)
 );
 
@@ -992,11 +1004,102 @@ MATERIA
 );
 
 /*==============================================================*/
+/* Table: MATERIAS_POR_CARRERA                                  */
+/*==============================================================*/
+create table MATERIAS_POR_CARRERA (
+   CARRERA              D_CARRERA            not null,
+   MATERIA              D_MATERIA            not null,
+   constraint PK_MATERIAS_POR_CARRERA primary key (CARRERA, MATERIA)
+);
+
+/*==============================================================*/
+/* Index: TIENE2_PK                                             */
+/*==============================================================*/
+create unique index TIENE2_PK on MATERIAS_POR_CARRERA (
+CARRERA,
+MATERIA
+);
+
+/*==============================================================*/
+/* Index: TIENE_FK10                                            */
+/*==============================================================*/
+create  index TIENE_FK10 on MATERIAS_POR_CARRERA (
+CARRERA
+);
+
+/*==============================================================*/
+/* Index: TIENE_FK11                                            */
+/*==============================================================*/
+create  index TIENE_FK11 on MATERIAS_POR_CARRERA (
+MATERIA
+);
+
+/*==============================================================*/
+/* Table: MATRICULAS_POR_ALUMNO                                 */
+/*==============================================================*/
+create table MATRICULAS_POR_ALUMNO (
+   NUMERO_DE_DOCUMENTO  D_DOCUMENT_ID        not null,
+   TIPO_DE_DOCUMENTO    D_TIPO_DOCUMENTO     not null,
+   ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   not null,
+   MATRICULA            D_MATRICULA          not null,
+   constraint PK_MATRICULAS_POR_ALUMNO primary key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO, MATRICULA)
+);
+
+/*==============================================================*/
+/* Index: TIENE_PK                                              */
+/*==============================================================*/
+create unique index TIENE_PK on MATRICULAS_POR_ALUMNO (
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO,
+MATRICULA
+);
+
+/*==============================================================*/
+/* Index: TIENE_FK8                                             */
+/*==============================================================*/
+create  index TIENE_FK8 on MATRICULAS_POR_ALUMNO (
+NUMERO_DE_DOCUMENTO,
+TIPO_DE_DOCUMENTO,
+ORIGEN_DE_DOCUMENTO
+);
+
+/*==============================================================*/
+/* Index: TIENE_FK9                                             */
+/*==============================================================*/
+create  index TIENE_FK9 on MATRICULAS_POR_ALUMNO (
+MATRICULA
+);
+
+/*==============================================================*/
+/* Table: MATRICULAS_POR_CARRERA                                */
+/*==============================================================*/
+create table MATRICULAS_POR_CARRERA (
+   MATRICULA            D_MATRICULA          not null,
+   CARRERA              D_CARRERA            not null,
+   constraint PK_MATRICULAS_POR_CARRERA primary key (MATRICULA)
+);
+
+/*==============================================================*/
+/* Index: MATRICULAS_PK                                         */
+/*==============================================================*/
+create unique index MATRICULAS_PK on MATRICULAS_POR_CARRERA (
+MATRICULA
+);
+
+/*==============================================================*/
+/* Index: PERTENECE_FK                                          */
+/*==============================================================*/
+create  index PERTENECE_FK on MATRICULAS_POR_CARRERA (
+CARRERA
+);
+
+/*==============================================================*/
 /* Table: PROFESORES                                            */
 /*==============================================================*/
 create table PROFESORES (
-   PROFESOR             D_PROFESOR           not null,
-   NOMBRE               D_NOMBRE_USUARIO     null,
+   PROFESOR             SERIAL not null,
+   NOMBRE               D_NOMBRE_USUARIO     not null,
    constraint PK_PROFESORES primary key (PROFESOR)
 );
 
@@ -1011,7 +1114,7 @@ PROFESOR
 /* Table: PROFESORES_POR_CURSO                                  */
 /*==============================================================*/
 create table PROFESORES_POR_CURSO (
-   PROFESOR             D_PROFESOR           not null,
+   PROFESOR             SERIAL not null,
    CURSO                D_CURSO              not null,
    constraint PK_PROFESORES_POR_CURSO primary key (PROFESOR, CURSO)
 );
@@ -1038,29 +1141,19 @@ create  index ENSENHA_FK2 on PROFESORES_POR_CURSO (
 CURSO
 );
 
-alter table ALUMNO_POR_CARRERA
-   add constraint FK_ALUMNO_P_SIGUE_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
+alter table ALUMNOS_POR_CURSO
+   add constraint FK_ALUMNOS__INSCRIPTO_ALUMNOS foreign key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      references ALUMNOS (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
       on delete restrict on update restrict;
 
-alter table ALUMNO_POR_CARRERA
-   add constraint FK_ALUMNO_P_SIGUE_CARRERAS foreign key (CARRERA)
-      references CARRERAS (CARRERA)
-      on delete restrict on update restrict;
-
-alter table ALUMNO_POR_CURSO
-   add constraint FK_ALUMNO_P_INSCRIPTO_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
-      on delete restrict on update restrict;
-
-alter table ALUMNO_POR_CURSO
-   add constraint FK_ALUMNO_P_INSCRIPTO_CURSOS foreign key (CURSO)
+alter table ALUMNOS_POR_CURSO
+   add constraint FK_ALUMNOS__INSCRIPTO_CURSOS foreign key (CURSO)
       references CURSOS (CURSO)
       on delete restrict on update restrict;
 
 alter table ASISTENCIAS_POR_ALUMNO
-   add constraint FK_ASISTENC_TIENE_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
+   add constraint FK_ASISTENC_TIENE_ALUMNOS foreign key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      references ALUMNOS (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
       on delete restrict on update restrict;
 
 alter table ASISTENCIAS_POR_ALUMNO
@@ -1069,8 +1162,8 @@ alter table ASISTENCIAS_POR_ALUMNO
       on delete restrict on update restrict;
 
 alter table CALIFICACIONES_POR_ALUMNO
-   add constraint FK_CALIFICA_TIENE_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
+   add constraint FK_CALIFICA_TIENE_ALUMNOS foreign key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      references ALUMNOS (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
       on delete restrict on update restrict;
 
 alter table CALIFICACIONES_POR_ALUMNO
@@ -1081,16 +1174,6 @@ alter table CALIFICACIONES_POR_ALUMNO
 alter table CARRERAS
    add constraint FK_CARRERAS_TIENE_DEPARTAM foreign key (DEPARTAMENTO)
       references DEPARTAMENTOS (DEPARTAMENTO)
-      on delete restrict on update restrict;
-
-alter table CARRERA_POR_MATERIA
-   add constraint FK_CARRERA__TIENE_CARRERAS foreign key (CARRERA)
-      references CARRERAS (CARRERA)
-      on delete restrict on update restrict;
-
-alter table CARRERA_POR_MATERIA
-   add constraint FK_CARRERA__TIENE_MATERIAS foreign key (MATERIA)
-      references MATERIAS (MATERIA)
       on delete restrict on update restrict;
 
 alter table CORRELATIVA_POR_CARRERA
@@ -1104,7 +1187,7 @@ alter table CORRELATIVA_POR_CARRERA
       on delete restrict on update restrict;
 
 alter table CORRELATIVA_POR_CARRERA
-   add constraint FK_CORRELAT_MATERIA_C_MATERIAS foreign key (MAT_MATERIA)
+   add constraint FK_CORRELAT_MATERIA_C_MATERIAS foreign key (MATERIA_CORRELATIVA)
       references MATERIAS (MATERIA)
       on delete restrict on update restrict;
 
@@ -1119,8 +1202,8 @@ alter table HISTORIAL_EXTRAORDINARIOS
       on delete restrict on update restrict;
 
 alter table HISTORIAL_EXTRAORDINARIOS
-   add constraint FK_HISTORIA_TIENE_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
+   add constraint FK_HISTORIA_TIENE_ALUMNOS foreign key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      references ALUMNOS (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
       on delete restrict on update restrict;
 
 alter table HORARIOS_DE_CLASE
@@ -1139,8 +1222,33 @@ alter table INSCRIPCION_EXAMEN_POR_ALUMNO
       on delete restrict on update restrict;
 
 alter table INSCRIPCION_EXAMEN_POR_ALUMNO
-   add constraint FK_INSCRIPC_INSCRIPTO_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
+   add constraint FK_INSCRIPC_INSCRIPTO_ALUMNOS foreign key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      references ALUMNOS (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      on delete restrict on update restrict;
+
+alter table MATERIAS_POR_CARRERA
+   add constraint FK_MATERIAS_TIENE_CARRERAS foreign key (CARRERA)
+      references CARRERAS (CARRERA)
+      on delete restrict on update restrict;
+
+alter table MATERIAS_POR_CARRERA
+   add constraint FK_MATERIAS_TIENE_MATERIAS foreign key (MATERIA)
+      references MATERIAS (MATERIA)
+      on delete restrict on update restrict;
+
+alter table MATRICULAS_POR_ALUMNO
+   add constraint FK_MATRICUL_TIENE_ALUMNOS foreign key (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      references ALUMNOS (NUMERO_DE_DOCUMENTO, TIPO_DE_DOCUMENTO, ORIGEN_DE_DOCUMENTO)
+      on delete restrict on update restrict;
+
+alter table MATRICULAS_POR_ALUMNO
+   add constraint FK_MATRICUL_TIENE_MATRICUL foreign key (MATRICULA)
+      references MATRICULAS_POR_CARRERA (MATRICULA)
+      on delete restrict on update restrict;
+
+alter table MATRICULAS_POR_CARRERA
+   add constraint FK_MATRICUL_PERTENECE_CARRERAS foreign key (CARRERA)
+      references CARRERAS (CARRERA)
       on delete restrict on update restrict;
 
 alter table PROFESORES_POR_CURSO

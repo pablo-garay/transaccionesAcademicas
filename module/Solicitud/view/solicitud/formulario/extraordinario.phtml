@@ -13,7 +13,19 @@
 	-webkit-border-radius: 200px; "> 
 	SOLICITUD DE EXAMEN EXTRAORDINARIO </h4>
 	<br> <br>
+
+
+	
+	<select id="combo1" >
+    <option value="CalculoI">CalculoI</option>
+    <option value="CalculoII">CalculoII</option>
+</select>
+
+<select id="combo2">
+<option value="0">--Elija el Profesor por favor --</option>
+</select>
 <?php
+
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
 $this->form1->prepare();
@@ -23,9 +35,12 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-
- 
+// 			if ($element->getName() == 'profesor'){
+					
+// 			}
+ 	
 ?>
+		
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
@@ -39,8 +54,6 @@ foreach ($this->form1 as $element) {
 		
         ?>
 	
-
-
 <?php
 	if ( ($element->getName() == 'Email')) {
 ?>
@@ -79,6 +92,32 @@ foreach ($this->form1 as $element) {
     		}
 }
 
+
+?>
+
+<script type="text/javascript">
+
+$("#combo1").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"materia":$("#combo1").val()},
+      success: function(data, textstatus, xhr){
+       // $('#profesor').find('option').remove().end();
+       
+        	$('#combo2').html(data);
+        	     
+      },
+      error: function(xhr, textstatus, errorThrown) {
+    	 alert("AJAX call an epic failure");
+   		}
+	}
+    );
+	});
+</script>
+
+<?php
 echo '</fieldset>';
-echo $this->form()->closeTag();
+echo $this->form()->closeTag(); 
 ?>

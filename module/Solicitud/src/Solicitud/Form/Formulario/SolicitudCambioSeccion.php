@@ -4,24 +4,37 @@ namespace Solicitud\Form\Formulario;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
+require_once "funcionesDB.php";
 
 class SolicitudCambioSeccion extends Solicitud
 {
 
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 
-		parent::__construct($name = 'cambioSeccion', $dbadapter);
+		parent::__construct($name = 'cambioSeccion', $dbadapter, $sapientiaDbadapter);
 
 		$this->setAttribute('method', 'post');
 
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		// rescatar su cedula
+		$usuarioLogueado = 1;
+		
+		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$cedulaUsuario = $datos['cedula'];
 
-
+		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $cedulaUsuario, TRUE);
+		$selectDataMat = $datosAlumno['materias'] ;
+		
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+		
 		$this->add(array(
 				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
-						'value_options' => $this->getAsignaturasDeCarrera(),
+						'empty_option' => 'Seleccione una asignatura..',
+						'value_options' => $selectDataMat,
 				),
 
 		),
@@ -29,6 +42,21 @@ class SolicitudCambioSeccion extends Solicitud
 						'priority' => 350,
 				)
 				);
+		
+// 		$this->add(array(
+// 				'name' => 'materia_seccion_validas',
+// 				'type' => 'Zend\Form\Element\Select',
+// 				'options' => array(
+// 						'label' => 'Asignatura:',
+// 						'empty_option' => 'Seleccione una asignatura..',
+// 						'value_options' => $this->getSecciones(),
+// 				),
+		
+// 		),
+// 				array (
+// 						'priority' => 350,
+// 				)
+// 		);
 
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -207,53 +235,6 @@ class SolicitudCambioSeccion extends Solicitud
 
 		return $this->filter;
 	}
-
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario, nombres FROM usuarios';
-
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-
-
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$dbAdapter = $this->dbAdapter;
-		$sql       = 'SELECT solicitud, resultado_requisitos FROM solicitudes';
-
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			$selectData[$res['resultado_requisitos']] = $res['resultado_requisitos'];
-		}
-		return array('Compiladores' =>'Compiladores', 'SPD' => 'SPD', 'Informática 2' =>'Informática 2');
-
-	}
-
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
-
-
 
 
 	public function setInputFilter(InputFilterInterface $inputFilter)

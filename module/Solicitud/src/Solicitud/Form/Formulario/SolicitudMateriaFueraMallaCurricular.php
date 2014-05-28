@@ -9,12 +9,34 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudMateriaFueraMallaCurricular extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudMateriaFueraMallaCurricular', $dbadapter);
+		parent::__construct($name = 'solicitudMateriaFueraMallaCurricular', $dbadapter, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
-
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		
+		
+		$sql       = "SELECT c.nombre AS n_carrera, m.nombre AS n_materia 
+					 FROM materias AS m
+					 INNER JOIN materias_por_carrera AS mxc ON mxc.materia = m.materia
+					 INNER JOIN carreras AS c ON c.carrera = mxc.carrera";
+		
+		//$usuarioLogueado
+		$statement = $sapientiaDbadapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataCarr = array();
+		$selectDataMat = array();
+		
+		foreach ($result as $res) {
+			$selectDataMat[$res['n_materia']] = $res['n_materia'];
+			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'];
+		}
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+		
+		
 		$this->add(array(
 				'name' => 'Carrera_asignatura',//de la tabla asignatura
 				'type' => 'Zend\Form\Element\Select',
@@ -22,13 +44,7 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 				'options' => array(
 						'label' => 'Carrera',
 						'empty_option' => 'Elija su carrera',
-						'value_options' => array(
-								'Carrera1' => 'Carrera1',
-								'Carrera2' => 'Carrera2',
-								'Carrera3' => 'Carrera3',
-								'Carrera4' => 'Carrera4',
-		
-						),
+						'value_options' => $selectDataCarr,
 		
 				),
 				'attributes' => array(
@@ -46,7 +62,7 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => array('Calculo'=>'Calculo')//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -203,42 +219,6 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 	
 		return $this->filter;
 	}
-	
-	public function getOptionsForSelect()
-	{
-		$dbAdapter = $this->adapter;
-		$sql       = 'SELECT usuario,nombres FROM usuarios';
-	
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['usuario']] = $res['nombres'];
-		}
-		return $selectData;
-	}
-	
-	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesoresDeAsignatura()
-	{
-		//@todo: Rescatar profesores titulares según la asignatura elegida
-	}
-	
-	public function getFechaDeExtraordinario()
-	{
-		//@todo: Rescatar los datos de usuario según la asignatura elegida
-	}
-	
-
 	
 	
 	public function setInputFilter(InputFilterInterface $inputFilter)

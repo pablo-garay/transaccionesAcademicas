@@ -7,17 +7,63 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
+// adaptador de sapientia
+use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDBAdapter;
+
+use Zend\ServiceManager\ServiceLocatorInterface;
+require_once 'funcionesDB.php';
+
 class Solicitud extends Form
 {
 	protected $dbAdapter;
+	protected $sapientiaDbAdapter;
 
 	//parámetro del constructor: adaptador de la base de datos
-	public function __construct( $name = 'solicitud', AdapterInterface $databaseAdapter) {
+	public function __construct( $name = 'solicitud', AdapterInterface $databaseAdapter, AdapterInterface $sapientiaDbAdapter) {
 		$this->dbAdapter = $databaseAdapter; //Asignación de nuestro adaptador de base de datos
+		
+		$this->sapientiaDbAdapter = $sapientiaDbAdapter; //Asignación de nuestro adaptador de base de datos
+		
 		parent::__construct($name);
 
 		$this->setAttribute('method', 'post');
-
+		
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////		
+		
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		$usuarioLogueado = 1;
+		$datos = getDatosUsuario ($databaseAdapter, $usuarioLogueado);
+		
+		$nombresUsuario = $datos['nombres'];
+		$apellidosUsuario = $datos['apellidos'];
+		$telefonoUsuario = $datos['telefono'];
+		$cedulaUsuario = $datos['cedula'];
+		$emailUsuario = $datos['email'];
+		 	
+		
+		// Sapientia
+		$sql       = 'SELECT a.matricula, carr.nombre as n_carrera FROM matriculas_por_alumno AS a 
+				INNER JOIN matriculas_por_carrera AS c ON a.matricula = c.matricula 
+				INNER JOIN carreras AS carr ON c.carrera = carr.carrera
+				AND a.numero_de_documento = '.$cedulaUsuario;  
+				 	
+		
+		$statement = $this->sapientiaDbAdapter->query($sql);
+		$result    = $statement->execute();
+		
+		$selectDataMat = array();
+		$selectDataCarr = array();
+		
+		foreach ($result as $res) {
+			// retornar nombre del usuario
+			$selectDataMat[$res['matricula']] = $res['matricula'];
+			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'] ;
+		}
+		
+		//////////////////////***********FIN Extracción de Datos**************/////////////////
+       
+       
        // Asi es como definimos un elemento (en este caso tipo texto)
         $this->add(array(
         		'name' => 'nombres',// the unique name of the element in the form.
@@ -29,7 +75,8 @@ class Solicitud extends Form
         		// These are the attributes that are passed directly to the HTML element
         				'placeholder' => 'Escriba su nombre...', // HTM5 placeholder attribute
         				'required' => 'required', // Ex: <input required="true"
-        				'value' => $this->getNombres(),
+        				'value' => $nombresUsuario,
+        				//'disabled' => 'disabled'
         		),
         		'options' => array(
         				// This is list of options that we can add to the element.
@@ -47,23 +94,41 @@ class Solicitud extends Form
 				'attributes' => array (
 						'placeholder' => 'Escriba su apellido...',
 						'required' => 'required',
-						'value' => $this->getApellidos ()
+						'value' => $apellidosUsuario,
+						//'disabled' => 'disabled'
 				),
 				'options' => array (
-						'label' => 'Apellidos'
+						'label' => 'Apellidos',
+						
 				)
 		)
 		, array (
 				'priority' => 600,
         ) );
 
+		$this->add(array(
+				'name' => 'telefono',
+				'type' => 'Zend\Form\Element\Text',
+				'options' => array(
+						'label' => 'Teléfono',
+		
+				),
+				'attributes' => array (
+						'value' => $telefonoUsuario, // @todo getphone
+						//'disabled' => 'disabled'
+				),
+		
+		), array (
+				'priority' => 550,
+		) );
+		
         $this->add(array(
         		'name' => 'matricula',
         		'type' => 'Zend\Form\Element\Select',
         		'options' => array(
         				'label' => 'Matrícula',
         				'empty_option' => 'Elija su matricula',
-        				'value_options' => $this->getMatricula(),
+        				'value_options' => $selectDataMat,
         		),
         		'attributes' => array(
         		        'placeholder' => 'Elija su matrícula...',
@@ -79,9 +144,11 @@ class Solicitud extends Form
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array (
 						'label' => 'Carrera',
-						'value_options' => $this->getCarrera ()
+						'empty_option' => 'Elija su carrera',
+						'value_options' => $selectDataCarr,
 				),
 				'attributes' => array (
+						// Below: HTML5 way to specify that the input will be phone number
 						'placeholder' => 'Elija su carrera...',
 						'required' => 'required'
 				)
@@ -89,22 +156,7 @@ class Solicitud extends Form
 				'priority' => 400,
 		) );
 
-        $this->add(array(
-        		'name' => 'telefono',
-        		'type' => 'Zend\Form\Element\Text',
-        		'options' => array(
-        				'label' => 'Teléfono',
 
-        		),
-        		'attributes' => array (
-        				'value' => $this->getTelefono(), // @todo getphone
-        				'required' => 'required'
-        				//'disabled' => 'disabled'
-        		),
-
-		), array (
-				'priority' => 300,
-		) );
 
 
         //This is the submit button
@@ -296,95 +348,16 @@ class Solicitud extends Form
 	{
 		throw new \Exception('It is not allowed to set the input filter');
 	}
-
-	public function getNombres()
+	
+	
+	public function getDbAdapterSapientia()
 	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, nombres FROM usuarios LIMIT 1';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			// retornar nombre del usuario
-			return $res['nombres'];
-		}
-
-		return FALSE; // no se encontraron resultados
+		//instanciar la clase cuyo metodo nos devuelve el adaptador de nuestra bd
+		$database = new SapientiaDBAdapter();
+		//llamamos al metodo que nos devuelve el adaptador de bd
+		$dbAdapter = $database->createService();
+	
+		return $dbAdapter;
 	}
-
-	public function getApellidos()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, apellidos FROM usuarios ORDER BY usuario DESC LIMIT 1';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			// retornar nombre del usuario
-			return $res['apellidos'];
-		}
-
-		return FALSE; // no se encontraron resultados
-	}
-
-	public function getMatricula()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, telefono FROM usuarios';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			$selectData[$res['telefono']] = $res['telefono'];
-		}
-			return array("061039" => "061039");
-	}
-
-	public function getTelefono()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, telefono FROM usuarios';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			return $res['telefono'];
-		}
-		return FALSE;
-	}
-
-	public function getCarrera()
-	{
-		//@todo: Rescatar los datos de usuario según el usuario de la sesión actual
-
-		$sql       = 'SELECT usuario, telefono FROM usuarios';
-
-		$statement = $this->dbAdapter->query($sql);
-		$result    = $statement->execute();
-
-		$selectData = array();
-
-		foreach ($result as $res) {
-			$selectData[$res['telefono']] = $res['telefono'];
-		}
-		return array("Ingeniería Informática" => "Ingeniería Informática");;
-	}
-
 
 }
