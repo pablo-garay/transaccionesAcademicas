@@ -1,4 +1,4 @@
-<?php echo '<?xml version="1.0" encoding="UTF-8"?>';?>
+<?php echo '<?xml version="1.0" encoding="iso-8859-1"?>';?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -177,13 +177,13 @@ a[href] {
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo $nombre." ".$apellido?></p>
+<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
 
-<p>Matr�cula: <?php echo $matricula?></p>
+<p><?php echo ("Matr�cula: ")?><?php echo $matricula?></p>
 
-<p>Carrera: <?php echo $carrera?></p>
+<p>Carrera: <?php echo ($carrera)?></p>
 
-<p>Telefono/Celular: <?php echo $telefono?></p>
+<p><?php echo ("Tel�fono/Celular: ")?><?php echo $telefono?></p>
 
 <p></p>
 
@@ -191,15 +191,15 @@ a[href] {
 <br />
 
 
-<h3>Solicita al Se�or (Director Acad�mico/Decano):</h3>
+<h3><?php echo ("Solicita al Se�or (Director Acad�mico/Decano):")?></h3>
 <br />
 
 
-<p>Titulo: <?php echo $titulo ?></p>
+<p><?php echo ("T�tulo: ")?><?php echo ($titulo) ?></p>
 
-<p>Documentos adjuntos: <?php echo $documento?></p>
+<p>Documentos adjuntos: <?php echo ($documento)?></p>
 
-<p>Descripci�n del documento: <?php echo $descripcion?></p>
+<p><?php echo ("Descripci�n del documento: ")?><?php echo ($descripcion)?></p>
 
 <p></p>
 

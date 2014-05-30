@@ -173,17 +173,17 @@ a[href] {
 <p style="text-align:right;margin-left:auto;margin-right:0;">Mesa de Entrada N: <?php echo $mesaNro?></p>
 <!-- <p style="margin-left:0;"><img src="/visualize/visualize/logo_uca" alt="logo_uca" /> </p>  -->
 
-<h1>SOLICITUD DE REVISION DE ESCOLARIDAD</h1>
+<h1>SOLICITUD DE REVISION DE EXAMEN</h1>
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
+<p>Nombre y Apellidos: <?php echo utf8_encode($nombre." ".$apellido)?></p>
 
-<p><?php echo ("Matr�cula: ")?><?php echo $matricula?></p>
+<p><?php echo utf8_encode("Matr�cula: ")?><?php echo $matricula?></p>
 
-<p>Carrera: <?php echo ($carrera)?></p>
+<p>Carrera: <?php echo $carrera?></p>
 
-<p><?php echo ("Tel�fono/Celular: ")?><?php echo $telefono?></p>
+<p><?php echo utf8_encode("Tel�fono/Celular: ")?><?php echo $telefono?></p>
 
 <p></p>
 
@@ -191,15 +191,39 @@ a[href] {
 <br />
 
 
-<h3><?php echo ("Solicito la revisi�n de escolaridad en la asignatura")?></h3>
-<br />
+<h3><?php echo utf8_encode("Solicita al Se�or (Director Acad�mico/Decano), la revision de examen de la:")?></h3>
 
-
-<p>Asignatura: <?php echo ($asignatura)?></p>
-
-<p>Observaciones: <?php echo ($observaciones)?></p>
+<p><br />
+</p>
 
 <p></p>
+
+<p>Asignatura: <?php echo utf8_encode($asignatura)?></p>
+
+<p>Profesor/es: <?php echo utf8_encode($profesor) ?></p>
+
+<p>Fecha de examen: <?php echo $fechaEXA ?></p>
+
+<p>Oportunidad: <?php echo $oportunidad ?></p>
+
+<p><?php echo utf8_encode("Calificaci�n obtenida: ")?><?php echo $calificacion ?></p>
+
+<p>Motivo: <?php echo utf8_encode($motivo) ?></p>
+
+<p></p>
+<br></br>
+<h4><?php echo utf8_encode("Datos de la revisi�n")?></h4>
+
+<p>Fecha asignada: <?php echo $fechaREVI ?></p>
+
+<p>Hora: <?php echo $horaREVI ?></p>
+
+<p>Lugar: <?php echo utf8_encode($lugarREVI) ?></p>
+
+<p></p>
+<br></br>
+<p><?php echo utf8_encode("AL MOMENTO DE PRESENTAR ESTA SOLICITUD HE TOMADO CONOCIMIENTO DE LA FECHA Y
+HORA DE LA REVISI�N.")?></p>
 <br />
 
 

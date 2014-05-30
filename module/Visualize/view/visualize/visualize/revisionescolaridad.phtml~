@@ -177,13 +177,13 @@ a[href] {
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
+<p>Nombre y Apellidos: <?php echo utf8_encode($nombre." ".$apellido)?></p>
 
-<p><?php echo ("Matr�cula: ")?><?php echo $matricula?></p>
+<p><?php echo utf8_encode("Matr�cula: ")?><?php echo $matricula?></p>
 
-<p>Carrera: <?php echo ($carrera)?></p>
+<p>Carrera: <?php echo utf8_encode($carrera)?></p>
 
-<p><?php echo ("Tel�fono/Celular: ")?><?php echo $telefono?></p>
+<p><?php echo utf8_encode("Tel�fono/Celular: ")?><?php echo $telefono?></p>
 
 <p></p>
 
@@ -191,13 +191,13 @@ a[href] {
 <br />
 
 
-<h3><?php echo ("Solicito la revisi�n de escolaridad en la asignatura")?></h3>
+<h3><?php echo utf8_encode("Solicito la revisi�n de escolaridad en la asignatura")?></h3>
 <br />
 
 
-<p>Asignatura: <?php echo ($asignatura)?></p>
+<p>Asignatura: <?php echo utf8_encode($asignatura)?></p>
 
-<p>Observaciones: <?php echo ($observaciones)?></p>
+<p>Observaciones: <?php echo utf8_encode($observaciones)?></p>
 
 <p></p>
 <br />

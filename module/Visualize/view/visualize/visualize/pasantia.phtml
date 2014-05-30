@@ -1,4 +1,4 @@
-<?php echo '<?xml version="1.0" encoding="UTF-8"?>';?>
+<?php echo '<?xml version="1.0" encoding="iso-8859-1"?>';?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -7,7 +7,7 @@
   <title>Nuevo</title>
   <meta name="generator" content="Amaya, see http://www.w3.org/Amaya/" />
   <style type="text/css" title="Amaya theme">
-/* Classic style for Amaya Editor Lite */
+
 
 /* default rules for the whole document */
 body {
@@ -177,38 +177,38 @@ a[href] {
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo $nombre." ".$apellido?></p>
+<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
 
-<p>Matricula: <?php echo $matricula?></p>
+<p><?php echo ("Matr�cula: ")?><?php echo $matricula?></p>
 
 <p>Carrera: <?php echo $carrera?></p>
 
-<p>Telefono/Celular: <?php echo $telefono?></p>
+<p><?php echo ("Tel�fono/Celular: ")?><?php echo $telefono?></p>
 
 <p></p>
 
 <p></p>
 
 <br />
-<h3>Solicita al (Director Academico/Decano), el permiso para pasantia en:</h3>
+<h3><?php echo ("Solicita al (Director Academico/Decano), el permiso para pasantia en:")?></h3>
 <br />
 
 
 <p></p>
 
-<p>Lugar: <?php echo $lugar?></p>
+<p>Lugar: <?php echo ($lugar)?></p>
 
-<p>Direcci�n: <?php echo $direccion?></p>
+<p>Direcci�n: <?php echo ($direccion)?></p>
 
-<p>Email: <?php echo $email?></p>
+<p>Email: <?php echo ($email)?></p>
 
-<p>Motivo: <?php echo $motivo?></p>
+<p>Motivo: <?php echo ($motivo)?></p>
 
-<p>Especificaci�n del motivo: <?php echo $esp_motivo?></p>
+<p><?php echo ("Especificaci�n del motivo: ")?><?php echo ($esp_motivo)?></p>
 
-<p>Documento adjunto: <?php echo $adjunto?></p>
+<p>Documento adjunto: <?php echo ($adjunto)?></p>
 
-<p>Especificaci�n del documento adjunto: <?php echo $esp_adjunto?></p>
+<p><?php echo ("Especificaci�n del documento adjunto: ")?><?php echo ($esp_adjunto)?></p>
 <p></p>
 
 <p></p>

@@ -1,4 +1,4 @@
-<?php echo '<?xml version="1.0" encoding="UTF-8"?>';?>
+<?php echo '<?xml version="1.0" encoding="iso-8859-1"?>';?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -177,13 +177,13 @@ a[href] {
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo $nombre." ".$apellido?></p>
+<p>Nombre y Apellidos: <?php echo ($nombre)." ".($apellido)?></p>
 
 <p>Matr�cula: <?php echo $matricula?></p>
 
-<p>Carrera: <?php echo $carrera?></p>
+<p>Carrera: <?php echo ($carrera)?></p>
 
-<p>Telefono/Celular: <?php echo $telefono?></p>
+<p><?php echo ("Tel�fono/Celular")?>: <?php echo $telefono?></p>
 
 <p></p>
 
@@ -191,18 +191,18 @@ a[href] {
 <br />
 
 
-<h3>Solicita al Se�or (Director Acad�mico/Decano), para ser colaborador de
+<h3>Solicita al <?php echo ("Se�or (Director Acad�mico")?>/Decano), para ser colaborador de
 la:</h3>
 <br />
 
 
 <p></p>
 
-<p>Asignatura: <?php echo $asignatura?></p>
+<p>Asignatura: <?php echo ($asignatura)?></p>
 
-<p>Profesor: <?php echo $profesor?></p>
+<p>Profesor: <?php echo ($profesor)?></p>
 
-<p>Acompa�a a la solicitud: <?php echo $adjunto?></p>
+<p><?php echo ("Acompa�a a la solicitud")?>: <?php echo ($adjunto)?></p>
 
 <p></p>
 

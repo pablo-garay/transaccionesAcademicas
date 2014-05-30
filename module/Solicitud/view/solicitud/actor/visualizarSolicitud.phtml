@@ -1,0 +1,84 @@
+<h4  style="
+	margin: 1em 20px;
+	padding: 10px;
+
+	background-color: #f2f2f2;
+	color: #555;
+	font-size: 140%;
+	text-align: center;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	-webkit-border-radius: 200px; ">
+	<?php echo $this->title; ?> </h4>
+   <?php
+    foreach ($this->data as $keyControl => $element) {
+
+		echo sprintf($this->translate('<h5 align="center"><b>Mesa de Entrada:</b> %s &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp'), $element['mesa_entrada']);
+		echo sprintf($this->translate('<b>Fecha:</b> %s <br></h5>'), $element['fecha_solicitada']);
+    	?>
+    	
+    	<h5 align = "left"> DATOS DEL ALUMNO</h5><pre><?php
+    	echo sprintf($this->translate('<b>Nombres:</b> %s		'), $element['nombres']);    	
+    	echo sprintf($this->translate('<b>Apellidos:</b> %s		'), $element['apellidos']);    	
+    	echo sprintf($this->translate('<b>Carrera:</b> %s <br>'), $element['carrera']);    	
+    	echo sprintf($this->translate('<b>Teléfono:</b> %s	'), $element['telefono']);    	
+    	echo sprintf($this->translate('<b>Email:</b> %s'), $element['email']);
+    	
+    	?></pre><h5 align = "left"> DATOS DE LA SOLICITUD</h5><pre><?php
+    			    	
+    	
+	   foreach ($element as $key => $value) {
+
+			
+			if ($key == 'materia') {
+				echo sprintf($this->translate('<b>Asignatura:</b> %s <br>'), $element['materia']);
+
+			}else if ($key == 'fecha_extraordinario') {
+				echo sprintf($this->translate('<b>Fecha de Examen:</b> %s	'), $element['fecha_extraordinario']);
+
+			}else if ($key == 'motivo') {
+				echo sprintf($this->translate('<b>Justificación: </b> %s	'), $element['motivo']);
+
+			}else if ($key == 'archivo') {
+				echo sprintf($this->translate('<b>Documento Adjunto:</b> %s <br>'), $element['archivo']);
+
+			}else if ($key == 'cumple_fecha') {
+				?></pre><h5 align = "left"> REQUISITOS DE LA SOLICITUD</h5><pre><?php
+				echo sprintf($this->translate('<b>Plazo de 5 días para la presentación de la solicitud:</b> %s <br>'), $element['cumple_fecha']);
+
+			}else if ($key == 'inscripto_tercera_op') {
+				echo sprintf($this->translate('<b>Inscripto en tercera oprotunidad:</b> %s <br>'), $element['inscripto_tercera_op']);
+
+			}else if ($key == 'ausente_tercera_op') {
+				echo sprintf($this->translate('<b>Ausente en tercera oportunidad:</b> %s <br>'), $element['ausente_tercera_op']);
+
+			}
+
+
+	  }
+
+   }
+   ?></pre><h5 align = "left"> OBSERVACIONES</h5><pre>
+   <?php
+   $this->form1->setAttribute('class', 'form-horizontal');
+   $form = $this->form1;
+   $form->prepare();
+
+   echo $this->form()->openTag($form);
+   echo $this->formRow($form->get('observaciones'));
+   ?>
+    <a href="https://docs.google.com/file/d/0B62u95FJxevPdUJfSlBlVUg5bXc/edit" target="_blank"> Ver el Historial de Extraordinarios</a>      <a href="https://drive.google.com/?tab=wo#folders/0B62u95FJxevPS1Rqdm5PVEUzems" target="_blank"> Ver la Situación Académica</a>
+   </pre> <div style="text-align:center;"><br>
+   <?php
+   foreach ($this->form1 as $element){
+	  if ($element instanceof Zend\Form\Element\Submit){
+		  echo $this->formRow($element->setAttribute('class', 'btn btn-primary'));
+		  echo sprintf(" ");
+	  }
+   }
+
+   echo $this->form()->closeTag();
+
+   ?></div><br><br>

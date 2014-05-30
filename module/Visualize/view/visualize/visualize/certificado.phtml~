@@ -170,47 +170,75 @@ a[href] {
 </head>
 
 <body>
-<p style="text-align:right;margin-left:auto;margin-right:0;">Mesa de Entrada N: <?php echo $mesaNro?></p>
+<p style="text-align:right;margin-left:auto;margin-right:0;">Mesa de entrada N: <?php echo $mesaNro?></p>
 <!-- <p style="margin-left:0;"><img src="/visualize/visualize/logo_uca" alt="logo_uca" /> </p>  -->
 
-<h1>SOLICITUD DE REVISION DE ESCOLARIDAD</h1>
+<h1>SOLICITUD DE CERTIFICADO DE ESTUDIOS</h1>
 
 <p>Fecha: <?php echo $fecha?></p>
+<br></br>
 
-<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
+<p><strong>Decano</strong></p>
 
-<p><?php echo ("Matr�cula: ")?><?php echo $matricula?></p>
+<p><strong>Facultad de Ciencias y <?php echo utf8_encode("Tecnolog�a") ?></strong></p>
 
-<p>Carrera: <?php echo ($carrera)?></p>
+<p><strong>UNIVERSIDAD CATOLICA</strong></p>
 
-<p><?php echo ("Tel�fono/Celular: ")?><?php echo $telefono?></p>
+<p></p>
+<br></br>
+<p>De mi <?php echo utf8_encode("consideraci�n") ?>:</p>
+
+<p>Es objeto de la presente, solicitar a usted se me expida un certificado de
+estudios.</p>
+
+<p></p>
+<br></br>
+<p><strong>DATOS PERSONALES</strong></p>
+
+<p><strong>Nombres y Apellidos: </strong><?php echo $nombre.$apellido?></p>
+
+<p><strong><?php echo utf8_encode("Matr�cula") ?>: </strong><?php echo $matricula?></p>
+
+<p><strong>C.I. Nro: </strong><?php echo $documento?></p>
+
+<p><strong><?php echo utf8_encode("Tel�fono") ?>: </strong><?php echo $telefono?></p>
+
+<p><strong>E-mail: </strong><?php echo $email?></p>
+
+<p></p>
+<br></br>
+<p><strong>DATOS ACADEMICOS</strong></p>
+
+<p><strong>Carreras diurnas: </strong><?php echo $materiasDiurnas?></p>
+
+<p><strong>Carreras nocturnas: </strong><?php echo $materiasNocturnas?></p>
+
+<p></p>
+<br></br>
+<p><strong>DATOS ADMINISTRATIVOS</strong></p>
+
+<p><strong>Tipo de certificado que solicito: </strong><?php echo $tipo?></p>
 
 <p></p>
 
+<p><strong>Solicito titulo de: </strong><?php echo $titulo?></p>
+
+<p><strong></strong></p>
+<br></br>
+<p><strong><?php echo utf8_encode("SOLICIT� ") ?>CERTIFICADO DE ESTUDIOS ANTERIORMENTE: </strong><?php echo $respuesta?></p>
+<br></br>
 <p></p>
-<br />
 
+<p><strong>Observaciones:</strong><?php echo utf8_encode($observaciones)?></p>
 
-<h3><?php echo ("Solicito la revisi�n de escolaridad en la asignatura")?></h3>
-<br />
+<p><br />
+</p>
 
-
-<p>Asignatura: <?php echo ($asignatura)?></p>
-
-<p>Observaciones: <?php echo ($observaciones)?></p>
-
-<p></p>
-<br />
-
-
-<p style="text-align:left;margin-right:auto;margin-left:10em">Con todo
-respeto.</p>
-<br />
-<br />
-
+<p>Sin otro particular me despido atentamente.</p>
 
 <p style="text-align:left;margin-left:0;margin-right:auto;"></p>
-
+<br></br>
+<br></br>
 <p
 style="text-align:center;margin-left:auto;margin-right:auto;">________________________</p>
 

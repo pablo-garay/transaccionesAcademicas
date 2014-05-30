@@ -12,7 +12,10 @@ class DecanoSolicitud extends Form
 {
 
 	protected $adapter;
-	public function __construct(AdapterInterface $dbadapter) { //parámetro del constructor: adaptador de la base de datos
+	
+	//parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $aprobarEnabled, $vistoBuenoEnabled) 
+	{ 
 		$this->adapter = $dbadapter; //Asignación de nuestro adaptador de base de datos
 		parent::__construct('solicitud');
 
@@ -35,21 +38,39 @@ class DecanoSolicitud extends Form
 				)
 		);
 
+		if ($aprobarEnabled){
+			//This is the submit button
+			$this->add(array(
+					'name' => 'Aprobar',
+					'type' => 'Zend\Form\Element\Submit',
+					'attributes' => array(
+							'value' => 'Aprobar',
+							'required' => 'false',
+			
+					),
+			),
+					array (
+							'priority' => 495,
+					)
+			);
+		}
 
-		//This is the submit button
-		$this->add(array(
-				'name' => 'Aprobar',
-				'type' => 'Zend\Form\Element\Submit',
-				'attributes' => array(
-						'value' => 'Aprobar',
-						'required' => 'false',
+		if ($vistoBuenoEnabled){
+			$this->add(array(
+					'name' => 'VistoBueno',
+					'type' => 'Zend\Form\Element\Submit',
+					'attributes' => array(
+							'value' => 'Visto Bueno y Derivar',
+							'required' => 'false',
+			
+					),
+			),
+					array (
+							'priority' => 495,
+					)
+			);
+		}
 
-				),
-		),
-				array (
-						'priority' => 475,
-				)
-		);
 
 		$this->add(array(
 				'name' => 'Pendiente',
@@ -92,20 +113,6 @@ class DecanoSolicitud extends Form
 		),
 				array (
 						'priority' => 470,
-				)
-		);
-
-		$this->add(array(
-				'name' => 'VistoBueno',
-				'type' => 'Zend\Form\Element\Submit',
-				'attributes' => array(
-						'value' => 'Visto Bueno y Derivar',
-						'required' => 'false',
-
-				),
-		),
-				array (
-						'priority' => 460,
 				)
 		);
 
@@ -180,19 +187,11 @@ class DecanoSolicitud extends Form
 			) ) );
 
 
-
-
-			// @todo: posiblemente agregar filtros a los demas campos
-
 			$this->filter = $inputFilter;
 		}
 
 		return $this->filter;
 	}
-
-
-
-
 
 
 	public function setInputFilter(InputFilterInterface $inputFilter)

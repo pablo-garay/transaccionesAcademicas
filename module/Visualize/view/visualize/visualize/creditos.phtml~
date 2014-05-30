@@ -173,31 +173,32 @@ a[href] {
 <p style="text-align:right;margin-left:auto;margin-right:0;">Mesa de Entrada N: <?php echo $mesaNro?></p>
 <!-- <p style="margin-left:0;"><img src="/visualize/visualize/logo_uca" alt="logo_uca" /> </p>  -->
 
-<h1>SOLICITUD DE REVISION DE ESCOLARIDAD</h1>
+<h1>SOLICITUD DE CREDITOS ACADEMICOS</h1>
+
+<p><strong><?php echo utf8_encode("A la direcci�n del Departamento que corresponda")?></strong></p>
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
+<p>Nombre y Apellidos: <?php echo $nombre." ".$apellido?></p>
 
-<p><?php echo ("Matr�cula: ")?><?php echo $matricula?></p>
+<p>Carrera: <?php echo $carrera?></p>
 
-<p>Carrera: <?php echo ($carrera)?></p>
+<p><?php echo utf8_encode("Matr�cula:")?> <?php echo $matricula?></p>
 
-<p><?php echo ("Tel�fono/Celular: ")?><?php echo $telefono?></p>
-
-<p></p>
+<p><?php echo utf8_encode("Tel�fono/Celular:")?> <?php echo $telefono?></p>
 
 <p></p>
-<br />
+<br></br>
+<p><strong>Solicita a esa <?php echo utf8_encode("direcci�n")?> el otorgamiento de cr�ditos por las
+siguientes actividades:</strong></p>
+<br></br>
+<p>Actividad: <?php echo utf8_encode($actividad)?></p>
 
+<p>Fecha de inicio de la actividad: <?php echo $fechaIni?></p>
 
-<h3><?php echo ("Solicito la revisi�n de escolaridad en la asignatura")?></h3>
-<br />
+<p>Fecha de fin de la actividad: <?php echo $fechaFin?></p>
 
-
-<p>Asignatura: <?php echo ($asignatura)?></p>
-
-<p>Observaciones: <?php echo ($observaciones)?></p>
+<p><?php echo utf8_encode("Descripci�n:")?> <?php echo utf8_encode($descripcion)?></p>
 
 <p></p>
 <br />

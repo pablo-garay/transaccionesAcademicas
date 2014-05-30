@@ -80,19 +80,26 @@
    ?>
     <a href="https://docs.google.com/file/d/0B62u95FJxevPdUJfSlBlVUg5bXc/edit" target="_blank"> Ver el Historial de Extraordinarios</a>      <a href="https://drive.google.com/?tab=wo#folders/0B62u95FJxevPS1Rqdm5PVEUzems" target="_blank"> Ver la Situación Académica</a>
    </pre><pre><?php
- //  setAttribute('class', 'btn btn-primary');
    echo sprintf("			  ");
-   echo $this->formRow($form->get('Aprobar')->setAttribute('class', 'btn btn-primary'));
-   echo sprintf(" ");
-   echo $this->formRow($form->get('Pendiente')->setAttribute('class', 'btn btn-primary'));
-   echo sprintf(" ");
-   echo $this->formRow($form->get('Anular')->setAttribute('class', 'btn btn-primary'));
-   echo sprintf(" ");
-   echo $this->formRow($form->get('Rechazar')->setAttribute('class', 'btn btn-primary'));
-   echo sprintf(" ");
-   echo $this->formRow($form->get('EnviarCorreo')->setAttribute('class', 'btn btn-primary'));
-   echo sprintf(" ");
-   echo $this->formRow($form->get('Imprimir')->setAttribute('class', 'btn btn-primary'));
+   
+   foreach ($this->form1 as $element){
+	  if ($element instanceof Zend\Form\Element\Submit){
+		  echo $this->formRow($element->setAttribute('class', 'btn btn-primary'));
+		  echo sprintf(" ");
+	  }
+   }
+
+   // echo $this->formRow($form->get('Aprobar')->setAttribute('class', 'btn btn-primary'));
+//    echo sprintf(" ");
+//    echo $this->formRow($form->get('Pendiente')->setAttribute('class', 'btn btn-primary'));
+//    echo sprintf(" ");
+//    echo $this->formRow($form->get('Anular')->setAttribute('class', 'btn btn-primary'));
+//    echo sprintf(" ");
+//    echo $this->formRow($form->get('Rechazar')->setAttribute('class', 'btn btn-primary'));
+//    echo sprintf(" ");
+//    echo $this->formRow($form->get('EnviarCorreo')->setAttribute('class', 'btn btn-primary'));
+//    echo sprintf(" ");
+//    echo $this->formRow($form->get('Imprimir')->setAttribute('class', 'btn btn-primary'));
 
    echo $this->form()->closeTag();
 

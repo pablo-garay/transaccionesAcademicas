@@ -1,4 +1,4 @@
-<?php echo '<?xml version="1.0" encoding="UTF-8"?>';?>
+<?php echo '<?xml version="1.0" encoding="iso-8859-1"?>';?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -175,8 +175,7 @@ a[href] {
 
 <h1>SOLICITUD DE CREDITOS ACADEMICOS</h1>
 
-<p style="font-family: Arial,Helvetica,sans-serif"><strong>A la direcci�n del
-Departamento que corresponda</strong></p>
+<p><strong><?php echo ("A la direcci�n del Departamento que corresponda")?></strong></p>
 
 <p>Fecha: <?php echo $fecha?></p>
 
@@ -184,22 +183,22 @@ Departamento que corresponda</strong></p>
 
 <p>Carrera: <?php echo $carrera?></p>
 
-<p>Matricula: <?php echo $matricula?></p>
+<p><?php echo ("Matr�cula:")?> <?php echo $matricula?></p>
 
-<p>Telefono/Celular: <?php echo $telefono?></p>
+<p><?php echo ("Tel�fono/Celular:")?> <?php echo $telefono?></p>
 
 <p></p>
 <br></br>
-<p><strong>Solicita a esa direcci�n el otorgamiento de cr�ditos por las
+<p><strong>Solicita a esa <?php echo ("direcci�n")?> el otorgamiento de cr�ditos por las
 siguientes actividades:</strong></p>
 <br></br>
-<p>Actividad: <?php echo $actividad?></p>
+<p>Actividad: <?php echo ($actividad)?></p>
 
 <p>Fecha de inicio de la actividad: <?php echo $fechaIni?></p>
 
 <p>Fecha de fin de la actividad: <?php echo $fechaFin?></p>
 
-<p>Descripci�n: <?php echo $descripcion?></p>
+<p><?php echo ("Descripci�n:")?> <?php echo ($descripcion)?></p>
 
 <p></p>
 <br />

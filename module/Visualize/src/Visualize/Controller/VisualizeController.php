@@ -287,6 +287,8 @@ class VisualizeController extends AbstractActionController
           'carrera' => '---',
           'telefono' => '---',
           #CAMPOS DE SOLICITUD
+          'asignatura' => '---',
+          'observaciones' => '---',
             )); 
         return $pdf;
     } 
@@ -449,8 +451,5 @@ class VisualizeController extends AbstractActionController
           'esp_motivo' => '---',
           )); 
         return $pdf;
-    } 
-
-
+    }
 }
-

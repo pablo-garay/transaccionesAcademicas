@@ -1,4 +1,4 @@
-<?php echo '<?xml version="1.0" encoding="UTF-8"?>';?>
+<?php echo '<?xml version="1.0" encoding="iso-8859-1"?>';?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -173,17 +173,17 @@ a[href] {
 <p style="text-align:right;margin-left:auto;margin-right:0;">Mesa de Entrada N: <?php echo $mesaNro ?></p>
 <!-- <p style="margin-left:0;"><img src="/visualize/visualize/logo_uca" alt="logo_uca" /> </p>  -->
 
-<h1>Solicitud de Asignatura Fuera de Malla Curricular</h1>
+<h1>SOLICITUD DE ASIGNATURA FUERA DE MALLA</h1>
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo $nombre." ".$apellido?></p>
+<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
 
-<p>Matr�cula: <?php echo $matricula?></p>
+<p><?php echo ("Matr�cula: ")?><?php echo $matricula?></p>
 
-<p>Carrera: <?php echo $carrera?></p>
+<p>Carrera: <?php echo ($carrera)?></p>
 
-<p>Telefono/Celular: <?php echo $telefono?></p>
+<p><?php echo ("Tel�fono/Celular: ")?><?php echo $telefono?></p>
 
 <p></p>
 
@@ -191,16 +191,16 @@ a[href] {
 <br />
 
 
-<h3>Solicita al Se�or (Director Acad�mico/Decano), poder cursar fuera de malla
-curricular la:</h3>
+<h3><?php echo ("Solicita al Se�or (Director Acad�mico/Decano), poder cursar fuera de malla
+curricular la:")?></h3>
 <br />
 
 
-<p>Asignatura: <?php echo $asignatura?></p>
+<p>Asignatura: <?php echo ($asignatura)?></p>
 
-<p>Motivo: <?php echo $motivo?></p>
+<p>Motivo: <?php echo ($motivo)?></p>
 
-<p>Especificaci�n del motivo: <?php echo $esp_motivo?></p>
+<p><?php echo ("Especificaci�n del motivo: ")?><?php echo ($esp_motivo)?></p>
 
 <p></p>
 

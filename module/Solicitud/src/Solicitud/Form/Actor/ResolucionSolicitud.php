@@ -8,7 +8,7 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
 
-class AlumnoSolicitud extends Form
+class ResolucionSolicitud extends Form
 {
 
 	protected $adapter;
@@ -57,50 +57,20 @@ class AlumnoSolicitud extends Form
 
 	}
 
-	public function getInputFilter()
-	{
-		if (! $this->filter) {
-			$inputFilter = new InputFilter();
-			$factory = new InputFactory ();
-
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'observaciones',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-
-					)
-			) ) );
+// 	public function getInputFilter()
+// 	{
+// 		if (! $this->filter) {
+// 			$inputFilter = new InputFilter();
+// 			$factory = new InputFactory ();
 
 
+// 			// @todo: posiblemente agregar filtros a los demas campos
 
+// 			$this->filter = $inputFilter;
+// 		}
 
-			// @todo: posiblemente agregar filtros a los demas campos
-
-			$this->filter = $inputFilter;
-		}
-
-		return $this->filter;
-	}
-
-
-
-
+// 		return $this->filter;
+// 	}
 
 
 	public function setInputFilter(InputFilterInterface $inputFilter)
