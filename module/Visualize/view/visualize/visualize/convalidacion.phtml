@@ -1,12 +1,13 @@
 <?php echo '<?xml version="1.0" encoding="iso-8859-1"?>';?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <title>Nuevo</title>
   <meta name="generator" content="Amaya, see http://www.w3.org/Amaya/" />
   <style type="text/css" title="Amaya theme">
+
 
 /* default rules for the whole document */
 body {
@@ -172,47 +173,29 @@ a[href] {
 <p style="text-align:right;margin-left:auto;margin-right:0;">Mesa de Entrada N: <?php echo $mesaNro?></p>
 <!-- <p style="margin-left:0;"><img src="/visualize/visualize/logo_uca" alt="logo_uca" /> </p>  -->
 
-<h1>SOLICITUD DE INSCRIPCION TARDIA A EXAMEN</h1>
+<h1>SOLICITUD DE CONVALIDACION DE MATERIAS</h1>
 
 <p>Fecha: <?php echo $fecha?></p>
 
-<p>Nombre y Apellidos: <?php echo $nombre." ".$apellido?></p>
+<p>Nombre y Apellidos: <?php echo ($nombre." ".$apellido)?></p>
 
-<p><?php echo utf8_encode("Matr�cula: ")?><?php echo $matricula?></p>
 
-<p>Carrera: <?php echo utf8_encode($carrera)?></p>
-
-<p><?php echo utf8_encode("Telefono/Celular: ")?><?php echo $telefono?></p>
+<p><?php echo ("Teléfono/Celular: ")?><?php echo $telefono?></p>
 
 <p></p>
 
 <p></p>
-<br />
+<br/>
+<h3><?php echo ("Solicita al señor (Director Académico/Decano), la convalidación de materias de la:")?></h3>
+<br/>
 
+<p>Universidad de origen: <?php echo ($universidad)?></p>
+<p>Dirección de la universidad de origen: <?php echo ($direUniversidad)?></p>
+<p>Teléfono de la universidad de origen: <?php echo ($telUniversidad)?></p>
+<p>Email de la universidad de origen: <?php echo ($emailUniversidad)?></p>
+<p>Carrera: <?php echo ($carrera)?></p>
 
-<h3><?php echo utf8_encode("Solicita al Se�or (Director Acad�mico/Decano), la inscripci�n tard�a a
-examen de la:")?></h3>
-<br />
-
-
-<p></p>
-
-<p>Asignatura: <?php echo utf8_encode($asignatura) ?></p>
-
-<p>Oportunidad: <?php echo $oportunidad?></p>
-
-<p>Fecha de examen: <?php echo $fechaEXA?></p>
-
-<p>Motivo: <?php echo utf8_encode($motivo) ?></p>
-
-<p><?php echo utf8_encode("Especificaci�n de motivo:")?> <?php echo utf8_encode($especificacion) ?></p>
-
-<p><?php echo utf8_encode("Acompa�a a la solicitud: ")?><?php echo utf8_encode($adjunto)?></p>
-
-<p></p>
-
-<p></p>
-<br />
+<br/>
 
 
 <p style="text-align:left;margin-right:auto;margin-left:10em">Con todo
