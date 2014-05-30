@@ -165,11 +165,23 @@ class ActorController extends AbstractActionController
 					case 'recepcion':
 						$this->cambiarEstadoSolicitud('RCDA', 'PEND', $id_solicitud);
 						break;
-					case 'secretaria':
+					case 'secretariageneral':
 						$this->cambiarEstadoSolicitud('DEL_SG', 'PEND', $id_solicitud);
+						break;
+					case 'secretariadepartamento':
+						$this->cambiarEstadoSolicitud('DEL_SD', 'PEND', $id_solicitud);
+						break;
+					case 'secretariaacademica':
+						$this->cambiarEstadoSolicitud('DEL_SA', 'PEND', $id_solicitud);
 						break;
 					case 'decano':
 						$this->cambiarEstadoSolicitud('DEL_DE', 'PEND', $id_solicitud);
+						break;
+					case 'directoracademico':
+						$this->cambiarEstadoSolicitud('DEL_DA', 'PEND', $id_solicitud);
+						break;
+					case 'directordepartamento':
+						$this->cambiarEstadoSolicitud('DEL_DD', 'PEND', $id_solicitud);
 						break;
 				}
 				$message = "La solicitud fue marcada como pendiente";
@@ -180,8 +192,14 @@ class ActorController extends AbstractActionController
 					case 'recepcion':
 						$this->cambiarEstadoSolicitud('DEL_SG', 'NUEVO', $id_solicitud);
 						break;
-					case 'secretaria':
+					case 'secretariageneral':
 						$this->cambiarEstadoSolicitud('DEL_DE', 'NUEVO', $id_solicitud);
+						break;
+					case 'secretariadepartamento':
+						$this->cambiarEstadoSolicitud('DEL_DD', 'NUEVO', $id_solicitud);
+						break;
+					case 'secretariaacademica':
+						$this->cambiarEstadoSolicitud('DEL_DA', 'NUEVO', $id_solicitud);
 						break;
 				}
 				$message = "La solicitud fue derivada";			
@@ -226,11 +244,25 @@ class ActorController extends AbstractActionController
 	}
 
 
-	public function secretariaAction()
+	public function secretariageneralAction()
 	{
 		$this->setDbAdapter(); # init DB adapter
-		$form = new Form\VisualizarSolicitud($this->dbAdapter);
-		return $this->solicitudActorHandler($form, 'secretaria');
+		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+		return $this->solicitudActorHandler($form, 'secretariageneral');
+	}
+	
+	public function secretariadepartamentoAction()
+	{
+		$this->setDbAdapter(); # init DB adapter
+		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+		return $this->solicitudActorHandler($form, 'secretariadepartamento');
+	}
+	
+	public function secretariaacademicaAction()
+	{
+		$this->setDbAdapter(); # init DB adapter
+		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+		return $this->solicitudActorHandler($form, 'secretariaacademica');
 	}
 
 	public function decanoAction()
@@ -244,14 +276,14 @@ class ActorController extends AbstractActionController
 	{
 		$this->setDbAdapter(); # init DB adapter
 		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = TRUE, $vistoBuenoEnabled = FALSE);
-		return $this->solicitudActorHandler($form, 'decano');
+		return $this->solicitudActorHandler($form, 'directoracademico');
 	}
 	
 	public function directordepartamentoAction()
 	{
 		$this->setDbAdapter(); # init DB adapter
 		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = TRUE, $vistoBuenoEnabled = FALSE);
-		return $this->solicitudActorHandler($form, 'decano');
+		return $this->solicitudActorHandler($form, 'directordepartamento');
 	}
 
 	public function alumnoAction()

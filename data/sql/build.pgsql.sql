@@ -1,332 +1,334 @@
-﻿/*==============================================================*/
+/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     5/25/2014 10:54:36 PM                        */
+/* Created on:     5/29/2014 10:00:12 PM                        */
 /*==============================================================*/
 
 
--- drop index ALUMNOS_PK;
--- 
--- drop table ALUMNOS;
--- 
--- drop index INCLUYE_INTEGRANTES_FK2;
--- 
--- drop index INCLUYE_INTEGRANTES_FK;
--- 
--- drop index INCLUYE_INTEGRANTES_PK;
--- 
--- drop table ALUMNOS_POR_TESIS;
--- 
--- drop index TIENE_FK3;
--- 
--- drop index ASIGNATURAS_POR_SOLICITUD_PK;
--- 
--- drop table ASIGNATURAS_POR_SOLICITUD;
--- 
--- drop index CREDITOS_POR_CARRERA_PK;
--- 
--- drop table CREDITOS_POR_CARRERA;
--- 
--- drop index TIENE_FK;
--- 
--- drop index DOCUMENTOS_ADJUNTOS_PK;
--- 
--- drop table DOCUMENTOS_ADJUNTOS;
--- 
--- drop index FECHAS_DE_RESOLUCION_DE_SOLICITUDES_PK;
--- 
--- drop table FECHAS_DE_RESOLUCION_DE_SOLICITUDES;
--- 
--- drop index TIENE_FK2;
--- 
--- drop index HISTORIAL_EXTRAORDINARIOS_PK;
--- 
--- drop table HISTORIAL_EXTRAORDINARIOS;
--- 
--- drop index GENERADO_SEGUN_FK;
--- 
--- drop index ACCEDE_A_FK;
--- 
--- drop index LOGS_PK;
--- 
--- drop table LOGS;
--- 
--- drop index PARAMETROS_LOGS_PK;
--- 
--- drop table PARAMETROS_LOGS;
--- 
--- drop table PARAMETROS_REQUISITOS;
--- 
--- drop index PERMISOS_PK;
--- 
--- drop table PERMISOS;
--- 
--- drop index CONTIENE_FK3;
--- 
--- drop index CONTIENE_FK2;
--- 
--- drop index CONTIENE_PK;
--- 
--- drop table PERMISOS_POR_ROL;
--- 
--- drop index ROLES_PK;
--- 
--- drop table ROLES;
--- 
--- drop index TIENE_ASIGNADO_FK2;
--- 
--- drop index TIENE_ASIGNADO_FK;
--- 
--- drop index TIENE_ASIGNADO_PK;
--- 
--- drop table ROLES_POR_USUARIO;
--- 
--- drop index HECHA_POR_FK;
--- 
--- drop index SOLICITUDES_PK;
--- 
--- drop table SOLICITUDES;
--- 
--- drop index SOLICITUDES_VARIAS_PK;
--- 
--- drop table SOLICITUDES_VARIAS;
--- 
--- drop index SOLICITUD_DE_CAMBIO_DE_SECCION_PK;
--- 
--- drop table SOLICITUD_DE_CAMBIO_DE_SECCION;
--- 
--- drop index SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS_PK;
--- 
--- drop table SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS;
--- 
--- drop index SOLICITUD_DE_COLABORADOR_DE_CATEDRA_PK;
--- 
--- drop table SOLICITUD_DE_COLABORADOR_DE_CATEDRA;
--- 
--- drop index SOLICITUD_DE_CONVALIDACION_DE_MATERIAS_PK;
--- 
--- drop table SOLICITUD_DE_CONVALIDACION_DE_MATERIAS;
--- 
--- drop index SOLICITUD_DE_CREDITOS_ACADEMICOS_PK;
--- 
--- drop table SOLICITUD_DE_CREDITOS_ACADEMICOS;
--- 
--- drop index SOLICITUD_DE_DESINSCRIPCION_DE_CURSO_PK;
--- 
--- drop table SOLICITUD_DE_DESINSCRIPCION_DE_CURSO;
--- 
--- drop index SOLICITUD_DE_EXONERACION_PK;
--- 
--- drop table SOLICITUD_DE_EXONERACION;
--- 
--- drop index SOLICITUD_DE_EXTRAORDINARIO_PK;
--- 
--- drop table SOLICITUD_DE_EXTRAORDINARIO;
--- 
--- drop index SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS_PK;
--- 
--- drop table SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS;
--- 
--- drop index SOLICITUD_DE_INCLUSION_EN_LISTA_PK;
--- 
--- drop table SOLICITUD_DE_INCLUSION_EN_LISTA;
--- 
--- drop index SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN_PK;
--- 
--- drop table SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN;
--- 
--- drop index SOLICITUD_DE_PASANTIA_PK;
--- 
--- drop table SOLICITUD_DE_PASANTIA;
--- 
--- drop index SOLICITUD_DE_REDUCCION_DE_ASISTENCIA_PK;
--- 
--- drop table SOLICITUD_DE_REDUCCION_DE_ASISTENCIA;
--- 
--- drop index SOLICITUD_DE_REVISION_DE_ESCOLARIDAD_PK;
--- 
--- drop table SOLICITUD_DE_REVISION_DE_ESCOLARIDAD;
--- 
--- drop index SOLICITUD_DE_REVISION_DE_EXAMEN_PK;
--- 
--- drop table SOLICITUD_DE_REVISION_DE_EXAMEN;
--- 
--- drop index SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD_PK;
--- 
--- drop table SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD;
--- 
--- drop index SOLICITUD_DE_TESIS_PK;
--- 
--- drop table SOLICITUD_DE_TESIS;
--- 
--- drop index SOLICITUD_DE_TITULO_PK;
--- 
--- drop table SOLICITUD_DE_TITULO;
--- 
--- drop index SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN_PK;
--- 
--- drop table SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN;
--- 
--- drop index SOLICITUD_DE_TUTORIA_DE_CATEDRA_PK;
--- 
--- drop table SOLICITUD_DE_TUTORIA_DE_CATEDRA;
--- 
--- drop index SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR_PK;
--- 
--- drop table SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR;
--- 
--- drop index TIENE_TUTORES_FK2;
--- 
--- drop index TIENE_TUTORES_FK;
--- 
--- drop index TIENE_TUTORES_PK;
--- 
--- drop table TUTORES_POR_TESIS;
--- 
--- drop index USUARIOS_PK;
--- 
--- drop table USUARIOS;
--- 
--- drop domain D_ACTA;
--- 
--- drop domain D_ADJUNTO;
--- 
--- drop domain D_ANHO;
--- 
--- drop domain D_APELLIDO_USUARIO;
--- 
--- drop domain D_ASISTENCIA;
--- 
--- drop domain D_ASUNTO_SOLICITUD;
--- 
--- drop domain D_BOOLEAN;
--- 
--- drop domain D_CALIFICACION;
--- 
--- drop domain D_CANTIDAD;
--- 
--- drop domain D_CARRERA;
--- 
--- drop domain D_CEDULA;
--- 
--- drop domain D_COMPROBANTE;
--- 
--- drop domain D_CONTRASENA;
--- 
--- drop domain D_CORREO;
--- 
--- drop domain D_CUENTA;
--- 
--- drop domain D_DEPARTAMENTO;
--- 
--- drop domain D_DESCRIPCION_ACTIVIDADES;
--- 
--- drop domain D_DESCRIPCION_LOG;
--- 
--- drop domain D_DESCRIPCION_PERMISO;
--- 
--- drop domain D_DIA;
--- 
--- drop domain D_DIRECCION;
--- 
--- drop domain D_DIRECCION_EMAIL;
--- 
--- drop domain D_DOCUMENT_ID;
--- 
--- drop domain D_EMAIL;
--- 
--- drop domain D_ESTADO_CUENTA;
--- 
--- drop domain D_ESTADO_SOLICITUD;
--- 
--- drop domain D_ETAPA_ACTUAL;
--- 
--- drop domain D_FECHA;
--- 
--- drop domain D_FECHAHORA;
--- 
--- drop domain D_FILENAME;
--- 
--- drop domain D_HISTORIAL;
--- 
--- drop domain D_HORA;
--- 
--- drop domain D_HORARIO;
--- 
--- drop domain D_MATERIA;
--- 
--- drop domain D_MATRICULA;
--- 
--- drop domain D_MESA_ENTRADA;
--- 
--- drop domain D_MOTIVO;
--- 
--- drop domain D_NOMBRE_CARRERA;
--- 
--- drop domain D_NOMBRE_DEPARTAMENTO;
--- 
--- drop domain D_NOMBRE_LOG;
--- 
--- drop domain D_NOMBRE_LUGAR;
--- 
--- drop domain D_NOMBRE_MATERIA;
--- 
--- drop domain D_NOMBRE_PARAMETRO;
--- 
--- drop domain D_NOMBRE_PERMISO;
--- 
--- drop domain D_NOMBRE_ROL;
--- 
--- drop domain D_NOMBRE_TESIS;
--- 
--- drop domain D_NOMBRE_TITULO;
--- 
--- drop domain D_NOMBRE_UNIVERSIDAD;
--- 
--- drop domain D_NOMBRE_USUARIO;
--- 
--- drop domain D_NUM_ARCHIVO;
--- 
--- drop domain D_NUM_LOG;
--- 
--- drop domain D_OBSERVACIONES;
--- 
--- drop domain D_OPORTUNIDAD;
--- 
--- drop domain D_PARAMETRO;
--- 
--- drop domain D_PERMISO;
--- 
--- drop domain D_PROFESOR;
--- 
--- drop domain D_RESULTADO_REQUISITO;
--- 
--- drop domain D_ROL;
--- 
--- drop domain D_SECCION;
--- 
--- drop domain D_SEMESTRE;
--- 
--- drop domain D_SEXO;
--- 
--- drop domain D_SOLICITUD;
--- 
--- drop domain D_TELEFONO;
--- 
--- drop domain D_TEXTO_EMAIL;
--- 
--- drop domain D_TEXTO_LOG;
--- 
--- drop domain D_TIME;
--- 
--- drop domain D_TIPO_CERTIFICADO;
--- 
--- drop domain D_TIPO_SOLICITUD;
--- 
--- drop domain D_TIPO_TITULO;
--- 
--- drop domain D_USUARIO;
--- 
--- drop domain D_VALOR_PARAMETRO;
+drop index ALUMNOS_PK;
+
+drop table ALUMNOS;
+
+drop index INCLUYE_INTEGRANTES_FK2;
+
+drop index INCLUYE_INTEGRANTES_FK;
+
+drop index INCLUYE_INTEGRANTES_PK;
+
+drop table ALUMNOS_POR_TESIS;
+
+drop index TIENE_FK3;
+
+drop index ASIGNATURAS_POR_SOLICITUD_PK;
+
+drop table ASIGNATURAS_POR_SOLICITUD;
+
+drop index CREDITOS_POR_CARRERA_PK;
+
+drop table CREDITOS_POR_CARRERA;
+
+drop index TIENE_FK;
+
+drop index DOCUMENTOS_ADJUNTOS_PK;
+
+drop table DOCUMENTOS_ADJUNTOS;
+
+drop index FECHAS_DE_RESOLUCION_DE_SOLICITUDES_PK;
+
+drop table FECHAS_DE_RESOLUCION_DE_SOLICITUDES;
+
+drop index TIENE_FK2;
+
+drop index HISTORIAL_EXTRAORDINARIOS_PK;
+
+drop table HISTORIAL_EXTRAORDINARIOS;
+
+drop index GENERADO_SEGUN_FK;
+
+drop index ACCEDE_A_FK;
+
+drop index LOGS_PK;
+
+drop table LOGS;
+
+drop index PARAMETROS_LOGS_PK;
+
+drop table PARAMETROS_LOGS;
+
+drop table PARAMETROS_REQUISITOS;
+
+drop index PERMISOS_PK;
+
+drop table PERMISOS;
+
+drop index CONTIENE_FK3;
+
+drop index CONTIENE_FK2;
+
+drop index CONTIENE_PK;
+
+drop table PERMISOS_POR_ROL;
+
+drop index ROLES_PK;
+
+drop table ROLES;
+
+drop index TIENE_ASIGNADO_FK2;
+
+drop index TIENE_ASIGNADO_FK;
+
+drop index TIENE_ASIGNADO_PK;
+
+drop table ROLES_POR_USUARIO;
+
+drop index HECHA_POR_FK;
+
+drop index SOLICITUDES_PK;
+
+drop table SOLICITUDES;
+
+drop index SOLICITUDES_VARIAS_PK;
+
+drop table SOLICITUDES_VARIAS;
+
+drop index SOLICITUD_DE_CAMBIO_DE_SECCION_PK;
+
+drop table SOLICITUD_DE_CAMBIO_DE_SECCION;
+
+drop index SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS_PK;
+
+drop table SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS;
+
+drop index SOLICITUD_DE_COLABORADOR_DE_CATEDRA_PK;
+
+drop table SOLICITUD_DE_COLABORADOR_DE_CATEDRA;
+
+drop index SOLICITUD_DE_CONVALIDACION_DE_MATERIAS_PK;
+
+drop table SOLICITUD_DE_CONVALIDACION_DE_MATERIAS;
+
+drop index SOLICITUD_DE_CREDITOS_ACADEMICOS_PK;
+
+drop table SOLICITUD_DE_CREDITOS_ACADEMICOS;
+
+drop index SOLICITUD_DE_DESINSCRIPCION_DE_CURSO_PK;
+
+drop table SOLICITUD_DE_DESINSCRIPCION_DE_CURSO;
+
+drop index SOLICITUD_DE_EXONERACION_PK;
+
+drop table SOLICITUD_DE_EXONERACION;
+
+drop index SOLICITUD_DE_EXTRAORDINARIO_PK;
+
+drop table SOLICITUD_DE_EXTRAORDINARIO;
+
+drop index SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS_PK;
+
+drop table SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS;
+
+drop index SOLICITUD_DE_INCLUSION_EN_LISTA_PK;
+
+drop table SOLICITUD_DE_INCLUSION_EN_LISTA;
+
+drop index SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN_PK;
+
+drop table SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN;
+
+drop index SOLICITUD_DE_PASANTIA_PK;
+
+drop table SOLICITUD_DE_PASANTIA;
+
+drop index SOLICITUD_DE_REDUCCION_DE_ASISTENCIA_PK;
+
+drop table SOLICITUD_DE_REDUCCION_DE_ASISTENCIA;
+
+drop index SOLICITUD_DE_REVISION_DE_ESCOLARIDAD_PK;
+
+drop table SOLICITUD_DE_REVISION_DE_ESCOLARIDAD;
+
+drop index SOLICITUD_DE_REVISION_DE_EXAMEN_PK;
+
+drop table SOLICITUD_DE_REVISION_DE_EXAMEN;
+
+drop index SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD_PK;
+
+drop table SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD;
+
+drop index SOLICITUD_DE_TESIS_PK;
+
+drop table SOLICITUD_DE_TESIS;
+
+drop index SOLICITUD_DE_TITULO_PK;
+
+drop table SOLICITUD_DE_TITULO;
+
+drop index SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN_PK;
+
+drop table SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN;
+
+drop index SOLICITUD_DE_TUTORIA_DE_CATEDRA_PK;
+
+drop table SOLICITUD_DE_TUTORIA_DE_CATEDRA;
+
+drop index SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR_PK;
+
+drop table SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR;
+
+drop index TIENE_TUTORES_FK2;
+
+drop index TIENE_TUTORES_FK;
+
+drop index TIENE_TUTORES_PK;
+
+drop table TUTORES_POR_TESIS;
+
+drop index USUARIOS_PK;
+
+drop table USUARIOS;
+
+drop domain D_ACTA;
+
+drop domain D_ADJUNTO;
+
+drop domain D_ANHO;
+
+drop domain D_APELLIDO_USUARIO;
+
+drop domain D_ASISTENCIA;
+
+drop domain D_ASUNTO_SOLICITUD;
+
+drop domain D_BOOLEAN;
+
+drop domain D_CALIFICACION;
+
+drop domain D_CANTIDAD;
+
+drop domain D_CARRERA;
+
+drop domain D_CEDULA;
+
+drop domain D_COMPROBANTE;
+
+drop domain D_CONTRASENA;
+
+drop domain D_CORREO;
+
+drop domain D_CUENTA;
+
+drop domain D_DEPARTAMENTO;
+
+drop domain D_DESCRIPCION_ACTIVIDADES;
+
+drop domain D_DESCRIPCION_LOG;
+
+drop domain D_DESCRIPCION_PERMISO;
+
+drop domain D_DIA;
+
+drop domain D_DIRECCION;
+
+drop domain D_DIRECCION_EMAIL;
+
+drop domain D_DOCUMENT_ID;
+
+drop domain D_EMAIL;
+
+drop domain D_ESTADO_CUENTA;
+
+drop domain D_ESTADO_SOLICITUD;
+
+drop domain D_ETAPA_ACTUAL;
+
+drop domain D_FECHA;
+
+drop domain D_FECHAHORA;
+
+drop domain D_FILENAME;
+
+drop domain D_HISTORIAL;
+
+drop domain D_HORA;
+
+drop domain D_HORARIO;
+
+drop domain D_MATERIA;
+
+drop domain D_MATRICULA;
+
+drop domain D_MESA_ENTRADA;
+
+drop domain D_MOTIVO;
+
+drop domain D_NOMBRE_CARRERA;
+
+drop domain D_NOMBRE_DEPARTAMENTO;
+
+drop domain D_NOMBRE_LOG;
+
+drop domain D_NOMBRE_LUGAR;
+
+drop domain D_NOMBRE_MATERIA;
+
+drop domain D_NOMBRE_PARAMETRO;
+
+drop domain D_NOMBRE_PERMISO;
+
+drop domain D_NOMBRE_ROL;
+
+drop domain D_NOMBRE_SECCION;
+
+drop domain D_NOMBRE_TESIS;
+
+drop domain D_NOMBRE_TITULO;
+
+drop domain D_NOMBRE_UNIVERSIDAD;
+
+drop domain D_NOMBRE_USUARIO;
+
+drop domain D_NUM_ARCHIVO;
+
+drop domain D_NUM_LOG;
+
+drop domain D_OBSERVACIONES;
+
+drop domain D_OPORTUNIDAD;
+
+drop domain D_PARAMETRO;
+
+drop domain D_PERMISO;
+
+drop domain D_PROFESOR;
+
+drop domain D_RESULTADO_REQUISITO;
+
+drop domain D_ROL;
+
+drop domain D_SECCION;
+
+drop domain D_SEMESTRE;
+
+drop domain D_SEXO;
+
+drop domain D_SOLICITUD;
+
+drop domain D_TELEFONO;
+
+drop domain D_TEXTO_EMAIL;
+
+drop domain D_TEXTO_LOG;
+
+drop domain D_TIME;
+
+drop domain D_TIPO_CERTIFICADO;
+
+drop domain D_TIPO_SOLICITUD;
+
+drop domain D_TIPO_TITULO;
+
+drop domain D_USUARIO;
+
+drop domain D_VALOR_PARAMETRO;
 
 /*==============================================================*/
 /* Table: ALUMNOS                                               */
@@ -381,7 +383,7 @@ CEDULA
 create table ASIGNATURAS_POR_SOLICITUD (
    SOLICITUD            INT4                 not null,
    ASIGNATURA           VARCHAR(80)          not null,
-   SECCION              CHAR(1)              null,
+   SECCION              VARCHAR(6)           null,
    SEMESTRE_ANHO        INT4                 null
       constraint CKC_SEMESTRE_ANHO_ASIGNATU check (SEMESTRE_ANHO is null or (SEMESTRE_ANHO >= 1)),
    SEMESTRE             INT4                 null
@@ -658,12 +660,12 @@ create table SOLICITUDES (
    MATRICULA            INT4                 null,
    CARRERA              VARCHAR(80)          not null,
    FECHA_SOLICITADA     DATE                 not null,
-   ESTADO_SOLICITUD     CHAR(6)              not null
+   ESTADO_SOLICITUD     VARCHAR(6)           not null
       constraint CKC_ESTADO_SOLICITUD_SOLICITU check (ESTADO_SOLICITUD in ('APROB','RECHAZ','ANUL','NUEVO','PEND','CANCEL')),
-   ETAPA_ACTUAL         CHAR(6)              not null
+   ETAPA_ACTUAL         VARCHAR(6)           not null
       constraint CKC_ETAPA_ACTUAL_SOLICITU check (ETAPA_ACTUAL in ('DEL_DE','DEL_DA','DEL_DD','DEL_SA','DEL_SD','DEL_SG','RCDA','FINAL')),
    OBSERVACIONES        TEXT                 null,
-   RESULTADO_REQUISITOS CHAR(13)             not null
+   RESULTADO_REQUISITOS VARCHAR(13)          not null
       constraint CKC_RESULTADO_REQUISI_SOLICITU check (RESULTADO_REQUISITOS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUDES primary key (SOLICITUD)
 );
@@ -705,8 +707,7 @@ create table SOLICITUD_DE_CAMBIO_DE_SECCION (
    SOLICITUD            INT4                 not null,
    MOTIVO               TEXT                 not null,
    ESPECIFICACION_MOTIVO TEXT                 null,
-   MATERIA_SECCION_VALIDAS CHAR(13)             not null
-      constraint CKC_MATERIA_SECCION_V_SOLICITU check (MATERIA_SECCION_VALIDAS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
+   NUEVA_SECCION_ELEGIDA VARCHAR(6)           not null,
    constraint PK_SOLICITUD_DE_CAMBIO_DE_SECC primary key (SOLICITUD)
 );
 
@@ -725,13 +726,12 @@ create table SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS (
    CARRERA_CURSADA      VARCHAR(80)          null,
    TIPO_DE_CERTIFICADO  CHAR(1)              not null
       constraint CKC_TIPO_DE_CERTIFICA_SOLICITU check (TIPO_DE_CERTIFICADO in ('S','L')),
-   TIPO_DE_TITULO       CHAR(15)             not null
-      constraint CKC_TIPO_DE_TITULO_SOLICITU check (TIPO_DE_TITULO in ('Arquitecto','Ingeniero','Master','Licenciado','Programador','Tecnico','Especializacion','Completo','Incompleto')),
+   TIPO_DE_TITULO       VARCHAR(15)          not null,
    SOLICITUD_ANTERIOR   BOOL                 null,
    ACLARACIONES         TEXT                 null,
-   APROBACION_PLAN_MATERIAS CHAR(13)             not null
+   APROBACION_PLAN_MATERIAS VARCHAR(13)          not null
       constraint CKC_APROBACION_PLAN_M_SOLICITU check (APROBACION_PLAN_MATERIAS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   PRESENTACION_CERTIFICADO_ESTUDIOS CHAR(13)             not null
+   PRESENTACION_CERTIFICADO_ESTUDIOS VARCHAR(13)          not null
       constraint CKC_PRESENTACION_CERT_SOLICITU check (PRESENTACION_CERTIFICADO_ESTUDIOS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_CERTIFICADO_DE primary key (SOLICITUD)
 );
@@ -750,12 +750,12 @@ create table SOLICITUD_DE_COLABORADOR_DE_CATEDRA (
    SOLICITUD            INT4                 not null,
    PROFESOR             VARCHAR(80)          null,
    DESCRIPCION_ACTIVIDADES TEXT                 not null,
-   MATERIA_CURSADA      CHAR(13)             not null
+   MATERIA_CURSADA      VARCHAR(13)          not null
       constraint CKC_MATERIA_CURSADA_SOLICITU check (MATERIA_CURSADA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   NOTA_MINIMA_REQUERIDA CHAR(13)             not null
+   NOTA_MINIMA_REQUERIDA VARCHAR(13)          not null
       constraint CKC_NOTA_MINIMA_REQUE_SOLICITU check (NOTA_MINIMA_REQUERIDA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    AYUDANTE_COLABORADOR BOOL                 not null,
-   SOLICITANTE_LICENCIADO_ULTIMO_ANHO CHAR(13)             null
+   SOLICITANTE_LICENCIADO_ULTIMO_ANHO VARCHAR(13)          null
       constraint CKC_SOLICITANTE_LICEN_SOLICITU check (SOLICITANTE_LICENCIADO_ULTIMO_ANHO is null or (SOLICITANTE_LICENCIADO_ULTIMO_ANHO in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE'))),
    CARRERAS_PROFESOR    TEXT                 null,
    constraint PK_SOLICITUD_DE_COLABORADOR_DE primary key (SOLICITUD)
@@ -818,7 +818,7 @@ create table SOLICITUD_DE_DESINSCRIPCION_DE_CURSO (
    MOTIVO_DESINSCRIPCION TEXT                 null,
    CURSO_COMPLETO       BOOL                 not null,
    POR_ASIGNATURA       BOOL                 not null,
-   CUOTAS_PAGADAS       CHAR(13)             null
+   CUOTAS_PAGADAS       VARCHAR(13)          null
       constraint CKC_CUOTAS_PAGADAS_SOLICITU check (CUOTAS_PAGADAS is null or (CUOTAS_PAGADAS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE'))),
    constraint PK_SOLICITUD_DE_DESINSCRIPCION primary key (SOLICITUD)
 );
@@ -837,9 +837,9 @@ create table SOLICITUD_DE_EXONERACION (
    SOLICITUD            INT4                 not null,
    MOTIVO               TEXT                 not null,
    ESPECIFICACION_MOTIVO TEXT                 null,
-   CUMPLE_PORCENTAJE_ASISTENCIA CHAR(13)             not null
+   CUMPLE_PORCENTAJE_ASISTENCIA VARCHAR(13)          not null
       constraint CKC_CUMPLE_PORCENTAJE_SOLICITU check (CUMPLE_PORCENTAJE_ASISTENCIA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   AUSENCIA_FINALES     CHAR(13)             not null
+   AUSENCIA_FINALES     VARCHAR(13)          not null
       constraint CKC_AUSENCIA_FINALES_SOLICITU check (AUSENCIA_FINALES in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_EXONERACION primary key (SOLICITUD)
 );
@@ -860,11 +860,11 @@ create table SOLICITUD_DE_EXTRAORDINARIO (
    PROFESOR             VARCHAR(80)          not null,
    MOTIVO               TEXT                 not null,
    ESPECIFICACION_MOTIVO TEXT                 null,
-   CUMPLE_FECHA         CHAR(13)             not null
+   CUMPLE_FECHA         VARCHAR(13)          not null
       constraint CKC_CUMPLE_FECHA_SOLICITU check (CUMPLE_FECHA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   AUSENTE_TERCERA_OP   CHAR(13)             not null
+   AUSENTE_TERCERA_OP   VARCHAR(13)          not null
       constraint CKC_AUSENTE_TERCERA_O_SOLICITU check (AUSENTE_TERCERA_OP in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   INSCRIPTO_TERCERA_OP CHAR(13)             not null
+   INSCRIPTO_TERCERA_OP VARCHAR(13)          not null
       constraint CKC_INSCRIPTO_TERCERA_SOLICITU check (INSCRIPTO_TERCERA_OP in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_EXTRAORDINARIO primary key (SOLICITUD)
 );
@@ -961,7 +961,7 @@ create table SOLICITUD_DE_REDUCCION_DE_ASISTENCIA (
    SOLICITUD            INT4                 not null,
    MOTIVO               TEXT                 not null,
    ESPECIFICACION_MOTIVO TEXT                 null,
-   ASISTENCIA_MINIMA    CHAR(13)             not null
+   ASISTENCIA_MINIMA    VARCHAR(13)          not null
       constraint CKC_ASISTENCIA_MINIMA_SOLICITU check (ASISTENCIA_MINIMA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_REDUCCION_DE_A primary key (SOLICITUD)
 );
@@ -1020,9 +1020,9 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD (
    SOLICITUD            INT4                 not null,
-   CUMPLE_PROMEDIO_MINIMO CHAR(13)             not null
+   CUMPLE_PROMEDIO_MINIMO VARCHAR(13)          not null
       constraint CKC_CUMPLE_PROMEDIO_M_SOLICITU check (CUMPLE_PROMEDIO_MINIMO in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   HASTA_CUARTO_SEMESTRE_REGULAR CHAR(13)             not null
+   HASTA_CUARTO_SEMESTRE_REGULAR VARCHAR(13)          not null
       constraint CKC_HASTA_CUARTO_SEME_SOLICITU check (HASTA_CUARTO_SEMESTRE_REGULAR in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_RUPTURA_DE_COR primary key (SOLICITUD)
 );
@@ -1040,7 +1040,7 @@ SOLICITUD
 create table SOLICITUD_DE_TESIS (
    SOLICITUD            INT4                 not null,
    TEMA_TESIS           VARCHAR(80)          not null,
-   CUMPLE_APROBACION_MATERIAS CHAR(13)             not null
+   CUMPLE_APROBACION_MATERIAS VARCHAR(13)          not null
       constraint CKC_CUMPLE_APROBACION_SOLICITU check (CUMPLE_APROBACION_MATERIAS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_TESIS primary key (SOLICITUD)
 );
@@ -1057,13 +1057,12 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_TITULO (
    SOLICITUD            INT4                 not null,
-   NOMBRE_TITULO        CHAR(15)             not null
-      constraint CKC_NOMBRE_TITULO_SOLICITU check (NOMBRE_TITULO in ('Arquitecto','Ingeniero','Master','Licenciado','Programador','Tecnico','Especializacion','Completo','Incompleto')),
-   APROBACION_TOTAL_DE_MATERIAS CHAR(13)             not null
+   NOMBRE_TITULO        VARCHAR(15)          not null,
+   APROBACION_TOTAL_DE_MATERIAS VARCHAR(13)          not null
       constraint CKC_APROBACION_TOTAL__SOLICITU check (APROBACION_TOTAL_DE_MATERIAS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   CUMPLE_CREDITOS_REQUERIDOS CHAR(13)             not null
+   CUMPLE_CREDITOS_REQUERIDOS VARCHAR(13)          not null
       constraint CKC_CUMPLE_CREDITOS_R_SOLICITU check (CUMPLE_CREDITOS_REQUERIDOS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
-   PRESENTO_TESIS       CHAR(13)             not null
+   PRESENTO_TESIS       VARCHAR(13)          not null
       constraint CKC_PRESENTO_TESIS_SOLICITU check (PRESENTO_TESIS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    FOTOCOPIA_CEDULA     BOOL                 not null,
    FOTOCOPIA_CERTIFICADO_NACIMIENTO BOOL                 not null,
@@ -1094,7 +1093,7 @@ create table SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN (
    OPORTUNIDAD_A_PAGAR  CHAR(1)              not null
       constraint CKC_OPORTUNIDAD_A_PAG_SOLICITU check (OPORTUNIDAD_A_PAGAR in ('1','2','3','E')),
    FECHA_OPORTUNIDAD_A_PAGAR DATE                 not null,
-   CUMPLE_PLAZO_LIMITE  CHAR(13)             not null
+   CUMPLE_PLAZO_LIMITE  VARCHAR(13)          not null
       constraint CKC_CUMPLE_PLAZO_LIMI_SOLICITU check (CUMPLE_PLAZO_LIMITE in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    FECHA_DE_ABONO       DATE                 null,
    COMPROBANTE          VARCHAR(120)         null,
@@ -1116,7 +1115,7 @@ create table SOLICITUD_DE_TUTORIA_DE_CATEDRA (
    PROFESOR             VARCHAR(80)          null,
    MOTIVO               TEXT                 not null,
    ESPECIFICACION_MOTIVO TEXT                 null,
-   CUMPLE_NOTA_MINIMA_REQUERIDA CHAR(13)             not null
+   CUMPLE_NOTA_MINIMA_REQUERIDA VARCHAR(13)          not null
       constraint CKC_CUMPLE_NOTA_MINIM_SOLICITU check (CUMPLE_NOTA_MINIMA_REQUERIDA in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
    constraint PK_SOLICITUD_DE_TUTORIA_DE_CAT primary key (SOLICITUD)
 );

@@ -1,0 +1,49 @@
+<?php
+$title = 'Lista de calificaciones';
+$this->headTitle($title);
+?>
+
+<?php if (count($this->calificaciones)): ?>
+
+<table class="table table-hover">
+<thead>
+    <tr>
+        <th><?= $this->translate('Materia') ?></th>
+        <th><?= $this->translate('Calificación') ?></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+<?php foreach ($this->calificaciones as $dataItem): ?>
+   <tr>
+            <td><?= $this->escapehtml($dataItem['materia']) ?></td>
+            <td><?= $this->escapehtml($dataItem['calificacion']) ?></td>            
+            <td><?php
+//                 if($this->user->getId() == $solicitud['id'] || $this->acl->isAllowed($this->user->getRole(),'actor','edit')) :
+//             ?>           
+            <?php
+//                 endif;
+//             ?>
+<!--             </td> -->
+            <td><?php
+//                 if($this->acl->isAllowed($this->user->getRole(),'actor','delete')) :
+//             ?>        
+            <?php
+//                 endif;
+//             ?>
+<!--             </td> -->
+    </tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+<?php endif; ?>
+
+<br><p>&nbsp;&nbsp;</p>
+
+<?php echo $this->paginationControl($this->calificaciones,
+                                    'Sliding',
+                                    'paginator/sliding',
+                                    array('route' => 'solicitud/calificaciones')
+                                    );

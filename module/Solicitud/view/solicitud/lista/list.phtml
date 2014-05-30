@@ -26,9 +26,7 @@ $this->headTitle($title);
             		array('controller'=> 'actor', 'action'=>'recepcion', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Visualizar') ?></a></td>
             <td><?php
 //                 if($this->user->getId() == $solicitud['id'] || $this->acl->isAllowed($this->user->getRole(),'actor','edit')) :
-//             ?>
-            <a href="<?= $this->url('solicitud/actor', 
-            		array('controller'=> 'actor', 'action'=>'edit', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Editar') ?></a>
+//             ?>           
             <?php
 //                 endif;
 //             ?>
