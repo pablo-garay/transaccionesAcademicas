@@ -45,7 +45,7 @@ return array(
                 	'list' => array(
                 		'type'    => 'Segment',
                 		'options' => array (
-                			'route' => '/lista/list[/:page]',
+                			'route' => '/lista[/:action][/:page]',
                 			'constraints' => array(
                 					'page'     => '[0-9]*',
                 			),
@@ -56,19 +56,15 @@ return array(
                 			),
                 		)
                 	),
-                		'calificaciones' => array(
+                		'academica' => array(
                 				'type'    => 'Segment',
                 				'options' => array (
-                						'route' => '/situacionacademica/calificaciones[/:page]',
-                						'constraints' => array(
-                								'page'     => '[0-9]*',
-                						),
+                						'route' => '/academica[/:action][/:page]',
                 						'defaults' => array(
                 								'controller'    => 'SituacionAcademica',
-                								'action'        => 'calificaciones',
-                								'page'          => '1',
+                								'action'        => 'index',
                 						),
-                				)
+                				),
                 		),
             		'actor' => array(
         				'type'    => 'Segment',

@@ -1,25 +1,29 @@
 <?php
-$title = 'Lista de calificaciones';
-$this->headTitle($title);
+$this->headTitle($this->headTitle);
 ?>
 
-<?php if (count($this->calificaciones)): ?>
+<div class="page-header">
+    <h1><?php echo $this->header; ?></h1>
+</div>
+
+
+<?php if (count($this->paginator)): ?>
 
 <table class="table table-hover">
 <thead>
     <tr>
-        <th><?= $this->translate('Materia') ?></th>
-        <th><?= $this->translate('Calificación') ?></th>
+        <th><?= $this->translate($this->tableFieldTitle1) ?></th>
+        <th><?= $this->translate($this->tableFieldTitle2) ?></th>
         <th></th>
         <th></th>
         <th></th>
     </tr>
 </thead>
 <tbody>
-<?php foreach ($this->calificaciones as $dataItem): ?>
+<?php foreach ($this->paginator as $dataItem): ?>
    <tr>
-            <td><?= $this->escapehtml($dataItem['materia']) ?></td>
-            <td><?= $this->escapehtml($dataItem['calificacion']) ?></td>            
+            <td><?= $this->escapehtml($dataItem[$tableField1]) ?></td>
+            <td><?= $this->escapehtml($dataItem[$tableField2]) ?></td>            
             <td><?php
 //                 if($this->user->getId() == $solicitud['id'] || $this->acl->isAllowed($this->user->getRole(),'actor','edit')) :
 //             ?>           
@@ -42,8 +46,9 @@ $this->headTitle($title);
 
 <br><p>&nbsp;&nbsp;</p>
 
-<?php echo $this->paginationControl($this->calificaciones,
+<?php echo $this->paginationControl($this->paginator,
                                     'Sliding',
                                     'paginator/sliding',
-                                    array('route' => 'solicitud/calificaciones')
+                                    array('route' => 'solicitud/academica',
+										  'action' => $this->action)
                                     );

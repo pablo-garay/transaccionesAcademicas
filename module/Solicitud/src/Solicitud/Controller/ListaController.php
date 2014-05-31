@@ -38,12 +38,16 @@ class ListaController extends AbstractActionController
 		
 		$adapter = new PaginatorDbAdapter($result, $model->getAdapter());
 		$paginator = new Paginator($adapter);
-		$currentPage = $this->params('page', 1);
-		$paginator->setCurrentPageNumber($currentPage);
-		$paginator->setItemCountPerPage(10);
+		$currentPage = $this->params('page', 1); /* default page 1 */
+		$paginator->setCurrentPageNumber($currentPage); /* set current page */
+		$paginator->setItemCountPerPage(10); /* cant items por pagina */
+		
+		/* Get current action */
+		$action = $this->getEvent()->getRouteMatch()->getParam('action');
 		
 		$this->viewModel->setVariables(array('solicitudes'=> $paginator,
-				'page'=> $currentPage
+				'page'=> $currentPage,
+				'action' => $action 
 		));
 		
 		return $this->viewModel;

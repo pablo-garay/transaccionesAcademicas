@@ -1,6 +1,6 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     27/05/2014 12:14:19 a.m.                     */
+/* Created on:     29/05/2014 10:13:30 a.m.                     */
 /*==============================================================*/
 
 
@@ -752,9 +752,9 @@ CURSO
 create table CARRERAS (
    CARRERA              SERIAL not null,
    DEPARTAMENTO         D_DEPARTAMENTO       not null,
+   PLAN_DE_ESTUDIO      D_ANHO               not null,
    NOMBRE               D_NOMBRE_CARRERA     not null,
    CREDITOS_REQUERIDOS  D_CANTIDAD           null,
-   PLAN_DE_ESTUDIO      INT4                 null,
    constraint PK_CARRERAS primary key (CARRERA)
 );
 
@@ -819,7 +819,6 @@ MATERIA_CORRELATIVA
 create table CURSOS (
    CURSO                SERIAL not null,
    MATERIA              D_MATERIA            not null,
-   SEMESTRE_CARRERA     D_SEMESTRE           not null,
    SEMESTRE_ANHO        D_SEMESTRE           not null,
    ANHO                 D_ANHO               not null,
    SECCION              D_SECCION            not null,
@@ -993,6 +992,7 @@ CURSO
 create table MATERIAS (
    MATERIA              SERIAL not null,
    NOMBRE               D_NOMBRE_MATERIA     not null,
+   SEMESTRE_CARRERA     D_SEMESTRE           null,
    constraint PK_MATERIAS primary key (MATERIA)
 );
 
@@ -1114,7 +1114,7 @@ PROFESOR
 /* Table: PROFESORES_POR_CURSO                                  */
 /*==============================================================*/
 create table PROFESORES_POR_CURSO (
-   PROFESOR             SERIAL not null,
+   PROFESOR             D_PROFESOR           not null,
    CURSO                D_CURSO              not null,
    constraint PK_PROFESORES_POR_CURSO primary key (PROFESOR, CURSO)
 );

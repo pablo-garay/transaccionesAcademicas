@@ -50,5 +50,6 @@ $this->headTitle($title);
 <?php echo $this->paginationControl($this->solicitudes,
                                     'Sliding',
                                     'paginator/sliding',
-                                    array('route' => 'solicitud/list')
+                                    array('route' => 'solicitud/list',
+										  'action' => $this->action)
                                     );

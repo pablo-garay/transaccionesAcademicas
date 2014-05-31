@@ -35,16 +35,11 @@ class SituacionAcademicaController extends AbstractActionController
 		return array();
 	}
 	
-	public function calificacionesAction(){
+	public function consultSapientiaDatabase($sql, $field1, $field2){
 		
 		/*****             SAPIENTIA DATA              ************/
 		$database = new SapientiaDatabaseAdapter();
 		$sapientiaDbadapter = $database->createService($this->getServiceLocator());
-		
-		$sql  = 'SELECT calificacion, ma.nombre as materia
-				FROM calificaciones_por_alumno ca
-				INNER JOIN cursos cu ON ca.curso = cu.curso
-				INNER JOIN materias ma ON cu.materia = ma.materia';
 		
 		$statement = $sapientiaDbadapter->query($sql);
 		$result    = $statement->execute();
@@ -53,32 +48,75 @@ class SituacionAcademicaController extends AbstractActionController
 		
 		$i = 0;
 		foreach ($result as $row) {
-			$dataItems[$i] = array(
-						'calificacion' => $row['calificacion'],
-						'materia' => $row['materia']
-						);
-			$i++;
+			$dataItems[$i++] = array(
+					$field1 => $row[$field1],
+					$field2 => $row[$field2]
+			);
 		}
-		/***** FIN       SAPIENTIA          DATA      ************/
 		
+		return $dataItems;
+		/***** FIN       SAPIENTIA          DATA      ************/
+	}
+	
+	public function situacionAcademicaHandler($dataItems, $paginatorName, $headTitle, $header, 
+			$tableFieldTitle1, $tableFieldTitle2, $tableField1, $tableField2){
 		
 		$paginator = new \Zend\Paginator\Paginator(new
 				\Zend\Paginator\Adapter\ArrayAdapter($dataItems)
-		);
+		);		
 		
-	
-		$currentPage = $this->params('page', 1);
-		$paginator->setCurrentPageNumber($currentPage);
-		$paginator->setItemCountPerPage(10);
-	
+		$currentPage = $this->params('page', 1); /* default page 1 */
+		$paginator->setCurrentPageNumber($currentPage); /* set current page */
+		$paginator->setItemCountPerPage(10); /* cant items por pagina */
+		
+		/* Get current action */
+		$action = $this->getEvent()->getRouteMatch()->getParam('action');
+		
 		$this->viewModel->setVariables(
-				array('calificaciones'=> $paginator,
-					'page'=> $currentPage,
+				array('paginator' => $paginator,
+						'page'=> $currentPage,
+						'headTitle' => $headTitle,
+						'header' => $header,
+						'tableFieldTitle1' => $tableFieldTitle1,
+						'tableFieldTitle2' => $tableFieldTitle2,
+						'tableField1' => $tableField1,
+						'tableField2' => $tableField2,
+						'action' => $action
 				)
 		);
-	
+		
 		return $this->viewModel;
 	}
+	
+	public function calificacionesAction(){
+	
+		$sql  = 'SELECT calificacion, ma.nombre as materia
+				FROM calificaciones_por_alumno ca
+				INNER JOIN cursos cu ON ca.curso = cu.curso
+				INNER JOIN materias ma ON cu.materia = ma.materia';
+	
+		$dataItems = $this->consultSapientiaDatabase($sql, 'calificacion', 'materia');
+		return $this->situacionAcademicaHandler($dataItems, 
+				$paginatorName = 'calificaciones', $headTitle = 'Lista de calificaciones', 
+				$header = 'Visualizar Calificaciones',
+				$tableFieldTitle1 = 'Materia', $tableFieldTitle2 = 'Calificación', 
+				$tableField1 = 'materia', $tableField2 = 'calificacion');
+	}
+	
+	public function asistenciaAction(){
+	
+		$sql  = 'SELECT fecha, presencia
+				FROM asistencias_por_alumno';
+	
+		$dataItems = $this->consultSapientiaDatabase($sql, 'fecha', 'presencia');
+		return $this->situacionAcademicaHandler($dataItems,
+				$paginatorName = 'asistencia', $headTitle = 'Asistencia', 
+				$header = 'Asistencia a Clases',
+				$tableFieldTitle1 = 'Fecha', $tableFieldTitle2 = 'Presencia', 
+				$tableField1 = 'fecha', $tableField2 = 'presencia');
+	}
+	
+	
 
 // 	public function calificacionesAction(){
 		
