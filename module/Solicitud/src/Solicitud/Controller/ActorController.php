@@ -5,10 +5,11 @@ namespace Solicitud\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Solicitud\Service\Factory\Database as DatabaseAdapter;
+use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDatabaseAdapter;
 use Zend\Db\Sql\Sql;
 use Solicitud\Form\Actor as Form;
 use Solicitud\Form\Actor\ResultadoRequisitos as ResultadoRequisitosForm;
-
+require_once 'VerificacionRequisitos.php';
 
 class ActorController extends AbstractActionController
 {
@@ -33,8 +34,14 @@ class ActorController extends AbstractActionController
 		$database = new DatabaseAdapter();
 		//llamamos al metodo que nos devuelve el adaptador de bd
 		$dbAdapter = $database->createService($this->getServiceLocator());
+		
+		//instanciar la clase cuyo metodo nos devuelve el adaptador de nuestra bd
+		$db = new SapientiaDatabaseAdapter();
+		//llamamos al metodo que nos devuelve el adaptador de bd
+		$sapientiaDbAdapter = $db->createService($this->getServiceLocator());
 		 
 		$this->dbAdapter = $dbAdapter;
+		$this->sapientiaDbAdapter = $sapientiaDbAdapter;
 	}
 	
 	public function getTipoSolicitud($id_solicitud)
@@ -85,7 +92,7 @@ class ActorController extends AbstractActionController
 		$solicitudData = array();
 		
 		foreach ($result as $res) {
-			$solicitudData[$res['solicitud']] = $res;// implode('<br>',$res);
+			$solicitudData = $res;// implode('<br>',$res);
 		}
 		
 		return $solicitudData;
@@ -121,6 +128,121 @@ class ActorController extends AbstractActionController
 		return $title[$tipo_solicitud];
 	}
 	
+	public function mapSolicitudDataColumns($tipo_solicitud){
+	
+		$dataColumns = array (
+				"solicitud_de_cambio_de_seccion" => array(
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificacion Motivo'),
+				
+				"solicitud_de_certificado_de_estudios" => array(
+													'carrera_cursada' => 'Carrera cursada', 
+													'tipo_de_certificado' => 'Tipo de Certificado', 
+													'tipo_de_titulo' => 'Tipo de Título', 
+													'solicitud_anterior' => 'Solicitó Anteriormente', 
+													'aclaraciones' => 'Aclaraciones'),
+				
+				"solicitud_de_colaborador_de_catedra" => array(
+													'profesor' => 'Profesor', 
+													'descripcion_actividades' => 'Descripción de Actividades', 
+													'ayudante_colaborador' => 'Ayudante/Colaborador', 
+													'carreras_profesor' => 'Profesor de carreras'),
+				
+				"solicitud_de_convalidacion_de_materias" => array(
+													'universidad_origen' => 'Universidad de Origen', 
+													'direccion_universidad_origen' => 'Dirección de Universidad Origen', 
+													'telefono_universidad_origen' => 'Teléfono de Universidad de Origen', 
+													'email_universidad_origen', 'Carrear cursada en la Universidad de Origen'),
+				
+				"solicitud_de_creditos_academicos" => array('descripcion_actividades' => 'Descripción de Actividades', 
+													'fecha_inicio' => 'Fecha de inicio', 
+													'fecha_fin' => 'Fecha de finalización'),
+				
+				"solicitud_de_desinscripcion_de_curso" => array(
+													'motivo_desinscripcion' => 'Motivo de Desinscripción', 
+													'curso_completo' => 'Curso completo', 
+													'por_asignatura' => 'Por asignatura'),
+				
+				"solicitud_de_exoneracion" => array(
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificación de motivo'),
+				
+				"solicitud_de_extraordinario" => array(
+													'fecha_extraordinario' => 'Fecha de Extraordinario', 
+													'profesor' => 'Profesor', 
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificación de motivo'),
+				
+				"solicitud_de_homologacion_de_materias" => array(
+													'plan_de_estudio_previo' => 'Plan de Estudio Anterior', 
+													'plan_de_estudio_nuevo' => 'Plan de Estudio Actual', 
+													'carrera_anterior' => 'Carrera Anterior'),
+				"solicitud_de_inclusion_en_lista" => array(
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificación de motivo'),
+				
+				"solicitud_de_inscripcion_tardia_a_examen" => array(
+													'oportunidad' => 'Oportunidad', 
+													'motivo' => 'Motivo', 
+													'fecha_de_examen' => 'Fecha de Examen', 
+													'especificacion_motivo' => 'Especificación de Motivo'),
+				
+				"solicitud_de_pasantia" => array(
+													'lugar' => 'Lugar', 
+													'direccion' => 'Dirección del Lugar', 
+													'telefono' => 'Teléfono del Lugar', 
+													'correo_electronico' => 'Correo electrónico del Lugar', 
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificación de Motivo'),
+				
+				"solicitud_de_reduccion_de_asistencia" => array(
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificación de Motivo'),
+				
+				"solicitud_de_revision_de_escolaridad" => array(),
+				"solicitud_de_revision_de_examen" => array(
+													'motivo' => 'Motivo', 
+													'fecha_examen' => 'Fecha del examen', 
+													'profesor' => 'Profesor', 
+													'oportunidad' => 'Oportunidad', 
+													'calificacion_previa' => 'Calificación anterior obtenida'),
+				
+				"solicitud_de_ruptura_de_correlatividad" => array(),
+				"solicitud_de_tesis" => array(
+													'tema_tesis' => 'Tema de tesis'),
+				"solicitud_de_titulo" => array(
+													'nombre_titulo' => 'Título de', 
+													'fotocopia_cedula' => 'Adjuntó Fotocopia de cédula', 
+													'fotocopia_certificado_nacimiento' => 'Adjuntó Fotocopia de certificado de nacimiento', 
+													'fotocopia_certificado_matrimonio' => 'Adjuntó Fotocopia de certificado de Matrimonio',
+											  		'fotocopia_de_titulo_de_grado' => 'Adjuntó Fotocopia de Título de Grado', 
+													'fotocopia_simple_de_titulo' => 'Adjuntó Fotocopia Simple de Título', 
+													'postgrado' => 'Postgrado', 
+													'otros' => 'Otros', 
+													'especificacion_otros' => 'Especificación otros'),
+				
+				"solicitud_de_traspaso_de_pago_de_examen" => array(
+													'oportunidad_pagada' => 'Oportunidad Pagada', 
+													'fecha_oportunidad_pagada' => 'Fecha de Oportunidad Pagada', 
+													'oportunidad_a_pagar' => 'Oportunidad a Pagar', 
+													'fecha_oportunidad_a_pagar' => 'Fecha Oportunidad a Pagar'),
+				
+				"solicitud_de_tutoria_de_catedra" => array(
+													'profesor' => 'Profesor', 
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificación de motivo'),
+				
+				"solicitud_para_tomar_materia_fuera_de_la_malla_curricular" => array(
+													'motivo' => 'Motivo', 
+													'especificacion_motivo' => 'Especificación de motivo'),
+				
+				"solicitudes_varias" => array(
+													'especificacion_motivo' => 'Especificación de motivo'),
+		);
+	
+		return $dataColumns[$tipo_solicitud];
+	}
+	
 	public function mapEstadoMensajeSolicitud($estadoSolicitud){
 		
 		$resultado = 'RESULTADO DE LA SOLICITUD: ';
@@ -137,6 +259,14 @@ class ActorController extends AbstractActionController
 		
 		return $message[trim($estadoSolicitud)];
 	}
+	
+	function combine_values_of_array_intersect($array1, $array2) {
+		$res = array();
+		foreach ( $array1 as $key => $val ) {
+			isset($array2[$key]) and $res[$val] = $array2[$key];
+		}
+		return $res;
+	}
 		
 	
 	public function solicitudActorHandler($form, $actor){
@@ -144,6 +274,8 @@ class ActorController extends AbstractActionController
 		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
 		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
 		$solicitudData = $this->getSolicitudData($id_solicitud, $tipo_solicitud); #obtener datos de solicitud
+		
+		$requisitos = verificarRequisitos($id_solicitud, $tipo_solicitud, $this->dbAdapter, $this->sapientiaDbAdapter);
 		
 		
 		if($this->getRequest()->isPost()) {
@@ -230,9 +362,17 @@ class ActorController extends AbstractActionController
 		
 		}
 		
+		$solicitudEspecificaDataColumns = $this->mapSolicitudDataColumns($tipo_solicitud);
+		$solicitudEspecificaDataColumnsValues = $this->combine_values_of_array_intersect($solicitudEspecificaDataColumns, $solicitudData);
+		
+		$this->flashmessenger()->addSuccessMessage(print_r($solicitudEspecificaDataColumnsValues, TRUE));
+		
 		$this->viewModel->setVariables(array('data' => $solicitudData, 'form1'=> $form, 
 									'title' => $this->mapTituloTipoSolicitud($tipo_solicitud),
-									'mensajeEstado' => $this->mapEstadoMensajeSolicitud($solicitudData['']['estado_solicitud'])));
+									'requisitos' => $requisitos,
+									'mensajeEstado' => $this->mapEstadoMensajeSolicitud($solicitudData['estado_solicitud']),
+									'datosSolicitudEspecifica' => $solicitudEspecificaDataColumnsValues,
+									));
 		return $this->viewModel;
 	}
 	

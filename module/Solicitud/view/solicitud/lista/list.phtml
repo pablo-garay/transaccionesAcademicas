@@ -19,7 +19,7 @@ $this->headTitle($title);
 <tbody>
 <?php foreach ($this->solicitudes as $solicitud): ?>
    <tr>
-            <td><?= $this->escapehtml($solicitud['tipo_solicitud']) ?></td>
+            <td><?= $this->escapehtml($name = str_replace('_', ' ', strtoupper($solicitud['tipo_solicitud']))) ?></td>
             <td><?= $this->escapehtml($solicitud['fecha_solicitada']) ?></td>
             <td><?= $this->escapehtml($solicitud['estado_solicitud']) ?> </td>
             <td><a href="<?= $this->url('solicitud/actor', 

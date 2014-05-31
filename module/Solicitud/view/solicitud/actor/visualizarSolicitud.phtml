@@ -12,8 +12,8 @@
 	border-bottom-right-radius: 5px;
 	-webkit-border-radius: 200px; ">
 	<?php echo $this->title; ?> </h4>
-   <?php
-    foreach ($this->data as $keyControl => $element) {
+
+   <?php $element = $this->data;
 
 		echo sprintf($this->translate('<h5 align="center"><b>Mesa de Entrada:</b> %s &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp'), $element['mesa_entrada']);
 		echo sprintf($this->translate('<b>Fecha:</b> %s <br></h5>'), $element['fecha_solicitada']);
@@ -27,39 +27,36 @@
     	echo sprintf($this->translate('<b>Email:</b> %s'), $element['email']);
     	
     	?></pre><h5 align = "left"> DATOS DE LA SOLICITUD</h5><pre><?php
+    	
+    	if (isset($element['asignatura']))  
+    		echo sprintf($this->translate('<b>Asignatura:</b> %s <br>'), $element['asignatura']);
     			    	
     	
-	   foreach ($element as $key => $value) {
+	   foreach ($this->datosSolicitudEspecifica as $titulo => $value) {
 
-			
-			if ($key == 'materia') {
-				echo sprintf($this->translate('<b>Asignatura:</b> %s <br>'), $element['materia']);
+			echo sprintf($this->translate('<b>%s:</b> %s<br>'), $titulo, $value);
+// 			if ($key == 'fecha_extraordinario') {
+// 				echo sprintf($this->translate('<b>Fecha de Examen:</b> %s	'), $element['fecha_extraordinario']);
 
-			}else if ($key == 'fecha_extraordinario') {
-				echo sprintf($this->translate('<b>Fecha de Examen:</b> %s	'), $element['fecha_extraordinario']);
+// 			}else if ($key == 'motivo') {
+// 				echo sprintf($this->translate('<b>Justificación: </b> %s	'), $element['motivo']);
 
-			}else if ($key == 'motivo') {
-				echo sprintf($this->translate('<b>Justificación: </b> %s	'), $element['motivo']);
+// 			}else if ($key == 'archivo') {
+// 				echo sprintf($this->translate('<b>Documento Adjunto:</b> %s <br>'), $element['archivo']);
 
-			}else if ($key == 'archivo') {
-				echo sprintf($this->translate('<b>Documento Adjunto:</b> %s <br>'), $element['archivo']);
-
-			}else if ($key == 'cumple_fecha') {
-				?></pre><h5 align = "left"> REQUISITOS DE LA SOLICITUD</h5><pre><?php
-				echo sprintf($this->translate('<b>Plazo de 5 días para la presentación de la solicitud:</b> %s <br>'), $element['cumple_fecha']);
-
-			}else if ($key == 'inscripto_tercera_op') {
-				echo sprintf($this->translate('<b>Inscripto en tercera oprotunidad:</b> %s <br>'), $element['inscripto_tercera_op']);
-
-			}else if ($key == 'ausente_tercera_op') {
-				echo sprintf($this->translate('<b>Ausente en tercera oportunidad:</b> %s <br>'), $element['ausente_tercera_op']);
-
-			}
+// 			}
 
 
 	  }
+	  
+	  if (!empty ($this->requisitos)){
+		  ?></pre><h5 align = "left"> REQUISITOS DE LA SOLICITUD</h5><pre><?php
+		  foreach ($this->requisitos as $key => $value){
+		  		echo sprintf($this->translate('<b>%s</b>%s <br>'), $key, str_replace('_', ' ', $value));
+		  }
+	  }
 
-   }
+   
    ?></pre><h5 align = "left"> OBSERVACIONES</h5><pre>
    <?php
    $this->form1->setAttribute('class', 'form-horizontal');
