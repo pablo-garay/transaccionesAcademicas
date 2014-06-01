@@ -26,7 +26,7 @@ class SituacionAcademicaController extends AbstractActionController
 	{
 		# Hacer que todos compartan el mismo View
 		$this->viewModel = new ViewModel();
-		$this->viewModel->setTemplate('solicitud/situacionacademica/list');
+		$this->viewModel->setTemplate('solicitud/situacionacademica/listarDatosAcademicos');
 	}
 	
 	public function indexAction()
@@ -35,7 +35,7 @@ class SituacionAcademicaController extends AbstractActionController
 		return array();
 	}
 	
-	public function consultSapientiaDatabase($sql, $field1, $field2){
+	public function consultSapientiaDatabase($sql){
 		
 		/*****             SAPIENTIA DATA              ************/
 		$database = new SapientiaDatabaseAdapter();
@@ -48,18 +48,14 @@ class SituacionAcademicaController extends AbstractActionController
 		
 		$i = 0;
 		foreach ($result as $row) {
-			$dataItems[$i++] = array(
-					$field1 => $row[$field1],
-					$field2 => $row[$field2]
-			);
+			$dataItems[$i++] = $row;
 		}
 		
 		return $dataItems;
 		/***** FIN       SAPIENTIA          DATA      ************/
 	}
 	
-	public function situacionAcademicaHandler($dataItems, $paginatorName, $headTitle, $header, 
-			$tableFieldTitle1, $tableFieldTitle2, $tableField1, $tableField2){
+	public function situacionAcademicaHandler($dataItems, $headTitle, $header, $columnHeader){
 		
 		$paginator = new \Zend\Paginator\Paginator(new
 				\Zend\Paginator\Adapter\ArrayAdapter($dataItems)
@@ -75,13 +71,11 @@ class SituacionAcademicaController extends AbstractActionController
 		$this->viewModel->setVariables(
 				array('paginator' => $paginator,
 						'page'=> $currentPage,
+						'dataItems' => $dataItems,
 						'headTitle' => $headTitle,
 						'header' => $header,
-						'tableFieldTitle1' => $tableFieldTitle1,
-						'tableFieldTitle2' => $tableFieldTitle2,
-						'tableField1' => $tableField1,
-						'tableField2' => $tableField2,
-						'action' => $action
+						'columnHeader' => $columnHeader,
+						'action' => $action,
 				)
 		);
 		
@@ -90,17 +84,18 @@ class SituacionAcademicaController extends AbstractActionController
 	
 	public function calificacionesAction(){
 	
-		$sql  = 'SELECT calificacion, ma.nombre as materia
+		$sql  = 'SELECT ma.nombre as materia, calificacion
 				FROM calificaciones_por_alumno ca
 				INNER JOIN cursos cu ON ca.curso = cu.curso
 				INNER JOIN materias ma ON cu.materia = ma.materia';
 	
-		$dataItems = $this->consultSapientiaDatabase($sql, 'calificacion', 'materia');
-		return $this->situacionAcademicaHandler($dataItems, 
-				$paginatorName = 'calificaciones', $headTitle = 'Lista de calificaciones', 
+		$dataItems = $this->consultSapientiaDatabase($sql);
+		return $this->situacionAcademicaHandler(
+				$dataItems, 
+				$headTitle = 'Lista de calificaciones', 
 				$header = 'Visualizar Calificaciones',
-				$tableFieldTitle1 = 'Materia', $tableFieldTitle2 = 'Calificación', 
-				$tableField1 = 'materia', $tableField2 = 'calificacion');
+				$columnHeader = array('Materia', 'Calificación')
+		);
 	}
 	
 	public function asistenciaAction(){
@@ -108,13 +103,78 @@ class SituacionAcademicaController extends AbstractActionController
 		$sql  = 'SELECT fecha, presencia
 				FROM asistencias_por_alumno';
 	
-		$dataItems = $this->consultSapientiaDatabase($sql, 'fecha', 'presencia');
-		return $this->situacionAcademicaHandler($dataItems,
-				$paginatorName = 'asistencia', $headTitle = 'Asistencia', 
+		$dataItems = $this->consultSapientiaDatabase($sql);
+		return $this->situacionAcademicaHandler(
+				$dataItems,
+				$headTitle = 'Asistencia', 
 				$header = 'Asistencia a Clases',
-				$tableFieldTitle1 = 'Fecha', $tableFieldTitle2 = 'Presencia', 
-				$tableField1 = 'fecha', $tableField2 = 'presencia');
+				$columnHeader = array('Fecha', 'Presencia')
+		);
 	}
+	
+	public function horarioAction(){
+	
+		$sql  = 'SELECT dia, hora_inicio, hora_fin
+				FROM horarios_de_clase h INNER JOIN cursos c ON h.curso = c.curso
+				INNER JOIN materias m ON c.materia = m.materia';
+	
+		$dataItems = $this->consultSapientiaDatabase($sql);
+		return $this->situacionAcademicaHandler(
+				$dataItems,
+				$headTitle = 'Horario de Clases',
+				$header = 'Horario de Clases',
+				$columnHeader = array('Dia', 'Hora inicio', 'Hora fin')
+		);
+	}
+	
+	public function materiasinscriptoAction(){
+	
+		$sql  = 'SELECT DISTINCT m.nombre
+				FROM alumnos_por_curso a INNER JOIN cursos c ON a.curso = c.curso
+				INNER JOIN materias m ON c.materia = m.materia';
+	
+		$dataItems = $this->consultSapientiaDatabase($sql);
+		return $this->situacionAcademicaHandler(
+				$dataItems,
+				$headTitle = 'Inscripción a Materias',
+				$header = 'Inscripción a Materias del Alumno',
+				$columnHeader = array('Asignatura')
+		);
+	}
+	
+	public function aprobadasAction(){
+	
+		$sql  = "SELECT DISTINCT m.nombre
+				FROM calificaciones_por_alumno ca INNER JOIN cursos c ON ca.curso = c.curso
+				INNER JOIN materias m ON c.materia = m.materia
+				WHERE calificacion > 1
+				ORDER by m.nombre";
+	
+		$dataItems = $this->consultSapientiaDatabase($sql);
+		return $this->situacionAcademicaHandler(
+				$dataItems,
+				$headTitle = 'Materias Aprobadas por Alumno',
+				$header = 'Materias Aprobadas por Alumno',
+				$columnHeader = array('Asignatura')
+		);
+	}
+	
+	public function cursadasAction(){
+	
+		$sql  = "SELECT DISTINCT m.nombre
+				FROM alumnos_por_curso ac INNER JOIN cursos c ON ac.curso = c.curso
+				INNER JOIN materias m ON c.materia = m.materia
+				ORDER by m.nombre";
+	
+		$dataItems = $this->consultSapientiaDatabase($sql);
+		return $this->situacionAcademicaHandler(
+				$dataItems,
+				$headTitle = 'Materias Cursadas por Alumno',
+				$header = 'Materias Cursadas por Alumno',
+				$columnHeader = array('Asignatura')
+		);
+	}
+	
 	
 	
 

@@ -22,7 +22,7 @@ class ListaController extends AbstractActionController
 	{
 		# Hacer que todos compartan el mismo View
 		$this->viewModel = new ViewModel();
-		$this->viewModel->setTemplate('solicitud/lista/list');
+		$this->viewModel->setTemplate('solicitud/lista/listarSolicitudes');
 	}
 	
 	public function listSolicitudes($estadoSolicitud = 'None', $filter = TRUE){
