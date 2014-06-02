@@ -9,137 +9,149 @@ class VisualizeController extends AbstractActionController
 {
 
     public function indexAction()
-    {
-        return new ViewModel();
+    {        
+    	return array();
     }
 
-    public function seccionAction()
+    public function seccionAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
+            'asignatura' => $solicitudData['asignatura'],
             'seccionActual' => '---',
             'seccionObj' => '---',
-            'profesor' => '---',
-            'motivo' => '---',
-            'adjunto' => '---'
+            'motivo' => $solicitudData['motivo'],
+            'especificacion_motivo' => $solicitudData['especificacion_motivo'],
         ));
         return $pdf;
     }
 
-    public function certificadoAction()
+    public function certificadoAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
             'documento' => '---',
-            'telefono' => '---',
+            'telefono' => $solicitudData['telefono'],
+        	// CAMPOS DE SOLICITUD
             'email' => '---',
             'materiasDiurnas' => '---',
             'materiasNocturnas' => '---',
-            'tipo' => '---',
+            'tipo' => $solicitudData['tipo_de_titulo'],
             'titulo' => '---',
             'respuesta' => '---',
-            'observaciones' => '---'
+            'observaciones' => $solicitudData['aclaraciones'],
         ));
         return $pdf;
     }
 
-    public function colaboradorAction()
+    public function colaboradorAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'profesor' => '---',
+        	'profesor' => $solicitudData['profesor'],
+            'asignatura' => $solicitudData['asignatura'],
             'adjunto' => '---'
         ));
         return $pdf;
     }
 
-    public function creditosAction()
+    public function creditosAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
             'actividad' => '---',
-            'fechaIni' => '---',
-            'fechaFin' => '---',
-            'descripcion' => '---'
+            'fechaIni' => $solicitudData['fecha_inicio'],
+            'fechaFin' => $solicitudData['fecha_fin'],
+            'descripcion' => $solicitudData['descripcion_actividades'],
         ));
         return $pdf;
     }
 
-    public function desinscripcionAction()
+    public function desinscripcionAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
+            'asignatura' => $solicitudData['asignatura'],
             'codigo' => '---'
         ));
         return $pdf;
     }
 
-    public function exoneracionAction()
+    public function exoneracionAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'motivo' => '---',
-            'esp_motivo' => '---',
+            'asignatura' => $solicitudData['asignatura'],
+            'motivo' => $solicitudData['motivo'],
+            'esp_motivo' => $solicitudData['especificacion_motivo'],
             'adjunto' => '---',
             'esp_adjunto' => '---'
         ));
@@ -148,363 +160,395 @@ class VisualizeController extends AbstractActionController
 
     public function extraordinarioAction()
     {
-        // quitar de la bd
+        $solicitudData = $this->params('solicitudData');
+        
         $pdf = new PdfModel();
         
         $pdf->setVariables(array(
-            // Datos del alumno
-            'nombre' => 'Jorge Rafael',
-            'apellido' => 'Zapattini Aponte',
-            'matricula' => '54816',
-            'carrera' => 'Ing. Inf.',
-            'telefono' => '021230123',
+            // DATOS DE ALUMNO
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // Informacion para la solicitud
-            'mesaNro' => '123123',
-            'asignatura' => 'Informatica 1',
-            'fecha' => '15/03/14',
-            'fechaEXA' => '12/03/14',
-            'profesor' => 'Ing. Mauricio Kreitmayer',
-            'motivo' => 'No estudie todo el contenido, para evitar recursar la materia solicito el extraordinario.',
+            'asignatura' => $solicitudData['asignatura'],
+            'fechaEXA' => $solicitudData['fecha_extraordinario'],
+            'profesor' => $solicitudData['profesor'],
+        	'motivo' => $solicitudData['motivo'],        		
             'adjunto' => '---'
         ));
         return $pdf;
     }
 
-    public function inclusionAction()
+    public function inclusionAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'motivo' => '---',
-            'profesor' => '---',
-            'descripcion' => '---'
+            'asignatura' => $solicitudData['asignatura'],
+            'motivo' => $solicitudData['motivo'],
+            'descripcion' => $solicitudData['especificacion_motivo'],
         ));
         return $pdf;
     }
 
-    public function tardiaAction()
+    public function tardiaAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'oportunidad' => '---',
-            'fechaEXA' => '---',
-            'motivo' => '---',
+            'asignatura' => $solicitudData['asignatura'],
+            'oportunidad' => $solicitudData['oportunidad'],
+            'fechaEXA' => $solicitudData['fecha_de_examen'],
+            'motivo' => $solicitudData['motivo'],
+        	'especificacion' => $solicitudData['especificacion_motivo'],
             'adjunto' => '---',
-            'especificacion' => '---'
         ));
         return $pdf;
     }
 
-    public function pasantiaAction()
+    public function pasantiaAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'lugar' => '---',
-            'direccion' => '---',
-            'email' => '---',
-            'motivo' => '---',
-            'esp_motivo' => '---',
+            'lugar' => $solicitudData['lugar'],
+            'direccion' => $solicitudData['direccion'],
+        	'lugar_telefono' => $solicitudData['telefono'],
+            'email' => $solicitudData['correo_electronico'],
+            'motivo' => $solicitudData['motivo'],
+            'esp_motivo' => $solicitudData['especificacion_motivo'],
             'adjunto' => '---',
             'esp_adjunto' => '---'
         ));
         return $pdf;
     }
 
-    public function reduccionAction()
+    public function reduccionAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'profesor' => '---',
-            'motivo' => '---',
+            'asignatura' => $solicitudData['asignatura'],
+            'motivo' => $solicitudData['motivo'],
             'adjunto' => '---'
         ));
         return $pdf;
     }
 
-    public function revisionescolaridadAction()
+    public function revisionescolaridadAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'observaciones' => '---'
+            'asignatura' => $solicitudData['asignatura'],
         ));
         return $pdf;
     }
 
-    public function revisionexamenAction()
+    public function revisionexamenAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'profesor' => '---',
-            'fechaEXA' => '----',
-            'oportunidad' => '---',
-            'calificacion' => '---',
-            'motivo' => '---',
-            'fechaREVI' => '----',
-            'horaREVI' => '---',
-            'lugarREVI' => '---'
+            'asignatura' => $solicitudData['asignatura'],
+            'profesor' => $solicitudData['profesor'],
+            'fechaEXA' => $solicitudData['fecha_examen'],
+            'oportunidad' => $solicitudData['oportunidad'],
+            'calificacion_obtenida' => $solicitudData['calificacion_previa'],
+            'motivo' => $solicitudData['motivo'],
+            'fechaREVI' => $solicitudData['fecha_revision'],
+            'horaREVI' => $solicitudData['hora_revision'],
+            'lugarREVI' => $solicitudData['lugar_revision'],
         ));
         return $pdf;
     }
 
-    public function rupturaAction()
+    public function rupturaAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
+            'asignatura' => $solicitudData['asignatura'],
             'materiaCo' => '---',
-            'motivo' => '---',
+            'motivo' => $solicitudData['motivo'],
             'descripcion' => '---'
         ));
         return $pdf;
     }
 
-    public function tituloAction()
+    public function tituloAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'titulo' => '---',
-            'descripcion' => '---',
-            'documento' => '---'
+            'titulo' => $solicitudData['nombre_titulo'],
+        	'fotocopia_cedula' => $solicitudData['fotocopia_cedula'],
+        	'fotocopia_certificado_nacimiento' => $solicitudData['fotocopia_certificado_nacimiento'],
+        	'fotocopia_certificado_matrimonio' => $solicitudData['fotocopia_certificado_matrimonio'],
+        	'fotocopia_de_titulo_de_grado' => $solicitudData['fotocopia_de_titulo_de_grado'],
+        	'fotocopia_simple_de_titulo' => $solicitudData['fotocopia_simple_de_titulo'],
+        	'otros' => $solicitudData['otros'],
+        	'descripcion_otros' => $solicitudData['especificacion_otros'],
         ));
         return $pdf;
     }
 
-    public function traspasoAction()
+    public function traspasoAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'seccion' => '---',
-            'op_pagada' => '---',
-            'fecha_pagada' => '---',
-            'op_apagar' => '---',
-            'fecha_apagar' => '---'
+            'asignatura' => $solicitudData['asignatura'],
+//             'seccion' => '---',
+            'op_pagada' => $solicitudData['oportunidad_pagada'],
+            'fecha_pagada' => $solicitudData['fecha_oportunidad_pagada'],
+            'op_apagar' => $solicitudData['oportunidad_a_pagar'],
+            'fecha_apagar' => $solicitudData['fecha_oportunidad_a_pagar'],
         ));
         return $pdf;
     }
 
-    public function tutoriaAction()
+    public function tutoriaAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'profesor' => '---',
-            'motivo' => '---',
-            'esp_motivo' => '---',
+            'asignatura' => $solicitudData['asignatura'],
+            'profesor' => $solicitudData['profesor'],
+            'motivo' => $solicitudData['motivo'],
+            'esp_motivo' => $solicitudData['especificacion_motivo'],
             'adjunto' => '---',
             'esp_adjunto' => '---'
         ));
         return $pdf;
     }
 
-    public function fueraAction()
+    public function fueraAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asignatura' => '---',
-            'motivo' => '---',
-            'esp_motivo' => '---'
+            'asignatura' => $solicitudData['asignatura'],
+            'motivo' => $solicitudData['motivo'],
+            'esp_motivo' => $solicitudData['especificacion_motivo'],
         ));
         return $pdf;
     }
 
-    public function variasAction()
+    public function variasAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'asunto' => '---',
-            'motivo' => '---',
-            'esp_motivo' => '---'
+            'asunto' => $solicitudData['asunto'],
+            'motivo' => $solicitudData['especificacion_motivo'],
         ));
         return $pdf;
     }
 
-    public function tesisAction()
+    public function tesisAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'tema' => '---',
+            'tema' => $solicitudData['tema_tesis'],
             'integrante' => '---',
-            'profesor' => '---',
+            'profesor' => $solicitudData['profesor'],
             'adjunto' => '---',
             'esp_adjunto' => '---'
         ));
         return $pdf;
     }
 
-    public function convalidacionAction()
+    public function convalidacionAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'universidad' => '---',
-            'direUniversidad' => '---',
-            'telUniversidad' => '---',
-            'emailUniversidad' => '---',
-            'carrera' => '---'
+            'universidad' => $solicitudData['universidad_origen'],
+            'direUniversidad' => $solicitudData['direccion_universidad_origen'],
+            'telUniversidad' => $solicitudData['telefono_universidad_origen'],
+            'emailUniversidad' => $solicitudData['email_universidad_origen'],
+            'carrera' => $solicitudData['carrera_cursada_universidad_origen'],
         ));
         return $pdf;
     }
 
-    public function homologacionAction()
+    public function homologacionAction($solicitudData)
     {
-        $pdf = new PdfModel();
+    	$solicitudData = $this->params('solicitudData');
+    	
+    	$pdf = new PdfModel();
         
         $pdf->setVariables(array(
             // DATOS DE ALUMNO
-            'mesaNro' => '---',
-            'fecha' => '---',
-            'nombre' => '---',
-            'apellido' => '---',
-            'matricula' => '---',
-            'carrera' => '---',
-            'telefono' => '---',
+            'mesaNro' => $solicitudData['mesa_entrada'],
+            'fecha' => $solicitudData['fecha_solicitada'],
+            'nombre' => $solicitudData['nombres'],
+            'apellido' => $solicitudData['apellidos'],
+            'matricula' => $solicitudData['matricula'],
+            'carrera' => $solicitudData['carrera'],
+            'telefono' => $solicitudData['telefono'],
             // CAMPOS DE SOLICITUD
-            'carreraH' => '---',
-            'planEstudios' => '---',
-            'adjunto' => '---',
-            'esp_adjunto' => '---',
+        	'plan_de_estudio_previo' => $solicitudData['plan_de_estudio_previo'],
+        	'plan_de_estudio_nuevo' => $solicitudData['plan_de_estudio_nuevo'],
+        	'carrera_anterior' => $solicitudData['carrera_anterior'],
         ));
         return $pdf;
     }

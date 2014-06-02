@@ -267,6 +267,19 @@ class ActorController extends AbstractActionController
 		}
 		return $res;
 	}
+	
+    public function sendNotificationEmailMessage($to, $content)
+    {
+        $mailService = $this->getServiceManager()->get('goaliomailservice_message');
+
+        $from = $this->getOptions()->getEmailFromAddress();
+        $subject = 'Notificacion de solicitud - Transacciones Académicas UCA';
+
+        $message = $mailService->createTextMessage($from, $to, $subject, 'notify/email/notificarSolicitud', 
+        											array('content' => $content));
+
+        $mailService->send($message);
+    }
 		
 	
 	public function solicitudActorHandler($form, $actor){
@@ -344,20 +357,26 @@ class ActorController extends AbstractActionController
 				$this->cambiarEstadoSolicitud('FINAL', 'RECHAZ', $id_solicitud);
 				$message = "La solicitud fue rechazada";
 
-			} else if (isset($data['EnviarCorreo'])) {
+			} else if (isset($data['EnviarCorreo'])) {				
 				
 			} else if (isset($data['Imprimir'])) {
-				
+				return $this->forward()->dispatch('Visualize\Controller\Visualize', array(
+						'action' => $this->mapSolicitudPdfAction($tipo_solicitud),
+						'tipoSolicitud' => $tipo_solicitud,
+						'solicitudData' => $solicitudData
+				));
 			}
+			
+			// $this->sendNotificationEmailMessage('palenq@gmail.com', $message);
 
 		
 			$this->flashmessenger()->addSuccessMessage($message);
 			$this->flashmessenger()->addSuccessMessage(print_r($id_solicitud, TRUE));
 		
-			// redirect the user to the view user action
-			return $this->redirect()->toRoute('user/default', array (
-					'controller' => 'account',
-					'action'     => 'me',
+			// redirect the user to its home page
+			return $this->redirect()->toRoute('zfcuser', array (
+					'controller' => 'zfcuser',
+					'action'     => 'index',
 			));
 		
 		}
@@ -442,5 +461,35 @@ class ActorController extends AbstractActionController
 					
 		return $this->solicitudActorHandler($form, 'alumno');
 		
+	}
+	
+	public function mapSolicitudPdfAction($tipo_solicitud){
+	
+		$title = array (
+				"solicitud_de_cambio_de_seccion" => 'seccion',
+				"solicitud_de_certificado_de_estudios" => 'certificado',
+				"solicitud_de_colaborador_de_catedra" => 'colaborador',
+				"solicitud_de_convalidacion_de_materias" => 'convalidacion',
+				"solicitud_de_creditos_academicos" => 'creditos',
+				"solicitud_de_desinscripcion_de_curso" => 'desinscripcion',
+				"solicitud_de_exoneracion" => 'exoneracion',
+				"solicitud_de_extraordinario" => 'extraordinario',
+				"solicitud_de_homologacion_de_materias" => 'homologacion',
+				"solicitud_de_inclusion_en_lista" => 'inclusion',
+				"solicitud_de_inscripcion_tardia_a_examen" => 'tardia',
+				"solicitud_de_pasantia" => 'pasantia',
+				"solicitud_de_reduccion_de_asistencia" => 'reduccion',
+				"solicitud_de_revision_de_escolaridad" => 'revisionescolaridad',
+				"solicitud_de_revision_de_examen" => 'revisionexamen',
+				"solicitud_de_ruptura_de_correlatividad" => 'ruptura',
+				"solicitud_de_tesis" => 'tesis',
+				"solicitud_de_titulo" => 'titulo',
+				"solicitud_de_traspaso_de_pago_de_examen" => 'traspaso',
+				"solicitud_de_tutoria_de_catedra" => 'tutoria',
+				"solicitud_para_tomar_materia_fuera_de_la_malla_curricular" => 'fuera',
+				"solicitudes_varias" => 'varias',
+		);
+	
+		return $title[$tipo_solicitud];
 	}
 }

@@ -76,6 +76,7 @@ class SituacionAcademicaController extends AbstractActionController
 						'header' => $header,
 						'columnHeader' => $columnHeader,
 						'action' => $action,
+						'actor' => $this->zfcUserAuthentication()->getIdentity()->getId()
 				)
 		);
 		

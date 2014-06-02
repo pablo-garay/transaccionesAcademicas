@@ -87,9 +87,9 @@ class FormularioController extends AbstractActionController
             	$this->flashmessenger()->addSuccessMessage('Solicitud Enviada');
 
             	// redirect the user to its account home page
-            	return $this->redirect()->toRoute('user/default', array (
-	            	    'controller' => 'account',
-	            	    'action'     => 'me',
+            	return $this->redirect()->toRoute('zfcuser', array (
+	            	    'controller' => 'zfcuser',
+	            	    'action'     => 'index',
             	));
             } else {
             	// debug code -- borrar despues!

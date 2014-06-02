@@ -2,22 +2,21 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            // below is key                      and below is the fully qualified class name
-            'Visualizar\Controller\Visualizar' => 'Visualizar\Controller\VisualizarController',
+            'Sapientia\Controller\Sapientia' => 'Sapientia\Controller\SapientiaController',
         ),
     ),
     'router' => array(
         'routes' => array(
-            'visualizar' => array(
+            'sapientia' => array(
                 'type'    => 'Literal',
                 'options' => array(
                     // Change this to something specific to your module
-                    'route'    => '/visualizar',
+                    'route'    => '/sapientia',
                     'defaults' => array(
                         // Change this value to reflect the namespace in which
                         // the controllers for your module are found
-                        '__NAMESPACE__' => 'Visualizar\Controller',
-                        'controller'    => 'Visualizar',
+                        '__NAMESPACE__' => 'Sapientia\Controller',
+                        'controller'    => 'Sapientia',
                         'action'        => 'index',
                     ),
                 ),
@@ -45,28 +44,7 @@ return array(
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'Visualizar' => __DIR__ . '/../view',
+            'Sapientia' => __DIR__ . '/../view',
         ),
     ),
-    
-    // Below is the menu navigation for this module
-	'navigation' => array(
-		'default' => array(
-			array(
-				'label' => 'Visualizar',
-				'route' => 'visualizar/default',
-				'controller'=> 'visualizar',
-				'pages' => array(
-					array(
-						'label' => 'Visualizar solicitud',
-						'route' => 'visualizar/default',
-						'controller' => 'visualizar',
-						'action' => 'index',
-						'resource' => 'visualizar',
-						'privilege' => 'create',
-					),
-				)
-			)
-		)
-	),
 );
