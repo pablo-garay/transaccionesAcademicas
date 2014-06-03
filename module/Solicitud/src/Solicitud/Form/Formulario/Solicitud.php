@@ -12,14 +12,14 @@ use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDBAdapter;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 require_once 'funcionesDB.php';
-
+require_once 'SapientiaClient.php';
 class Solicitud extends Form
 {
 	protected $dbAdapter;
 	protected $sapientiaDbAdapter;
 
 	//parámetro del constructor: adaptador de la base de datos
-	public function __construct( $name = 'solicitud', AdapterInterface $databaseAdapter, AdapterInterface $sapientiaDbAdapter) {
+	public function __construct( $name = 'solicitud', AdapterInterface $databaseAdapter, $idUsuario, AdapterInterface $sapientiaDbAdapter) {
 		$this->dbAdapter = $databaseAdapter; //Asignación de nuestro adaptador de base de datos
 		
 		$this->sapientiaDbAdapter = $sapientiaDbAdapter; //Asignación de nuestro adaptador de base de datos
@@ -32,34 +32,28 @@ class Solicitud extends Form
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////		
 		
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		$usuarioLogueado = 1;
+		$usuarioLogueado = $idUsuario;
 		$datos = getDatosUsuario ($databaseAdapter, $usuarioLogueado);
 		
 		$nombresUsuario = $datos['nombres'];
 		$apellidosUsuario = $datos['apellidos'];
 		$telefonoUsuario = $datos['telefono'];
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumentoUsuario = $datos['numero_de_documento'];
 		$emailUsuario = $datos['email'];
 		 	
 		
 		// Sapientia
-		$sql       = 'SELECT a.matricula, carr.nombre as n_carrera FROM matriculas_por_alumno AS a 
-				INNER JOIN matriculas_por_carrera AS c ON a.matricula = c.matricula 
-				INNER JOIN carreras AS carr ON c.carrera = carr.carrera
-				AND a.numero_de_documento = '.$cedulaUsuario;  
-				 	
-		
-		$statement = $this->sapientiaDbAdapter->query($sql);
-		$result    = $statement->execute();
-		
+
+		$resultMatCarr = getMatriculaCarrera($numeroDocumentoUsuario);
 		$selectDataMat = array();
 		$selectDataCarr = array();
 		
-		foreach ($result as $res) {
+		foreach ($resultMatCarr as $res) {
 			// retornar nombre del usuario
 			$selectDataMat[$res['matricula']] = $res['matricula'];
 			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'] ;
 		}
+		
 		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
        
@@ -76,6 +70,7 @@ class Solicitud extends Form
         				'placeholder' => 'Escriba su nombre...', // HTM5 placeholder attribute
         				'required' => 'required', // Ex: <input required="true"
         				'value' => $nombresUsuario,
+        				'readonly' => 'true',
         				//'disabled' => 'disabled'
         		),
         		'options' => array(
@@ -95,6 +90,7 @@ class Solicitud extends Form
 						'placeholder' => 'Escriba su apellido...',
 						'required' => 'required',
 						'value' => $apellidosUsuario,
+						'readonly' => 'true',
 						//'disabled' => 'disabled'
 				),
 				'options' => array (
@@ -114,7 +110,8 @@ class Solicitud extends Form
 		
 				),
 				'attributes' => array (
-						'value' => $telefonoUsuario, // @todo getphone
+						'value' => $telefonoUsuario, 
+						'readonly' => 'true',
 						//'disabled' => 'disabled'
 				),
 		
@@ -133,6 +130,8 @@ class Solicitud extends Form
         		'attributes' => array(
         		        'placeholder' => 'Elija su matrícula...',
         				'required' => 'required',
+        				'id' => 'matricula',
+        				
         		),
         )
         , array (
@@ -145,18 +144,37 @@ class Solicitud extends Form
 				'options' => array (
 						'label' => 'Carrera',
 						'empty_option' => 'Elija su carrera',
-						'value_options' => $selectDataCarr,
+						//'value_options' => $selectDataCarr,
 				),
 				'attributes' => array (
 						// Below: HTML5 way to specify that the input will be phone number
 						'placeholder' => 'Elija su carrera...',
-						'required' => 'required'
+						'required' => 'required',
+						'id' => 'carrera',
 				)
 		), array (
 				'priority' => 400,
 		) );
 
-
+		
+// 		$this->add(array(
+// 				'name' => 'descripcion',
+// 				'type' => 'Zend\Form\Element\Textarea',
+// 				'options' => array(
+// 						'label' => 'Especificación de documento adjunto'
+// 				),
+// 				'attributes' => array(
+// 						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
+// 						'required' => false,
+// 						'id' => 'descripcion',
+// 				)
+// 		),
+// 				array (
+// 						'priority' => 230,
+// 				)
+// 		);
+		
+		
 
 
         //This is the submit button
@@ -181,8 +199,9 @@ class Solicitud extends Form
         		'type' => 'Zend\Form\Element\Submit',
         		'attributes' => array(
         				'value' => 'Cancelar',
+        				
         				'required' => 'false',
-        
+        				'id' => 'cancelar'
         		),
         
         )
@@ -334,7 +353,35 @@ class Solicitud extends Form
 							),
 					)
 			)));		
+			
 
+			
+// 			$inputFilter->add ( $factory->createInput ( array (
+// 					'name' => 'descripcion',
+// 					'allow_empty' => true,
+// 					'filters' => array (
+// 							array (
+// 									'name' => 'StripTags'
+// 							),
+// 							array (
+// 									'name' => 'StringTrim'
+// 							)
+// 					),
+// 					'validators' => array (
+// 							array (
+// 									'name' => 'alnum',
+// 									'options' => array (
+// 											'messages' => array (
+// 													'notAlnum' => 'Se requieren sólo números y letras'
+// 											),
+// 											'allowWhiteSpace' => true,
+// 									)
+// 							),
+			
+// 					)
+						
+// 			) ) );
+				
 
 			// @todo: posiblemente agregar filtros a los demas campos
 

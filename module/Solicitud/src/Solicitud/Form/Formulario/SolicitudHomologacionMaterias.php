@@ -9,24 +9,24 @@ require_once "funcionesDB.php";
 class SolicitudHomologacionMaterias extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudHomologacionMaterias', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudHomologacionMaterias', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 		
 		// Bd Sapientia
 		
 		$sql       = "SELECT c.carrera, c.plan_de_estudio, c.nombre AS n_carrera  FROM carreras AS c
 						INNER JOIN matriculas_por_carrera AS mxc ON mxc.carrera = c.carrera
 						INNER JOIN matriculas_por_alumno AS axm ON axm.matricula = mxc.matricula
-						AND axm.numero_de_documento =".$cedulaUsuario;
+						AND axm.numero_de_documento =".$numeroDocumento;
 		
 		//$usuarioLogueado
 		$statement = $sapientiaDbadapter->query($sql);

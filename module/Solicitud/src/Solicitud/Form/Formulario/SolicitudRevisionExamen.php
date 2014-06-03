@@ -11,43 +11,43 @@ require_once "funcionesDB.php";
 class SolicitudRevisionExamen extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudRevisionExamen', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudRevisionExamen', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
 		// rescatar su cedula
-		$usuarioLogueado = 1;
+// 		$usuarioLogueado = 1;
 		
-		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+// 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+// 		$cedulaUsuario = $datos['cedula'];
 		
 		
 		
-		$sql       = "SELECT m.materia, m.nombre AS n_materia, p.nombre AS n_profesor, h.fecha_de_examen  FROM materias AS m
-						INNER JOIN cursos AS c ON m.materia = c.materia
-						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso
-						AND axc.numero_de_documento = ".$cedulaUsuario." AND axc.curso_actual = TRUE
-						INNER JOIN Horarios_de_examen AS h ON h.curso = axc.curso
-						INNER JOIN profesores_por_curso AS pxc ON pxc.curso = axc.curso
-						INNER JOIN profesores AS p ON p.profesor = pxc.profesor";
+// 		$sql       = "SELECT m.materia, m.nombre AS n_materia, p.nombre AS n_profesor, h.fecha_de_examen  FROM materias AS m
+// 						INNER JOIN cursos AS c ON m.materia = c.materia
+// 						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso
+// 						AND axc.numero_de_documento = ".$cedulaUsuario." AND axc.curso_actual = TRUE
+// 						INNER JOIN Horarios_de_examen AS h ON h.curso = axc.curso
+// 						INNER JOIN profesores_por_curso AS pxc ON pxc.curso = axc.curso
+// 						INNER JOIN profesores AS p ON p.profesor = pxc.profesor";
 		
-		//$usuarioLogueado
-		$statement = $sapientiaDbadapter->query($sql);
-		$result    = $statement->execute();
+// 		//$usuarioLogueado
+// 		$statement = $sapientiaDbadapter->query($sql);
+// 		$result    = $statement->execute();
 		
-		$selectDataMat = array();
-		$selectDataFech = array();
-		$selectDataProf = array();
+// 		$selectDataMat = array();
+// 		$selectDataFech = array();
+// 		$selectDataProf = array();
 		
-		foreach ($result as $res) {
-			$selectDataMat[$res['n_materia']] = $res['n_materia'];
-			$selectDataFech[$res['fecha_de_examen']] = $res['fecha_de_examen'];
-			$selectDataProf[$res['n_profesor']] = $res['n_profesor'];
-		}
+// 		foreach ($result as $res) {
+// 			$selectDataMat[$res['n_materia']] = $res['n_materia'];
+// 			$selectDataFech[$res['fecha_de_examen']] = $res['fecha_de_examen'];
+// 			$selectDataProf[$res['n_profesor']] = $res['n_profesor'];
+// 		}
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 		
 		$this->add(array(
@@ -56,10 +56,11 @@ class SolicitudRevisionExamen extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Elija una asignatura..',
-						'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
+						//'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 		),
 				array (
@@ -78,6 +79,7 @@ class SolicitudRevisionExamen extends Solicitud
 				'attributes' => array(
 					'value' =>  'dd/mm/aaaa',
 					'required' => 'required',
+					'id' => 'fecha_examen',
 				),
 	
 		),
@@ -92,10 +94,11 @@ class SolicitudRevisionExamen extends Solicitud
 				'options' => array(
 						'label' => 'Profesor:',
 						'empty_option' => 'Elija el Profesor..',
-						'value_options' => $selectDataProf,
+						//'value_options' => $selectDataProf,
 				),
 				'attributes' => array(
 					'required' => 'required',
+					'id' => 'profesor',
 				),
 		),
 				array (
@@ -108,15 +111,16 @@ class SolicitudRevisionExamen extends Solicitud
 				'name' => 'oportunidad',
 				'options' => array(
 						'label' => 'Oportunidad ',
-						'value_options' => array(
-								'1' => '1',
-								'2' => '2',
-								'3' => '3',
-								'E' => 'Extraordinario'
-						),
+// 						'value_options' => array(
+// 								'1' => '1',
+// 								'2' => '2',
+// 								'3' => '3',
+// 								'E' => 'Extraordinario'
+// 						),
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id'=>'oportunidad',
 				),
 		),
 				array (
@@ -139,6 +143,7 @@ class SolicitudRevisionExamen extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'calificacion_previa',
 				),
 		),
 				array (

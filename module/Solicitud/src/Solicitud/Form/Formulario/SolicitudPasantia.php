@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudPasantia extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudPasantia', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudPasantia', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
@@ -24,6 +24,7 @@ class SolicitudPasantia extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'lugar',
 				),
 	
 		),
@@ -33,7 +34,7 @@ class SolicitudPasantia extends Solicitud
 				);
 	
 		$this->add(array(
-				'name' => 'direccion',
+				'name' => 'direccion_lugar',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
 						'label' => 'Dirección',
@@ -41,6 +42,7 @@ class SolicitudPasantia extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'direccion',
 				),	
 		),
 				array (
@@ -56,6 +58,7 @@ class SolicitudPasantia extends Solicitud
         		),
         		'attributes' => array(
         				'required' => 'required',
+        				'id' => 'correo_electronico',
         		),
         ),
         		array (
@@ -64,7 +67,7 @@ class SolicitudPasantia extends Solicitud
         );
         
         $this->add(array(
-        		'name' => 'telefono',
+        		'name' => 'telefono_lugar',
         		'type' => 'Zend\Form\Element\Text',
         		'options' => array(
         				'label' => 'Teléfono del lugar',
@@ -72,6 +75,7 @@ class SolicitudPasantia extends Solicitud
         		),
         		'attributes' => array (
         				'required' => 'required',
+        				'id' => 'telefono',
         				//'value' => '0981334566', // @todo getphone
         		),
         
@@ -118,41 +122,7 @@ class SolicitudPasantia extends Solicitud
 				)
 				);
 	
-		$this->add(array(
-				'name' => 'documento_adjunto',
-				'type' => 'Zend\Form\Element\Radio',
-				'options' => array(
-						'label' => 'Documento Adjunto',
-						'value_options' => array(
-								'Datos Adicionales de la Empresa' => 'Datos Adicionales de la Empresa',
-								'Otro' => 'Otro'
-						),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),	
-		),
-				array (
-						'priority' => 240,
-				)
-						);
-	
-		$this->add(array(
-				'name' => 'especificacion_adjunto',
-				'type' => 'Zend\Form\Element\Textarea',
-				'options' => array(
-						'label' => 'Especificación de documento adjunto'
-				),
-				'attributes' => array(
-						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
-						'required' => false,
-						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
-				)
-		),
-				array (
-						'priority' => 230,
-				)
-				);
+
 	
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -202,7 +172,7 @@ class SolicitudPasantia extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'direccion',
+					'name' => 'direccion_lugar',
 					'filters' => array(
 							array ( 'name' => 'StripTags' ),
 							array ( 'name' => 'StringTrim' ),
@@ -255,7 +225,7 @@ class SolicitudPasantia extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'telefono',
+					'name' => 'telefono_lugar',
 					'filters' => array(
 							array ( 'name' => 'digits' ),
 							array ( 'name' => 'stringtrim' ),
@@ -299,6 +269,7 @@ class SolicitudPasantia extends Solicitud
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -321,30 +292,7 @@ class SolicitudPasantia extends Solicitud
 					)
 			) ) );
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'especificacion_adjunto',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-								
-					)
-			
-			) ) );
+
 			
 			
 			

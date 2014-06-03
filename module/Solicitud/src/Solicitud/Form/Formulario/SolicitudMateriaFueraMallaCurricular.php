@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudMateriaFueraMallaCurricular extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudMateriaFueraMallaCurricular', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudMateriaFueraMallaCurricular', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
@@ -38,17 +38,18 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 		
 		
 		$this->add(array(
-				'name' => 'Carrera_asignatura',//de la tabla asignatura
+				'name' => 'carrera_asignatura',//de la tabla asignatura
 				'type' => 'Zend\Form\Element\Select',
 		
 				'options' => array(
-						'label' => 'Carrera',
-						'empty_option' => 'Elija su carrera',
+						'label' => 'Carrera de la asignatura extracurricular',
+						'empty_option' => 'Elija la carrera',
 						'value_options' => $selectDataCarr,
 		
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'carrera_asignatura',
 				),
 		),
 				array (
@@ -57,15 +58,16 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'Asignatura',
+				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 	
 		),

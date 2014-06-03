@@ -13,10 +13,7 @@
 	-webkit-border-radius: 200px; "> 
 	 SOLICITUD DE CERTIFICADO DE ESTUDIOS </h4>
 	<br> <br>
-	 
-<h5 align="left"> Decano <br> Facultad de Ciencias y Tecnología <br> UNIVERSIDAD CATÓLICA <br>
-De mi consideración: <br> Es objeto de la presente, solicitar a usted se me expida un certificado de estudios. <br>
-<br>DATOS PERSONALES</h5>
+	
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
@@ -27,7 +24,8 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-        ?>
+
+?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
@@ -36,6 +34,7 @@ foreach ($this->form1 as $element) {
 	    </div>
 </div>
 <?php
+	
 	if ( ($element->getName() == 'Email')) {
 ?>
 	<h5 align = 'left'> DATOS ACADÉMICOS</h5>
@@ -86,3 +85,22 @@ foreach ($this->form1 as $element) {
 echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
+
+<script type="text/javascript">
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+       
+        	$('#carrera').html(data);
+        	     
+      },
+	}
+    );  
+	});
+
+
+	</script>

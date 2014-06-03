@@ -9,21 +9,21 @@ require_once "funcionesDB.php";
 class SolicitudCambioSeccion extends Solicitud
 {
 
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 
-		parent::__construct($name = 'cambioSeccion', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'cambioSeccion', $dbadapter, $idUsuario, $sapientiaDbadapter);
 
 		$this->setAttribute('method', 'post');
 
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 
-		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $cedulaUsuario, TRUE);
+		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $numeroDocumento, TRUE);
 		$selectDataMat = $datosAlumno['materias'] ;
 		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
@@ -37,14 +37,31 @@ class SolicitudCambioSeccion extends Solicitud
 						'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
-						// Below: HTML5 way to specify that the input will be phone number
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 		),
 				array (
 						'priority' => 350,
 				)
 				);
+		
+		$this->add(array(
+				'name' => 'nueva_seccion_elegida',
+				'type' => 'Zend\Form\Element\Text',
+				'options' => array(
+						'label' => 'Sección nueva: ',
+		
+				),
+				'attributes' => array(
+						'required' => 'required',
+						'id' => 'seccion',
+				),
+		),
+				array (
+						'priority' => 345,
+				)
+		);
 		
 // 		$this->add(array(
 // 				'name' => 'materia_seccion_validas',
@@ -68,6 +85,7 @@ class SolicitudCambioSeccion extends Solicitud
 						'label' => 'Motivo',
 						'value_options' => array(
 								'Trabajo' => 'Trabajo',
+								'Solapamiento de Horario' => 'Solapamiento de Horario',
 								'Otro' => 'Otro'
 						),
 				),
@@ -85,7 +103,7 @@ class SolicitudCambioSeccion extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						'label' => 'Descripción de Motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
@@ -104,7 +122,6 @@ class SolicitudCambioSeccion extends Solicitud
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
-								'Certificado Médico' => 'Certificado Médico',
 								'Certificado de Trabajo' => 'Certificado de Trabajo',
 								'Otro' => 'Otro'
 						),
@@ -116,22 +133,7 @@ class SolicitudCambioSeccion extends Solicitud
 				)
 		);
 		
-		$this->add(array(
-				'name' => 'Descripcion',
-				'type' => 'Zend\Form\Element\Textarea',
-				'options' => array(
-						'label' => 'Especificación de documento adjunto'
-				),
-				'attributes' => array(
-						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
-						'required' => false,
-						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
-				)
-		),
-				array (
-						'priority' => 230,
-				)
-		);
+
 
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
@@ -205,6 +207,7 @@ class SolicitudCambioSeccion extends Solicitud
 
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -227,7 +230,32 @@ class SolicitudCambioSeccion extends Solicitud
 					)
 			) ) );
 
-
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'nueva_seccion_elegida',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			) ) );
 
 			// @todo: posiblemente agregar filtros a los demas campos
 

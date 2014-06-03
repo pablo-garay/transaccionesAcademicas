@@ -3,6 +3,10 @@ $title = 'Lista de solicitudes';
 $this->headTitle($title);
 ?>
 
+<div class="page-header">
+    <h1><?php echo $title; ?></h1>
+</div>
+
 <?php if (count($this->solicitudes)): ?>
 
 <table class="table table-hover">
@@ -23,7 +27,7 @@ $this->headTitle($title);
             <td><?= $this->escapehtml($solicitud['fecha_solicitada']) ?></td>
             <td><?= $this->escapehtml($solicitud['estado_solicitud']) ?> </td>
             <td><a href="<?= $this->url('solicitud/actor', 
-            		array('controller'=> 'actor', 'action'=>'recepcion', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Visualizar') ?></a></td>
+            		array('controller'=> 'actor', 'action'=>$this->actorAction, 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Visualizar') ?></a></td>
             <td><?php
 //                 if($this->user->getId() == $solicitud['id'] || $this->acl->isAllowed($this->user->getRole(),'actor','edit')) :
 //             ?>           
@@ -34,7 +38,7 @@ $this->headTitle($title);
             <td><?php
 //                 if($this->acl->isAllowed($this->user->getRole(),'actor','delete')) :
 //             ?>
-            <a href="<?= $this->url('solicitud/actor', array('controller'=> 'actor', 'action'=>'delete', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Eliminar') ?></a>
+            <!-- <a href="<?= $this->url('solicitud/actor', array('controller'=> 'actor', 'action'=>'delete', 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Eliminar') ?></a> -->
             <?php
 //                 endif;
 //             ?>
@@ -43,7 +47,9 @@ $this->headTitle($title);
 <?php endforeach; ?>
 </tbody>
 </table>
-<?php endif; ?>
+<?php else:
+		echo 'No hay solicitudes que mostrar';
+	  endif; ?>
 
 <br><p>&nbsp;&nbsp;</p>
 
@@ -51,5 +57,5 @@ $this->headTitle($title);
                                     'Sliding',
                                     'paginator/sliding',
                                     array('route' => 'solicitud/list',
-										  'action' => $this->action)
+										  'listaAction' => $this->action)
                                     );

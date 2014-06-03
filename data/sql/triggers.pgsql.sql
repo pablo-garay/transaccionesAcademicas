@@ -106,21 +106,7 @@ CREATE TRIGGER tesis_insert BEFORE INSERT ON solicitud_de_tesis
 -- 
 -- CREATE TRIGGER inclusionlista_insert BEFORE INSERT ON solicitud_de_inclusion_en_lista
 --     FOR EACH ROW EXECUTE PROCEDURE inclusionlista_insert();
-
-
-
-CREATE OR REPLACE FUNCTION cambioseccion_insert() RETURNS trigger AS $$
-    BEGIN
-	NEW.materia_seccion_validas := 'NO_VERIFICADO';
-        
-        RETURN NEW;
-    END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS cambioseccion_insert ON solicitud_de_cambio_de_seccion;
-
-CREATE TRIGGER cambioseccion_insert BEFORE INSERT ON solicitud_de_cambio_de_seccion
-    FOR EACH ROW EXECUTE PROCEDURE cambioseccion_insert();      
+     
 
 
 
@@ -252,4 +238,17 @@ CREATE TRIGGER revisionexamen_insert BEFORE INSERT ON solicitud_de_revision_de_e
 
 
 
-    
+CREATE OR REPLACE FUNCTION usuario_register() RETURNS trigger AS $$
+    BEGIN
+
+        INSERT INTO user_role_linker
+        VALUES (NEW.usuario, 2); -- Asignar rol User al registrarse
+        
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS usuario_register ON usuarios;
+
+CREATE TRIGGER usuario_register AFTER INSERT ON usuarios
+    FOR EACH ROW EXECUTE PROCEDURE usuario_register();    

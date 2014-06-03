@@ -24,7 +24,8 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-        ?>
+	
+?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
@@ -33,6 +34,7 @@ foreach ($this->form1 as $element) {
 	    </div>
 </div>
 <?php
+
 	if ( ($element->getName() == 'Especificacion_motivo')) {
 ?>
 	
@@ -63,3 +65,115 @@ foreach ($this->form1 as $element) {
 echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
+
+<script type="text/javascript">
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+       // $('#profesor').find('option').remove().end();
+       
+        	$('#carrera').html(data);
+        	     
+      },
+//       error: function(xhr, textstatus, errorThrown) {
+//     	 alert("AJAX call an epic failure");
+//    		}
+	}
+    );
+    $('#carrera').fadeIn(1000);
+	});
+	$('#carrera').hide();
+
+	$("#carrera").change(function() {
+	    $.ajax({
+		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      type: "POST",
+		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      success: function(data, textstatus, xhr){
+		       // $('#profesor').find('option').remove().end();
+		       
+		        	$('#asignatura').html(data);
+		        	     
+		      },
+//		       error: function(xhr, textstatus, errorThrown) {
+//		     	 alert("AJAX call an epic failure");
+//		    		}
+			}
+		    );
+		
+	    $('#asignatura').fadeIn(1000);
+	});
+	
+	$('#asignatura').hide();
+
+	$("#asignatura").change(function() { ////HACERR EL SELECT 
+		
+	    $.ajax({
+	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+	      type: "POST",
+	      data:{"asignatura_fecha_tardia":$("#asignatura").val()},
+	      success: function(data, textstatus, xhr){
+	       // $('#profesor').find('option').remove().end();
+	       
+	        	$('#fecha_examen').html(data);
+	        	     
+	      },
+//	       error: function(xhr, textstatus, errorThrown) {
+//	     	 alert("AJAX call an epic failure");
+//	    		}
+		}
+	    );
+	    $('#fecha_examen').fadeIn(1000);
+		});
+		$('#fecha_examen').hide();
+
+		$("#asignatura").change(function() { //HACER EL SELECT 
+			
+		    $.ajax({
+		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      type: "POST",
+		      data:{"asignatura_op_tardia":$("#asignatura").val()},
+		      success: function(data, textstatus, xhr){
+		       // $('#profesor').find('option').remove().end();
+		       
+		        	$('#oportunidad').html(data);
+		        	     
+		      },
+//		       error: function(xhr, textstatus, errorThrown) {
+//		     	 alert("AJAX call an epic failure");
+//		    		}
+			}
+		    );
+		    $('#oportunidad').fadeIn(1000);
+			});
+			$('#oportunidad').hide();
+
+		$("#asignatura").change(function() {
+			
+		    $.ajax({
+		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      type: "POST",
+		      data:{"materia":$("#asignatura").val()},
+		      success: function(data, textstatus, xhr){
+		       // $('#profesor').find('option').remove().end();
+		       
+		        	$('#profesor').html(data);
+		        	     
+		      },
+		      error: function(xhr, textstatus, errorThrown) {
+		    	 alert("AJAX call an epic failure");
+		   		}
+			}
+		    );
+		    $('#profesor').fadeIn(1500);
+		    $('#calificacion_previa').fadeIn(1500);			    
+			});
+
+			$('#profesor').hide();
+			$('#calificacion_previa').hide();
+	
+</script>

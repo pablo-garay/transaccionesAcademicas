@@ -1,381 +1,312 @@
-/*==============================================================*/
+﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     5/29/2014 10:00:12 PM                        */
+/* Created on:     6/2/2014 8:20:41 PM                          */
 /*==============================================================*/
-
-
-drop index ALUMNOS_PK;
-
-drop table ALUMNOS;
-
-drop index INCLUYE_INTEGRANTES_FK2;
-
-drop index INCLUYE_INTEGRANTES_FK;
-
-drop index INCLUYE_INTEGRANTES_PK;
-
-drop table ALUMNOS_POR_TESIS;
-
-drop index TIENE_FK3;
-
-drop index ASIGNATURAS_POR_SOLICITUD_PK;
-
-drop table ASIGNATURAS_POR_SOLICITUD;
-
-drop index CREDITOS_POR_CARRERA_PK;
-
-drop table CREDITOS_POR_CARRERA;
-
-drop index TIENE_FK;
-
-drop index DOCUMENTOS_ADJUNTOS_PK;
-
-drop table DOCUMENTOS_ADJUNTOS;
-
-drop index FECHAS_DE_RESOLUCION_DE_SOLICITUDES_PK;
-
-drop table FECHAS_DE_RESOLUCION_DE_SOLICITUDES;
-
-drop index TIENE_FK2;
-
-drop index HISTORIAL_EXTRAORDINARIOS_PK;
-
-drop table HISTORIAL_EXTRAORDINARIOS;
-
-drop index GENERADO_SEGUN_FK;
-
-drop index ACCEDE_A_FK;
-
-drop index LOGS_PK;
-
-drop table LOGS;
-
-drop index PARAMETROS_LOGS_PK;
-
-drop table PARAMETROS_LOGS;
-
-drop table PARAMETROS_REQUISITOS;
-
-drop index PERMISOS_PK;
-
-drop table PERMISOS;
-
-drop index CONTIENE_FK3;
-
-drop index CONTIENE_FK2;
-
-drop index CONTIENE_PK;
-
-drop table PERMISOS_POR_ROL;
-
-drop index ROLES_PK;
-
-drop table ROLES;
-
-drop index TIENE_ASIGNADO_FK2;
-
-drop index TIENE_ASIGNADO_FK;
-
-drop index TIENE_ASIGNADO_PK;
-
-drop table ROLES_POR_USUARIO;
-
-drop index HECHA_POR_FK;
-
-drop index SOLICITUDES_PK;
-
-drop table SOLICITUDES;
-
-drop index SOLICITUDES_VARIAS_PK;
-
-drop table SOLICITUDES_VARIAS;
-
-drop index SOLICITUD_DE_CAMBIO_DE_SECCION_PK;
-
-drop table SOLICITUD_DE_CAMBIO_DE_SECCION;
-
-drop index SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS_PK;
-
-drop table SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS;
-
-drop index SOLICITUD_DE_COLABORADOR_DE_CATEDRA_PK;
-
-drop table SOLICITUD_DE_COLABORADOR_DE_CATEDRA;
-
-drop index SOLICITUD_DE_CONVALIDACION_DE_MATERIAS_PK;
-
-drop table SOLICITUD_DE_CONVALIDACION_DE_MATERIAS;
-
-drop index SOLICITUD_DE_CREDITOS_ACADEMICOS_PK;
-
-drop table SOLICITUD_DE_CREDITOS_ACADEMICOS;
-
-drop index SOLICITUD_DE_DESINSCRIPCION_DE_CURSO_PK;
-
-drop table SOLICITUD_DE_DESINSCRIPCION_DE_CURSO;
-
-drop index SOLICITUD_DE_EXONERACION_PK;
-
-drop table SOLICITUD_DE_EXONERACION;
-
-drop index SOLICITUD_DE_EXTRAORDINARIO_PK;
-
-drop table SOLICITUD_DE_EXTRAORDINARIO;
-
-drop index SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS_PK;
-
-drop table SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS;
-
-drop index SOLICITUD_DE_INCLUSION_EN_LISTA_PK;
-
-drop table SOLICITUD_DE_INCLUSION_EN_LISTA;
-
-drop index SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN_PK;
-
-drop table SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN;
-
-drop index SOLICITUD_DE_PASANTIA_PK;
-
-drop table SOLICITUD_DE_PASANTIA;
-
-drop index SOLICITUD_DE_REDUCCION_DE_ASISTENCIA_PK;
-
-drop table SOLICITUD_DE_REDUCCION_DE_ASISTENCIA;
-
-drop index SOLICITUD_DE_REVISION_DE_ESCOLARIDAD_PK;
-
-drop table SOLICITUD_DE_REVISION_DE_ESCOLARIDAD;
-
-drop index SOLICITUD_DE_REVISION_DE_EXAMEN_PK;
-
-drop table SOLICITUD_DE_REVISION_DE_EXAMEN;
-
-drop index SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD_PK;
-
-drop table SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD;
-
-drop index SOLICITUD_DE_TESIS_PK;
-
-drop table SOLICITUD_DE_TESIS;
-
-drop index SOLICITUD_DE_TITULO_PK;
-
-drop table SOLICITUD_DE_TITULO;
-
-drop index SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN_PK;
-
-drop table SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN;
-
-drop index SOLICITUD_DE_TUTORIA_DE_CATEDRA_PK;
-
-drop table SOLICITUD_DE_TUTORIA_DE_CATEDRA;
-
-drop index SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR_PK;
-
-drop table SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR;
-
-drop index TIENE_TUTORES_FK2;
-
-drop index TIENE_TUTORES_FK;
-
-drop index TIENE_TUTORES_PK;
-
-drop table TUTORES_POR_TESIS;
-
-drop index USUARIOS_PK;
-
-drop table USUARIOS;
-
-drop domain D_ACTA;
-
-drop domain D_ADJUNTO;
-
-drop domain D_ANHO;
-
-drop domain D_APELLIDO_USUARIO;
-
-drop domain D_ASISTENCIA;
-
-drop domain D_ASUNTO_SOLICITUD;
-
-drop domain D_BOOLEAN;
-
-drop domain D_CALIFICACION;
-
-drop domain D_CANTIDAD;
-
-drop domain D_CARRERA;
-
-drop domain D_CEDULA;
-
-drop domain D_COMPROBANTE;
-
-drop domain D_CONTRASENA;
-
-drop domain D_CORREO;
-
-drop domain D_CUENTA;
-
-drop domain D_DEPARTAMENTO;
-
-drop domain D_DESCRIPCION_ACTIVIDADES;
-
-drop domain D_DESCRIPCION_LOG;
-
-drop domain D_DESCRIPCION_PERMISO;
-
-drop domain D_DIA;
-
-drop domain D_DIRECCION;
-
-drop domain D_DIRECCION_EMAIL;
-
-drop domain D_DOCUMENT_ID;
-
-drop domain D_EMAIL;
-
-drop domain D_ESTADO_CUENTA;
-
-drop domain D_ESTADO_SOLICITUD;
-
-drop domain D_ETAPA_ACTUAL;
-
-drop domain D_FECHA;
-
-drop domain D_FECHAHORA;
-
-drop domain D_FILENAME;
-
-drop domain D_HISTORIAL;
-
-drop domain D_HORA;
-
-drop domain D_HORARIO;
-
-drop domain D_MATERIA;
-
-drop domain D_MATRICULA;
-
-drop domain D_MESA_ENTRADA;
-
-drop domain D_MOTIVO;
-
-drop domain D_NOMBRE_CARRERA;
-
-drop domain D_NOMBRE_DEPARTAMENTO;
-
-drop domain D_NOMBRE_LOG;
-
-drop domain D_NOMBRE_LUGAR;
-
-drop domain D_NOMBRE_MATERIA;
-
-drop domain D_NOMBRE_PARAMETRO;
-
-drop domain D_NOMBRE_PERMISO;
-
-drop domain D_NOMBRE_ROL;
-
-drop domain D_NOMBRE_SECCION;
-
-drop domain D_NOMBRE_TESIS;
-
-drop domain D_NOMBRE_TITULO;
-
-drop domain D_NOMBRE_UNIVERSIDAD;
-
-drop domain D_NOMBRE_USUARIO;
-
-drop domain D_NUM_ARCHIVO;
-
-drop domain D_NUM_LOG;
-
-drop domain D_OBSERVACIONES;
-
-drop domain D_OPORTUNIDAD;
-
-drop domain D_PARAMETRO;
-
-drop domain D_PERMISO;
-
-drop domain D_PROFESOR;
-
-drop domain D_RESULTADO_REQUISITO;
-
-drop domain D_ROL;
-
-drop domain D_SECCION;
-
-drop domain D_SEMESTRE;
-
-drop domain D_SEXO;
-
-drop domain D_SOLICITUD;
-
-drop domain D_TELEFONO;
-
-drop domain D_TEXTO_EMAIL;
-
-drop domain D_TEXTO_LOG;
-
-drop domain D_TIME;
-
-drop domain D_TIPO_CERTIFICADO;
-
-drop domain D_TIPO_SOLICITUD;
-
-drop domain D_TIPO_TITULO;
-
-drop domain D_USUARIO;
-
-drop domain D_VALOR_PARAMETRO;
-
-/*==============================================================*/
-/* Table: ALUMNOS                                               */
-/*==============================================================*/
-create table ALUMNOS (
-   CEDULA               INT4                 not null,
-   USUARIO              INT4                 not null,
-   constraint PK_ALUMNOS primary key (CEDULA)
-);
-
-/*==============================================================*/
-/* Index: ALUMNOS_PK                                            */
-/*==============================================================*/
-create unique index ALUMNOS_PK on ALUMNOS (
-CEDULA
-);
-
-/*==============================================================*/
-/* Table: ALUMNOS_POR_TESIS                                     */
-/*==============================================================*/
-create table ALUMNOS_POR_TESIS (
-   SOLICITUD            INT4                 not null,
-   CEDULA               INT4                 not null,
-   constraint PK_ALUMNOS_POR_TESIS primary key (SOLICITUD, CEDULA)
-);
-
-/*==============================================================*/
-/* Index: INCLUYE_INTEGRANTES_PK                                */
-/*==============================================================*/
-create unique index INCLUYE_INTEGRANTES_PK on ALUMNOS_POR_TESIS (
-SOLICITUD,
-CEDULA
-);
-
-/*==============================================================*/
-/* Index: INCLUYE_INTEGRANTES_FK                                */
-/*==============================================================*/
-create  index INCLUYE_INTEGRANTES_FK on ALUMNOS_POR_TESIS (
-SOLICITUD
-);
-
-/*==============================================================*/
-/* Index: INCLUYE_INTEGRANTES_FK2                               */
-/*==============================================================*/
-create  index INCLUYE_INTEGRANTES_FK2 on ALUMNOS_POR_TESIS (
-CEDULA
-);
+-- 
+-- 
+-- drop index TIENE_FK3;
+-- 
+-- drop index ASIGNATURAS_POR_SOLICITUD_PK;
+-- 
+-- drop table ASIGNATURAS_POR_SOLICITUD;
+-- 
+-- drop index CREDITOS_POR_CARRERA_PK;
+-- 
+-- drop table CREDITOS_POR_CARRERA;
+-- 
+-- drop index TIENE_FK;
+-- 
+-- drop index DOCUMENTOS_ADJUNTOS_PK;
+-- 
+-- drop table DOCUMENTOS_ADJUNTOS;
+-- 
+-- drop index FECHAS_DE_RESOLUCION_DE_SOLICITUDES_PK;
+-- 
+-- drop table FECHAS_DE_RESOLUCION_DE_SOLICITUDES;
+-- 
+-- drop index TIENE_FK2;
+-- 
+-- drop index HISTORIAL_EXTRAORDINARIOS_PK;
+-- 
+-- drop table HISTORIAL_EXTRAORDINARIOS;
+-- 
+-- drop table PARAMETROS_REQUISITOS;
+-- 
+-- drop index PERMISOS_PK;
+-- 
+-- drop table PERMISOS;
+-- 
+-- drop index CONTIENE_FK3;
+-- 
+-- drop index CONTIENE_FK2;
+-- 
+-- drop index CONTIENE_PK;
+-- 
+-- drop table PERMISOS_POR_ROL;
+-- 
+-- drop index ROLES_PK;
+-- 
+-- drop table ROLES;
+-- 
+-- drop index TIENE_ASIGNADO_FK2;
+-- 
+-- drop index TIENE_ASIGNADO_FK;
+-- 
+-- drop index TIENE_ASIGNADO_PK;
+-- 
+-- drop table ROLES_POR_USUARIO;
+-- 
+-- drop index HECHA_POR_FK;
+-- 
+-- drop index SOLICITUDES_PK;
+-- 
+-- drop table SOLICITUDES;
+-- 
+-- drop index SOLICITUDES_VARIAS_PK;
+-- 
+-- drop table SOLICITUDES_VARIAS;
+-- 
+-- drop index SOLICITUD_DE_CAMBIO_DE_SECCION_PK;
+-- 
+-- drop table SOLICITUD_DE_CAMBIO_DE_SECCION;
+-- 
+-- drop index SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS_PK;
+-- 
+-- drop table SOLICITUD_DE_CERTIFICADO_DE_ESTUDIOS;
+-- 
+-- drop index SOLICITUD_DE_COLABORADOR_DE_CATEDRA_PK;
+-- 
+-- drop table SOLICITUD_DE_COLABORADOR_DE_CATEDRA;
+-- 
+-- drop index SOLICITUD_DE_CONVALIDACION_DE_MATERIAS_PK;
+-- 
+-- drop table SOLICITUD_DE_CONVALIDACION_DE_MATERIAS;
+-- 
+-- drop index SOLICITUD_DE_CREDITOS_ACADEMICOS_PK;
+-- 
+-- drop table SOLICITUD_DE_CREDITOS_ACADEMICOS;
+-- 
+-- drop index SOLICITUD_DE_DESINSCRIPCION_DE_CURSO_PK;
+-- 
+-- drop table SOLICITUD_DE_DESINSCRIPCION_DE_CURSO;
+-- 
+-- drop index SOLICITUD_DE_EXONERACION_PK;
+-- 
+-- drop table SOLICITUD_DE_EXONERACION;
+-- 
+-- drop index SOLICITUD_DE_EXTRAORDINARIO_PK;
+-- 
+-- drop table SOLICITUD_DE_EXTRAORDINARIO;
+-- 
+-- drop index SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS_PK;
+-- 
+-- drop table SOLICITUD_DE_HOMOLOGACION_DE_MATERIAS;
+-- 
+-- drop index SOLICITUD_DE_INCLUSION_EN_LISTA_PK;
+-- 
+-- drop table SOLICITUD_DE_INCLUSION_EN_LISTA;
+-- 
+-- drop index SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN_PK;
+-- 
+-- drop table SOLICITUD_DE_INSCRIPCION_TARDIA_A_EXAMEN;
+-- 
+-- drop index SOLICITUD_DE_PASANTIA_PK;
+-- 
+-- drop table SOLICITUD_DE_PASANTIA;
+-- 
+-- drop index SOLICITUD_DE_REDUCCION_DE_ASISTENCIA_PK;
+-- 
+-- drop table SOLICITUD_DE_REDUCCION_DE_ASISTENCIA;
+-- 
+-- drop index SOLICITUD_DE_REVISION_DE_ESCOLARIDAD_PK;
+-- 
+-- drop table SOLICITUD_DE_REVISION_DE_ESCOLARIDAD;
+-- 
+-- drop index SOLICITUD_DE_REVISION_DE_EXAMEN_PK;
+-- 
+-- drop table SOLICITUD_DE_REVISION_DE_EXAMEN;
+-- 
+-- drop index SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD_PK;
+-- 
+-- drop table SOLICITUD_DE_RUPTURA_DE_CORRELATIVIDAD;
+-- 
+-- drop index SOLICITUD_DE_TESIS_PK;
+-- 
+-- drop table SOLICITUD_DE_TESIS;
+-- 
+-- drop index SOLICITUD_DE_TITULO_PK;
+-- 
+-- drop table SOLICITUD_DE_TITULO;
+-- 
+-- drop index SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN_PK;
+-- 
+-- drop table SOLICITUD_DE_TRASPASO_DE_PAGO_DE_EXAMEN;
+-- 
+-- drop index SOLICITUD_DE_TUTORIA_DE_CATEDRA_PK;
+-- 
+-- drop table SOLICITUD_DE_TUTORIA_DE_CATEDRA;
+-- 
+-- drop index SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR_PK;
+-- 
+-- drop table SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR;
+-- 
+-- drop index USUARIOS_PK;
+-- 
+-- drop table USUARIOS;
+-- 
+-- drop domain D_ACTA;
+-- 
+-- drop domain D_ADJUNTO;
+-- 
+-- drop domain D_ANHO;
+-- 
+-- drop domain D_APELLIDO_USUARIO;
+-- 
+-- drop domain D_ASISTENCIA;
+-- 
+-- drop domain D_ASUNTO_SOLICITUD;
+-- 
+-- drop domain D_BOOLEAN;
+-- 
+-- drop domain D_CALIFICACION;
+-- 
+-- drop domain D_CANTIDAD;
+-- 
+-- drop domain D_CARRERA;
+-- 
+-- drop domain D_CEDULA;
+-- 
+-- drop domain D_CODIGO_ASIGNATURA;
+-- 
+-- drop domain D_COMPROBANTE;
+-- 
+-- drop domain D_CONTRASENA;
+-- 
+-- drop domain D_CORREO;
+-- 
+-- drop domain D_CUENTA;
+-- 
+-- drop domain D_DEPARTAMENTO;
+-- 
+-- drop domain D_DESCRIPCION_ACTIVIDADES;
+-- 
+-- drop domain D_DESCRIPCION_LOG;
+-- 
+-- drop domain D_DESCRIPCION_PERMISO;
+-- 
+-- drop domain D_DIA;
+-- 
+-- drop domain D_DIRECCION;
+-- 
+-- drop domain D_DIRECCION_EMAIL;
+-- 
+-- drop domain D_DOCUMENT_ID;
+-- 
+-- drop domain D_EMAIL;
+-- 
+-- drop domain D_ESTADO_CUENTA;
+-- 
+-- drop domain D_ESTADO_SOLICITUD;
+-- 
+-- drop domain D_ETAPA_ACTUAL;
+-- 
+-- drop domain D_FECHA;
+-- 
+-- drop domain D_FECHAHORA;
+-- 
+-- drop domain D_FILENAME;
+-- 
+-- drop domain D_HISTORIAL;
+-- 
+-- drop domain D_HORA;
+-- 
+-- drop domain D_HORARIO;
+-- 
+-- drop domain D_MATERIA;
+-- 
+-- drop domain D_MATRICULA;
+-- 
+-- drop domain D_MESA_ENTRADA;
+-- 
+-- drop domain D_MOTIVO;
+-- 
+-- drop domain D_NOMBRE_CARRERA;
+-- 
+-- drop domain D_NOMBRE_DEPARTAMENTO;
+-- 
+-- drop domain D_NOMBRE_LOG;
+-- 
+-- drop domain D_NOMBRE_LUGAR;
+-- 
+-- drop domain D_NOMBRE_MATERIA;
+-- 
+-- drop domain D_NOMBRE_PARAMETRO;
+-- 
+-- drop domain D_NOMBRE_PERMISO;
+-- 
+-- drop domain D_NOMBRE_ROL;
+-- 
+-- drop domain D_NOMBRE_SECCION;
+-- 
+-- drop domain D_NOMBRE_TESIS;
+-- 
+-- drop domain D_NOMBRE_TITULO;
+-- 
+-- drop domain D_NOMBRE_UNIVERSIDAD;
+-- 
+-- drop domain D_NOMBRE_USUARIO;
+-- 
+-- drop domain D_NUMERO_DOCUMENTO;
+-- 
+-- drop domain D_NUM_ARCHIVO;
+-- 
+-- drop domain D_NUM_LOG;
+-- 
+-- drop domain D_OBSERVACIONES;
+-- 
+-- drop domain D_OPORTUNIDAD;
+-- 
+-- drop domain D_ORIGEN_DE_DOCUMENTO;
+-- 
+-- drop domain D_PARAMETRO;
+-- 
+-- drop domain D_PERMISO;
+-- 
+-- drop domain D_PROFESOR;
+-- 
+-- drop domain D_RESULTADO_REQUISITO;
+-- 
+-- drop domain D_ROL;
+-- 
+-- drop domain D_SECCION;
+-- 
+-- drop domain D_SEMESTRE;
+-- 
+-- drop domain D_SEXO;
+-- 
+-- drop domain D_SOLICITUD;
+-- 
+-- drop domain D_TELEFONO;
+-- 
+-- drop domain D_TEXTO_EMAIL;
+-- 
+-- drop domain D_TEXTO_LOG;
+-- 
+-- drop domain D_TIME;
+-- 
+-- drop domain D_TIPO_ACTIVIDAD;
+-- 
+-- drop domain D_TIPO_CERTIFICADO;
+-- 
+-- drop domain D_TIPO_DOCUMENTO;
+-- 
+-- drop domain D_TIPO_SOLICITUD;
+-- 
+-- drop domain D_TIPO_TITULO;
+-- 
+-- drop domain D_USUARIO;
+-- 
+-- drop domain D_VALOR_PARAMETRO;
 
 /*==============================================================*/
 /* Table: ASIGNATURAS_POR_SOLICITUD                             */
@@ -388,9 +319,12 @@ create table ASIGNATURAS_POR_SOLICITUD (
       constraint CKC_SEMESTRE_ANHO_ASIGNATU check (SEMESTRE_ANHO is null or (SEMESTRE_ANHO >= 1)),
    SEMESTRE             INT4                 null
       constraint CKC_SEMESTRE_ASIGNATU check (SEMESTRE is null or (SEMESTRE >= 1)),
+   ANHO                 INT4                 null
+      constraint CKC_ANHO_ASIGNATU check (ANHO is null or (ANHO >= 1950)),
    PORCENTAJE_ASISTENCIA_ACTUAL INT4                 null,
    PORCENTAJE_ASISTENCIA_ANTERIOR INT4                 null,
    CARRERA_DE_ASIGNATURA VARCHAR(80)          null,
+   COD_ASIGNATURA       VARCHAR(30)          null,
    constraint PK_ASIGNATURAS_POR_SOLICITUD primary key (SOLICITUD, ASIGNATURA)
 );
 
@@ -475,7 +409,7 @@ SOLICITUD
 /*==============================================================*/
 create table HISTORIAL_EXTRAORDINARIOS (
    HISTORIAL            SERIAL not null,
-   CEDULA               INT4                 not null,
+   USUARIO              INT4                 not null,
    MATERIA              VARCHAR(80)          not null,
    FECHA_HORA           DATE                 not null,
    constraint PK_HISTORIAL_EXTRAORDINARIOS primary key (HISTORIAL)
@@ -492,58 +426,7 @@ HISTORIAL
 /* Index: TIENE_FK2                                             */
 /*==============================================================*/
 create  index TIENE_FK2 on HISTORIAL_EXTRAORDINARIOS (
-CEDULA
-);
-
-/*==============================================================*/
-/* Table: LOGS                                                  */
-/*==============================================================*/
-create table LOGS (
-   ID                   SERIAL not null,
-   USUARIO              INT4                 null,
-   PARAMETRO            INT4                 null,
-   FECHA_CREADO         DATE                 not null,
-   CONTENIDO            TEXT                 not null,
-   constraint PK_LOGS primary key (ID)
-);
-
-/*==============================================================*/
-/* Index: LOGS_PK                                               */
-/*==============================================================*/
-create unique index LOGS_PK on LOGS (
-ID
-);
-
-/*==============================================================*/
-/* Index: ACCEDE_A_FK                                           */
-/*==============================================================*/
-create  index ACCEDE_A_FK on LOGS (
 USUARIO
-);
-
-/*==============================================================*/
-/* Index: GENERADO_SEGUN_FK                                     */
-/*==============================================================*/
-create  index GENERADO_SEGUN_FK on LOGS (
-PARAMETRO
-);
-
-/*==============================================================*/
-/* Table: PARAMETROS_LOGS                                       */
-/*==============================================================*/
-create table PARAMETROS_LOGS (
-   PARAMETRO            SERIAL not null,
-   NOMBRE_LOG           VARCHAR(80)          not null,
-   TIEMPO_DE_ACTUALIZACION TIME                 not null,
-   DESCRIPCION          TEXT                 null,
-   constraint PK_PARAMETROS_LOGS primary key (PARAMETRO)
-);
-
-/*==============================================================*/
-/* Index: PARAMETROS_LOGS_PK                                    */
-/*==============================================================*/
-create unique index PARAMETROS_LOGS_PK on PARAMETROS_LOGS (
-PARAMETRO
 );
 
 /*==============================================================*/
@@ -655,6 +538,7 @@ ROL
 create table SOLICITUDES (
    SOLICITUD            SERIAL not null,
    USUARIO_SOLICITANTE  INT4                 not null,
+   SOL_SOLICITUD        INT4                 null,
    TIPO_SOLICITUD       VARCHAR(80)          null,
    MESA_ENTRADA         INT4                 not null,
    MATRICULA            INT4                 null,
@@ -793,6 +677,7 @@ SOLICITUD
 /*==============================================================*/
 create table SOLICITUD_DE_CREDITOS_ACADEMICOS (
    SOLICITUD            INT4                 not null,
+   TIPO_ACTIVIDAD       TEXT                 not null,
    DESCRIPCION_ACTIVIDADES TEXT                 not null,
    FECHA_INICIO         DATE                 not null,
    FECHA_FIN            DATE                 not null,
@@ -939,8 +824,8 @@ SOLICITUD
 create table SOLICITUD_DE_PASANTIA (
    SOLICITUD            INT4                 not null,
    LUGAR                VARCHAR(80)          not null,
-   DIRECCION            VARCHAR(120)         not null,
-   TELEFONO             VARCHAR(30)          not null,
+   DIRECCION_LUGAR      VARCHAR(120)         not null,
+   TELEFONO_LUGAR       VARCHAR(30)          not null,
    CORREO_ELECTRONICO   VARCHAR(255)         null,
    MOTIVO               TEXT                 not null,
    ESPECIFICACION_MOTIVO TEXT                 null,
@@ -1145,41 +1030,13 @@ SOLICITUD
 );
 
 /*==============================================================*/
-/* Table: TUTORES_POR_TESIS                                     */
-/*==============================================================*/
-create table TUTORES_POR_TESIS (
-   SOLICITUD            INT4                 not null,
-   USUARIO              INT4                 not null,
-   constraint PK_TUTORES_POR_TESIS primary key (SOLICITUD, USUARIO)
-);
-
-/*==============================================================*/
-/* Index: TIENE_TUTORES_PK                                      */
-/*==============================================================*/
-create unique index TIENE_TUTORES_PK on TUTORES_POR_TESIS (
-SOLICITUD,
-USUARIO
-);
-
-/*==============================================================*/
-/* Index: TIENE_TUTORES_FK                                      */
-/*==============================================================*/
-create  index TIENE_TUTORES_FK on TUTORES_POR_TESIS (
-SOLICITUD
-);
-
-/*==============================================================*/
-/* Index: TIENE_TUTORES_FK2                                     */
-/*==============================================================*/
-create  index TIENE_TUTORES_FK2 on TUTORES_POR_TESIS (
-USUARIO
-);
-
-/*==============================================================*/
 /* Table: USUARIOS                                              */
 /*==============================================================*/
 create table USUARIOS (
    USUARIO              SERIAL not null,
+   NUMERO_DE_DOCUMENTO  INT4                 not null,
+   TIPO_DE_DOCUMENTO    VARCHAR(80)          not null,
+   ORIGEN_DE_DOCUMENTO  VARCHAR(80)          not null,
    NOMBRES              VARCHAR(80)          not null,
    APELLIDOS            VARCHAR(80)          not null,
    SEXO                 CHAR(1)              not null
@@ -1200,21 +1057,6 @@ create unique index USUARIOS_PK on USUARIOS (
 USUARIO
 );
 
-alter table ALUMNOS
-   add constraint FK_ALUMNOS_ES_UN_USUARIOS foreign key (USUARIO)
-      references USUARIOS (USUARIO)
-      on delete restrict on update restrict;
-
-alter table ALUMNOS_POR_TESIS
-   add constraint FK_ALUMNOS__INCLUYE_I_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
-      on delete restrict on update restrict;
-
-alter table ALUMNOS_POR_TESIS
-   add constraint FK_ALUMNOS__INCLUYE_I_SOLICITU foreign key (SOLICITUD)
-      references SOLICITUD_DE_TESIS (SOLICITUD)
-      on delete restrict on update restrict;
-
 alter table ASIGNATURAS_POR_SOLICITUD
    add constraint FK_ASIGNATU_TIENE_SOLICITU foreign key (SOLICITUD)
       references SOLICITUDES (SOLICITUD)
@@ -1231,18 +1073,8 @@ alter table FECHAS_DE_RESOLUCION_DE_SOLICITUDES
       on delete restrict on update restrict;
 
 alter table HISTORIAL_EXTRAORDINARIOS
-   add constraint FK_HISTORIA_TIENE_ALUMNOS foreign key (CEDULA)
-      references ALUMNOS (CEDULA)
-      on delete restrict on update restrict;
-
-alter table LOGS
-   add constraint FK_LOGS_ACCEDE_A_USUARIOS foreign key (USUARIO)
+   add constraint FK_HISTORIA_TIENE_USUARIOS foreign key (USUARIO)
       references USUARIOS (USUARIO)
-      on delete restrict on update restrict;
-
-alter table LOGS
-   add constraint FK_LOGS_GENERADO__PARAMETR foreign key (PARAMETRO)
-      references PARAMETROS_LOGS (PARAMETRO)
       on delete restrict on update restrict;
 
 alter table PERMISOS_POR_ROL
@@ -1378,15 +1210,5 @@ alter table SOLICITUD_DE_TUTORIA_DE_CATEDRA
 alter table SOLICITUD_PARA_TOMAR_MATERIA_FUERA_DE_LA_MALLA_CURRICULAR
    add constraint FK_SOLICITU_ES_UN_SOLICITU foreign key (SOLICITUD)
       references SOLICITUDES (SOLICITUD)
-      on delete restrict on update restrict;
-
-alter table TUTORES_POR_TESIS
-   add constraint FK_TUTORES__TIENE_TUT_SOLICITU foreign key (SOLICITUD)
-      references SOLICITUD_DE_TESIS (SOLICITUD)
-      on delete restrict on update restrict;
-
-alter table TUTORES_POR_TESIS
-   add constraint FK_TUTORES__TIENE_TUT_USUARIOS foreign key (USUARIO)
-      references USUARIOS (USUARIO)
       on delete restrict on update restrict;
 

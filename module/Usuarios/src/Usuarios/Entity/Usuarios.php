@@ -55,15 +55,20 @@ class Usuarios implements UserInterface
      */
     protected $telefono;
 
-//     /**
-//      * @var int
-//      */
-//      protected $tipo_doc;
+     /**
+      * @var string
+      */
+      protected $tipo_de_documento;
 
-//      /**
-//       * @var string
-//       */
-//      protected $documento;
+      /**
+       * @var int
+       */
+      protected $numero_de_documento;
+      
+      /**
+       * @var string
+       */
+      protected $origen_de_documento;
 
     /**
      * @var string
@@ -295,49 +300,71 @@ class Usuarios implements UserInterface
         return $this;
     }
 
-//     /**
-//      * Get tipo doc.
-//      *
-//      * @return int
-//      */
-//     public function getTipo_doc()
-//     {
-//         return $this->tipo_doc;
-//     }
+    /**
+     * Get tipoDeDocumento.
+     *
+     * @return string
+     */
+    public function getTipoDeDocumento()
+    {
+        return $this->tipoDeDocumento;
+    }
 
-//     /**
-//      * Set tipo doc.
-//      *
-//      * @param int $tipo_doc
-//      * @return UserInterface
-//      */
-//     public function setTipo_doc($tipo_doc)
-//     {
-//         $this->tipo_doc = $tipo_doc;
-//         return $this;
-//     }
+    /**
+     * Set tipoDeDocumento.
+     *
+     * @param string $tipoDeDocumento
+     * @return UserInterface
+     */
+    public function setTipoDeDocumento($tipoDeDocumento)
+    {
+        $this->tipoDeDocumento = $tipoDeDocumento;
+        return $this;
+    }
 
-//     /**
-//      * Get documento.
-//      *
-//      * @return string
-//      */
-//     public function getDocumento()
-//     {
-//         return $this->documento;
-//     }
+    /**
+     * Get numeroDeDocumento.
+     *
+     * @return int
+     */
+    public function getNumeroDeDocumento()
+    {
+        return $this->numeroDeDocumento;
+    }
 
-//     /**
-//      * Set documento.
-//      *
-//      * @param string $documento
-//      * @return UserInterface
-//      */
-//     public function setDocumento($documento)
-//     {
-//         $this->documento = $documento;
-//         return $this;
-//     }
+    /**
+     * Set numeroDeDocumento.
+     *
+     * @param int $numeroDeDocumento
+     * @return UserInterface
+     */
+    public function setNumeroDeDocumento($numeroDeDocumento)
+    {
+        $this->numeroDeDocumento = $numeroDeDocumento;
+        return $this;
+    }
+    
+    /**
+     * Get OrigenDeDocumento.
+     *
+     * @return string
+     */
+    public function getOrigenDeDocumento()
+    {
+    	return $this->origenDeDocumento;
+    }
+    
+    /**
+     * Set OrigenDeDocumento.
+     *
+     * @param string $origenDeDocumento
+     * @return UserInterface
+     */
+    public function setOrigenDeDocumento($origenDeDocumento)
+    {
+    	$this->origenDeDocumento = $origenDeDocumento;
+    	return $this;
+    }
 
     /**
      * Get nombres.

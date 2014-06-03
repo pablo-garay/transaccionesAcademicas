@@ -14,7 +14,6 @@
 	 SOLICITUD DE INSCRIPCION TARDIA A EXAMEN</h4>
 	 <br> <br>
 
-
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
@@ -25,7 +24,8 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-        ?>
+ 
+?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
@@ -34,7 +34,7 @@ foreach ($this->form1 as $element) {
 	    </div>
 </div>
 <?php
-
+	
 	if ( ($element->getName() == 'Especificacion_motivo')){
 ?>
 	<h5 align="center"> Con todo respeto. </h5>
@@ -63,3 +63,84 @@ foreach ($this->form1 as $element) {
 echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
+
+<script type="text/javascript">
+
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+      
+       
+        	$('#carrera').html(data);
+        	     
+      },
+
+	}
+    );
+  
+	});
+	
+	
+
+	$("#carrera").change(function() {
+	    $.ajax({
+		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      type: "POST",
+		      data:{"carrera_asignatura_inscriptas":$("#carrera").val(), "mat":$("#matricula").val()},
+		      success: function(data, textstatus, xhr){
+		     
+		        	$('#asignatura').html(data);
+		        	     
+		      },
+
+			}
+		    );
+		
+
+	});
+	
+	
+
+	$("#asignatura").change(function() { ////HACERR EL SELECT 
+		
+	    $.ajax({
+	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+	      type: "POST",
+	      data:{"asignatura_fecha_tardia":$("#asignatura").val(),'carrera_fecha_tardia':$("#carrera").val()},
+	      success: function(data, textstatus, xhr){
+
+	       
+	        	$('#fecha_de_examen').html(data);
+	        	     
+	      },
+
+		}
+	    );
+	    
+		});
+		
+
+		$("#asignatura").change(function() { //HACER EL SELECT 
+			
+		    $.ajax({
+		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      type: "POST",
+		      data:{"asignatura_op_tardia":$("#asignatura").val(), 'carrera_op_tardia':$("#carrera").val()},
+		      success: function(data, textstatus, xhr){
+		       // $('#profesor').find('option').remove().end();
+		       
+		        	$('#oportunidad').html(data);
+		        	     
+		      },
+
+			}
+		    );
+		    
+			});
+			
+
+</script>

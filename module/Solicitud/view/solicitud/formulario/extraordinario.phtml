@@ -14,16 +14,6 @@
 	SOLICITUD DE EXAMEN EXTRAORDINARIO </h4>
 	<br> <br>
 
-
-	
-	<select id="combo1" >
-    <option value="CalculoI">CalculoI</option>
-    <option value="CalculoII">CalculoII</option>
-</select>
-
-<select id="combo2">
-<option value="0">--Elija el Profesor por favor --</option>
-</select>
 <?php
 
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
@@ -35,10 +25,7 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-// 			if ($element->getName() == 'profesor'){
-					
-// 			}
- 	
+
 ?>
 		
 <div class="control-group">
@@ -50,7 +37,6 @@ foreach ($this->form1 as $element) {
 </div>
 
 <?php 
-
 		
         ?>
 	
@@ -94,19 +80,17 @@ foreach ($this->form1 as $element) {
 
 
 ?>
-
 <script type="text/javascript">
 
-$("#combo1").change(function() {
+$("#asignatura").change(function() {
 	
     $.ajax({
       url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
       type: "POST",
-      data:{"materia":$("#combo1").val()},
+      data:{"materia":$("#asignatura").val()},
       success: function(data, textstatus, xhr){
-       // $('#profesor').find('option').remove().end();
-       
-        	$('#combo2').html(data);
+
+        	$('#profesor').html(data);
         	     
       },
       error: function(xhr, textstatus, errorThrown) {
@@ -114,8 +98,62 @@ $("#combo1").change(function() {
    		}
 	}
     );
+    
 	});
-</script>
+	
+
+	
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+     
+        	$('#carrera').html(data);
+        	     
+      },
+
+	}
+    );
+    
+	});
+	
+
+	$("#carrera").change(function() {
+			
+
+	});
+
+                           
+
+	$("input:radio").click(function() {
+		//$('input[name=radioName]:checked', '#myForm').val()
+ 		if ($('input[name=motivo]:radio:checked').val() == 'Otro'){
+
+			//$('#especificacion_motivo').attr( 'required','required');
+ 		}
+ 		if ($('input[name=motivo]:radio:checked').val() != 'Otro'){
+
+			//$('#especificacion_motivo').attr( 'required',false);
+ 		}
+	});
+
+
+
+	$("#adjunto").onclick(function() {
+		
+	
+	    
+	});
+	
+	
+
+
+
+	
+	</script>
 
 <?php
 echo '</fieldset>';

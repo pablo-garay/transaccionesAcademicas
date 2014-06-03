@@ -1,6 +1,6 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     29/05/2014 10:13:30 a.m.                     */
+/* Created on:     02/06/2014 11:45:40 a.m.                     */
 /*==============================================================*/
 
 
@@ -282,7 +282,7 @@ create domain D_ASISTENCIA as INT4;
 /*==============================================================*/
 /* Domain: D_ASUNTO_SOLICITUD                                   */
 /*==============================================================*/
-create domain D_ASUNTO_SOLICITUD as CHAR(80);
+create domain D_ASUNTO_SOLICITUD as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_BOOLEAN                                            */
@@ -292,7 +292,7 @@ create domain D_BOOLEAN as BOOL;
 /*==============================================================*/
 /* Domain: D_CALIFICACION                                       */
 /*==============================================================*/
-create domain D_CALIFICACION as INT4;
+create domain D_CALIFICACION as CHAR(1);
 
 /*==============================================================*/
 /* Domain: D_CANTIDAD                                           */
@@ -362,12 +362,12 @@ create domain D_DIA as INT4;
 /*==============================================================*/
 /* Domain: D_DIRECCION                                          */
 /*==============================================================*/
-create domain D_DIRECCION as CHAR(120);
+create domain D_DIRECCION as VARCHAR(120);
 
 /*==============================================================*/
 /* Domain: D_DIRECCION_EMAIL                                    */
 /*==============================================================*/
-create domain D_DIRECCION_EMAIL as CHAR(255);
+create domain D_DIRECCION_EMAIL as VARCHAR(255);
 
 /*==============================================================*/
 /* Domain: D_DOCUMENT_ID                                        */
@@ -377,7 +377,7 @@ create domain D_DOCUMENT_ID as INT4;
 /*==============================================================*/
 /* Domain: D_EMAIL                                              */
 /*==============================================================*/
-create domain D_EMAIL as CHAR(80);
+create domain D_EMAIL as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_ESTADO_CUENTA                                      */
@@ -387,12 +387,12 @@ create domain D_ESTADO_CUENTA as CHAR(1);
 /*==============================================================*/
 /* Domain: D_ESTADO_SOLICITUD                                   */
 /*==============================================================*/
-create domain D_ESTADO_SOLICITUD as CHAR(6);
+create domain D_ESTADO_SOLICITUD as VARCHAR(6);
 
 /*==============================================================*/
 /* Domain: D_ETAPA_ACTUAL                                       */
 /*==============================================================*/
-create domain D_ETAPA_ACTUAL as CHAR(6);
+create domain D_ETAPA_ACTUAL as VARCHAR(6);
 
 /*==============================================================*/
 /* Domain: D_FECHA                                              */
@@ -442,7 +442,7 @@ create domain D_MATRICULA as INT4;
 /*==============================================================*/
 /* Domain: D_MESA_ENTRADA                                       */
 /*==============================================================*/
-create domain D_MESA_ENTRADA as CHAR(30);
+create domain D_MESA_ENTRADA as VARCHAR(30);
 
 /*==============================================================*/
 /* Domain: D_MOTIVO                                             */
@@ -452,52 +452,52 @@ create domain D_MOTIVO as TEXT;
 /*==============================================================*/
 /* Domain: D_NOMBRE_CARRERA                                     */
 /*==============================================================*/
-create domain D_NOMBRE_CARRERA as CHAR(80);
+create domain D_NOMBRE_CARRERA as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_DEPARTAMENTO                                */
 /*==============================================================*/
-create domain D_NOMBRE_DEPARTAMENTO as CHAR(80);
+create domain D_NOMBRE_DEPARTAMENTO as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_LOG                                         */
 /*==============================================================*/
-create domain D_NOMBRE_LOG as CHAR(80);
+create domain D_NOMBRE_LOG as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_LUGAR                                       */
 /*==============================================================*/
-create domain D_NOMBRE_LUGAR as CHAR(80);
+create domain D_NOMBRE_LUGAR as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_MATERIA                                     */
 /*==============================================================*/
-create domain D_NOMBRE_MATERIA as CHAR(80);
+create domain D_NOMBRE_MATERIA as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_PERMISO                                     */
 /*==============================================================*/
-create domain D_NOMBRE_PERMISO as CHAR(80);
+create domain D_NOMBRE_PERMISO as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_ROL                                         */
 /*==============================================================*/
-create domain D_NOMBRE_ROL as CHAR(80);
+create domain D_NOMBRE_ROL as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_TESIS                                       */
 /*==============================================================*/
-create domain D_NOMBRE_TESIS as CHAR(80);
+create domain D_NOMBRE_TESIS as VARCHAR(80);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_TITULO                                      */
 /*==============================================================*/
-create domain D_NOMBRE_TITULO as CHAR(60);
+create domain D_NOMBRE_TITULO as VARCHAR(60);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_UNIVERSIDAD                                 */
 /*==============================================================*/
-create domain D_NOMBRE_UNIVERSIDAD as CHAR(40);
+create domain D_NOMBRE_UNIVERSIDAD as VARCHAR(40);
 
 /*==============================================================*/
 /* Domain: D_NOMBRE_USUARIO                                     */
@@ -522,7 +522,7 @@ create domain D_OBSERVACIONES as TEXT;
 /*==============================================================*/
 /* Domain: D_OPORTUNIDAD                                        */
 /*==============================================================*/
-create domain D_OPORTUNIDAD as INT4;
+create domain D_OPORTUNIDAD as CHAR(1);
 
 /*==============================================================*/
 /* Domain: D_ORIGEN_DOCUMENTO                                   */
@@ -547,7 +547,7 @@ create domain D_PROFESOR as INT4;
 /*==============================================================*/
 /* Domain: D_RESULTADO_REQUISITO                                */
 /*==============================================================*/
-create domain D_RESULTADO_REQUISITO as CHAR(13);
+create domain D_RESULTADO_REQUISITO as VARCHAR(13);
 
 /*==============================================================*/
 /* Domain: D_ROL                                                */
@@ -607,7 +607,7 @@ create domain D_TIPO_DOCUMENTO as TEXT;
 /*==============================================================*/
 /* Domain: D_TIPO_TITULO                                        */
 /*==============================================================*/
-create domain D_TIPO_TITULO as CHAR(15);
+create domain D_TIPO_TITULO as VARCHAR(15);
 
 /*==============================================================*/
 /* Domain: D_USUARIO                                            */
@@ -681,7 +681,8 @@ create table ASISTENCIAS_POR_ALUMNO (
    ORIGEN_DE_DOCUMENTO  D_ORIGEN_DOCUMENTO   null,
    CURSO                D_CURSO              null,
    FECHA                D_FECHA              not null,
-   PRESENCIA            D_BOOLEAN            not null,
+   HORAS_ASISTIDAS      D_CANTIDAD           null,
+   HORAS_TOTALES        D_CANTIDAD           not null,
    constraint PK_ASISTENCIAS_POR_ALUMNO primary key (ASISTENCIA)
 );
 
@@ -750,19 +751,19 @@ CURSO
 /* Table: CARRERAS                                              */
 /*==============================================================*/
 create table CARRERAS (
-   CARRERA              SERIAL not null,
-   DEPARTAMENTO         D_DEPARTAMENTO       not null,
+   CARRERA              D_CARRERA            not null,
    PLAN_DE_ESTUDIO      D_ANHO               not null,
+   DEPARTAMENTO         D_DEPARTAMENTO       not null,
    NOMBRE               D_NOMBRE_CARRERA     not null,
-   CREDITOS_REQUERIDOS  D_CANTIDAD           null,
-   constraint PK_CARRERAS primary key (CARRERA)
+   constraint PK_CARRERAS primary key (CARRERA, PLAN_DE_ESTUDIO)
 );
 
 /*==============================================================*/
 /* Index: CARRERAS_PK                                           */
 /*==============================================================*/
 create unique index CARRERAS_PK on CARRERAS (
-CARRERA
+CARRERA,
+PLAN_DE_ESTUDIO
 );
 
 /*==============================================================*/
@@ -777,10 +778,11 @@ DEPARTAMENTO
 /*==============================================================*/
 create table CORRELATIVA_POR_CARRERA (
    CARRERA              D_CARRERA            not null,
+   PLAN_DE_ESTUDIO      D_ANHO               not null,
    MATERIA              D_MATERIA            not null,
    MATERIA_CORRELATIVA  D_MATERIA            not null,
    SEMESTRE_CARRERA     D_SEMESTRE           not null,
-   constraint PK_CORRELATIVA_POR_CARRERA primary key (CARRERA, MATERIA, MATERIA_CORRELATIVA)
+   constraint PK_CORRELATIVA_POR_CARRERA primary key (CARRERA, PLAN_DE_ESTUDIO, MATERIA, MATERIA_CORRELATIVA)
 );
 
 /*==============================================================*/
@@ -788,6 +790,7 @@ create table CORRELATIVA_POR_CARRERA (
 /*==============================================================*/
 create unique index CORRELATIVA_POR_CARRERA_PK on CORRELATIVA_POR_CARRERA (
 CARRERA,
+PLAN_DE_ESTUDIO,
 MATERIA,
 MATERIA_CORRELATIVA
 );
@@ -796,7 +799,8 @@ MATERIA_CORRELATIVA
 /* Index: ASOCIADO_A_FK                                         */
 /*==============================================================*/
 create  index ASOCIADO_A_FK on CORRELATIVA_POR_CARRERA (
-CARRERA
+CARRERA,
+PLAN_DE_ESTUDIO
 );
 
 /*==============================================================*/
@@ -843,7 +847,7 @@ MATERIA
 /* Table: DEPARTAMENTOS                                         */
 /*==============================================================*/
 create table DEPARTAMENTOS (
-   DEPARTAMENTO         SERIAL not null,
+   DEPARTAMENTO         D_DEPARTAMENTO       not null,
    NOMBRE               D_NOMBRE_DEPARTAMENTO not null,
    constraint PK_DEPARTAMENTOS primary key (DEPARTAMENTO)
 );
@@ -1008,8 +1012,9 @@ MATERIA
 /*==============================================================*/
 create table MATERIAS_POR_CARRERA (
    CARRERA              D_CARRERA            not null,
+   PLAN_DE_ESTUDIO      D_ANHO               not null,
    MATERIA              D_MATERIA            not null,
-   constraint PK_MATERIAS_POR_CARRERA primary key (CARRERA, MATERIA)
+   constraint PK_MATERIAS_POR_CARRERA primary key (CARRERA, PLAN_DE_ESTUDIO, MATERIA)
 );
 
 /*==============================================================*/
@@ -1017,6 +1022,7 @@ create table MATERIAS_POR_CARRERA (
 /*==============================================================*/
 create unique index TIENE2_PK on MATERIAS_POR_CARRERA (
 CARRERA,
+PLAN_DE_ESTUDIO,
 MATERIA
 );
 
@@ -1024,7 +1030,8 @@ MATERIA
 /* Index: TIENE_FK10                                            */
 /*==============================================================*/
 create  index TIENE_FK10 on MATERIAS_POR_CARRERA (
-CARRERA
+CARRERA,
+PLAN_DE_ESTUDIO
 );
 
 /*==============================================================*/
@@ -1077,6 +1084,7 @@ MATRICULA
 create table MATRICULAS_POR_CARRERA (
    MATRICULA            D_MATRICULA          not null,
    CARRERA              D_CARRERA            not null,
+   PLAN_DE_ESTUDIO      D_ANHO               not null,
    constraint PK_MATRICULAS_POR_CARRERA primary key (MATRICULA)
 );
 
@@ -1091,7 +1099,8 @@ MATRICULA
 /* Index: PERTENECE_FK                                          */
 /*==============================================================*/
 create  index PERTENECE_FK on MATRICULAS_POR_CARRERA (
-CARRERA
+CARRERA,
+PLAN_DE_ESTUDIO
 );
 
 /*==============================================================*/
@@ -1177,8 +1186,8 @@ alter table CARRERAS
       on delete restrict on update restrict;
 
 alter table CORRELATIVA_POR_CARRERA
-   add constraint FK_CORRELAT_ASOCIADO__CARRERAS foreign key (CARRERA)
-      references CARRERAS (CARRERA)
+   add constraint FK_CORRELAT_ASOCIADO__CARRERAS foreign key (CARRERA, PLAN_DE_ESTUDIO)
+      references CARRERAS (CARRERA, PLAN_DE_ESTUDIO)
       on delete restrict on update restrict;
 
 alter table CORRELATIVA_POR_CARRERA
@@ -1227,8 +1236,8 @@ alter table INSCRIPCION_EXAMEN_POR_ALUMNO
       on delete restrict on update restrict;
 
 alter table MATERIAS_POR_CARRERA
-   add constraint FK_MATERIAS_TIENE_CARRERAS foreign key (CARRERA)
-      references CARRERAS (CARRERA)
+   add constraint FK_MATERIAS_TIENE_CARRERAS foreign key (CARRERA, PLAN_DE_ESTUDIO)
+      references CARRERAS (CARRERA, PLAN_DE_ESTUDIO)
       on delete restrict on update restrict;
 
 alter table MATERIAS_POR_CARRERA
@@ -1247,8 +1256,8 @@ alter table MATRICULAS_POR_ALUMNO
       on delete restrict on update restrict;
 
 alter table MATRICULAS_POR_CARRERA
-   add constraint FK_MATRICUL_PERTENECE_CARRERAS foreign key (CARRERA)
-      references CARRERAS (CARRERA)
+   add constraint FK_MATRICUL_PERTENECE_CARRERAS foreign key (CARRERA, PLAN_DE_ESTUDIO)
+      references CARRERAS (CARRERA, PLAN_DE_ESTUDIO)
       on delete restrict on update restrict;
 
 alter table PROFESORES_POR_CURSO

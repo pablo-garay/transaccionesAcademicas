@@ -8,9 +8,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudesVarias extends Solicitud
 {
 
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 
-		parent::__construct($name = 'solicitudesVarias', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudesVarias', $dbadapter, $idUsuario, $sapientiaDbadapter);
 
 		$this->setAttribute('method', 'post');
 

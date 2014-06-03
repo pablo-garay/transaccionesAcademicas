@@ -11,20 +11,20 @@ require_once "funcionesDB.php";
 class SolicitudCertificadoEstudios extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudExtraordinario', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudExtraordinario', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		$usuarioLogueado = 1;
+		$usuarioLogueado = $idUsuario;
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
 	
 		$emailUsuario = $datos['email'];
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 	
 		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
@@ -39,7 +39,8 @@ class SolicitudCertificadoEstudios extends Solicitud
 				'attributes' => array(
 						// These are the attributes that are passed directly to the HTML element
 						'required' => 'required', // Ex: <input required="true"
-						'value' => $cedulaUsuario,
+						'value' => $numeroDocumento,
+						'readonly' => 'true',
 						//'disabled' => 'disabled'
 				),
 				'options' => array(
@@ -62,7 +63,8 @@ class SolicitudCertificadoEstudios extends Solicitud
 						// These are the attributes that are passed directly to the HTML element
 						'required' => 'required', // Ex: <input required="true"
 						'value' => $emailUsuario,
-						//'disabled' => 'disabled'
+						'readonly' => 'true',
+						
 				),
 				'options' => array(
 						// This is list of options that we can add to the element.

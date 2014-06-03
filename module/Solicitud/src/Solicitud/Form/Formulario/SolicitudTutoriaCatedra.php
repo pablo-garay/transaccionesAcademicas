@@ -13,21 +13,21 @@ require_once "funcionesDB.php";
 class SolicitudTutoriaCatedra extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudTutoriaCatedra', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudTutoriaCatedra', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 
-		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $cedulaUsuario, FALSE);
+		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $numeroDocumento, FALSE);
 		$selectDataMat = $datosAlumno['materias'] ;
 		$selectDataProf = $datosAlumno['profesores'];
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
@@ -43,6 +43,7 @@ class SolicitudTutoriaCatedra extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),	
 		),
 				array (
@@ -60,6 +61,7 @@ class SolicitudTutoriaCatedra extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'profesor',
 				),
 		),
 				array (

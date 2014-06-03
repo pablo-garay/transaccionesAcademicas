@@ -13,6 +13,8 @@
 	-webkit-border-radius: 200px; "> 
 	 SOLICITUD DE ASIGNATURA FUERA DE LA MALLA CURRICULAR </h4>
 	 <br> <br>
+
+			 
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
@@ -23,7 +25,9 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-        ?>
+
+ 	
+?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
@@ -32,6 +36,7 @@ foreach ($this->form1 as $element) {
 	    </div>
 </div>
 <?php
+	
 	if ( ($element->getName() == 'Email')) {
 ?>
 	
@@ -66,3 +71,62 @@ foreach ($this->form1 as $element) {
 echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
+
+<script type="text/javascript">
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+       
+        	$('#carrera').html(data);
+        	     
+      },
+
+	}
+    );
+
+	});
+
+
+$("#carrera").change(function() {
+	    $.ajax({
+		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      type: "POST",
+		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      success: function(data, textstatus, xhr){
+		       // $('#profesor').find('option').remove().end();
+		       
+		        	$('#asignatura').html(data);
+		        	     
+		      },
+			}
+		    );
+		
+	
+	});
+	
+	
+
+$("#carrera_asignatura").change(function() {
+    $.ajax({
+	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+	      type: "POST",
+	      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+	      success: function(data, textstatus, xhr){
+	       // $('#profesor').find('option').remove().end();
+	       
+	        	$('#asignatura').html(data);
+	        	     
+	      },
+		}
+	    );
+    
+
+});
+
+
+
+</script>

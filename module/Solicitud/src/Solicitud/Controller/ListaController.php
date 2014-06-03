@@ -27,13 +27,43 @@ class ListaController extends AbstractActionController
 	
 	public function listSolicitudes($estadoSolicitud = 'None', $filter = TRUE){
 		
+		$authorize = $this->getServiceLocator()->get('BjyAuthorize\Provider\Identity\ProviderInterface');
+		$roles = $authorize->getIdentityRoles();
+		$role = $roles[0];
+		
+		switch($role){
+			case 'recepcion':
+				$etapa = 'RCDA'; $actorAction = 'recepcion';
+				break;
+			case "secretaria_general":
+				$etapa = 'DEL_SG'; $actorAction = 'secretariageneral';
+				break;
+			case "secretaria_academica":
+				$etapa = 'DEL_SA'; $actorAction = 'secretariaacademica';
+				break;
+			case "secretaria_departamento":
+				$etapa = 'DEL_SD'; $actorAction = 'secretariadepartamento';
+				break;
+			case "decano":
+				$etapa = 'DEL_DE'; $actorAction = 'decano';
+				break;
+			case "director_academico":
+				$etapa = 'DEL_DA'; $actorAction = 'directoracademico';
+				break;
+			case "director_departamento":
+				$etapa = 'DEL_DD'; $actorAction = 'directordepartamento';
+				break;
+			
+		}
+		
 		$model = new SolicitudModel();
 		
 		if ($filter){
 			$result = $model->getSql()->select()
-							->where(array('estado_solicitud' => $estadoSolicitud));
+							->where(array('estado_solicitud' => $estadoSolicitud, 'etapa_actual' => $etapa));
 		} else {
-			$result = $model->getSql()->select();
+			$result = $model->getSql()->select()
+							->where(array('etapa_actual' => $etapa));
 		}
 		
 		$adapter = new PaginatorDbAdapter($result, $model->getAdapter());
@@ -43,11 +73,12 @@ class ListaController extends AbstractActionController
 		$paginator->setItemCountPerPage(10); /* cant items por pagina */
 		
 		/* Get current action */
-		$action = $this->getEvent()->getRouteMatch()->getParam('action');
+		$listaAction = $this->getEvent()->getRouteMatch()->getParam('action');
 		
 		$this->viewModel->setVariables(array('solicitudes'=> $paginator,
 				'page'=> $currentPage,
-				'action' => $action 
+				'listaAction' => $listaAction,
+				'actorAction' => $actorAction
 		));
 		
 		return $this->viewModel;
@@ -75,9 +106,5 @@ class ListaController extends AbstractActionController
 	
 	public function anuladasAction(){
 		return $this->listSolicitudes('ANUL');
-	}
-
-	public function listAction(){
-		return $this->listSolicitudes(null, FALSE);
 	}
 }	

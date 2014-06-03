@@ -10,9 +10,9 @@ use User\Controller\AccountController;
 class SolicitudTesis extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudTesis', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudTesis', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 	
@@ -20,16 +20,16 @@ class SolicitudTesis extends Solicitud
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 		
 		//BD sapientia
 		
-		$sql       = "SELECT m.materia, m.nombre AS n_materia, p.profesor , p.nombre AS n_profesor FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
-				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = ".$cedulaUsuario." 
+		$sql = "SELECT m.materia, m.nombre AS n_materia, p.profesor , p.nombre AS n_profesor FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
+				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = ".$numeroDocumento." 
 				INNER JOIN profesores_por_curso AS pxc ON  pxc.curso = c.curso  INNER JOIN profesores AS p ON pxc.profesor = p.profesor";
 
 
@@ -43,9 +43,8 @@ class SolicitudTesis extends Solicitud
 				
 		}
 		
-		$sql = "SELECT a.cedula, u.nombres, u.apellidos
-				FROM usuarios AS u 
-				INNER JOIN alumnos AS a ON a.usuario = u.usuario";
+		$sql = "SELECT u.numero_de_documento, u.nombres, u.apellidos
+				FROM usuarios AS u";
 		
 		$statement = $dbadapter->query($sql);
 		$result    = $statement->execute();
@@ -54,7 +53,7 @@ class SolicitudTesis extends Solicitud
 		$selectDataAlumnos = array();
 		
 		foreach ($result as $res) {
-			$selectDataAlumnos[$res['cedula']] = $res['nombres']." ".$res['apellidos'];
+			$selectDataAlumnos[$res['numero_de_documento']] = $res['nombres']." ".$res['apellidos'];
 				
 		}
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
@@ -68,6 +67,7 @@ class SolicitudTesis extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'tema_tesis',
 				),
 		),
 				array (
@@ -77,14 +77,11 @@ class SolicitudTesis extends Solicitud
 		
 		
 		$this->add(array(
-				'name' => 'cedula1',
-				'type' => 'Zend\Form\Element\Select',
+				'name' => 'integrante1',
+				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
 						'label' => 'Integrante1:',
-						'empty_option' => 'Elija Integrante',
-						'value_options' => $selectDataAlumnos,
 				),
-		
 		),
 				array (
 						'priority' => 270,
@@ -92,14 +89,11 @@ class SolicitudTesis extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'cedula2',
-				'type' => 'Zend\Form\Element\Select',
+				'name' => 'integrante2',
+				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Integrante 2:',
-						'empty_option' => 'Elija Integrante',
-						'value_options' => $selectDataAlumnos,
+						'label' => 'Integrante1:',
 				),
-		
 		),
 				array (
 						'priority' => 270,
@@ -107,14 +101,11 @@ class SolicitudTesis extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'cedula3',
-				'type' => 'Zend\Form\Element\Select',
+				'name' => 'integrante3',
+				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Integrante 3:',
-						'empty_option' => 'Elija Integrante',
-						'value_options' => $selectDataAlumnos,
+						'label' => 'Integrante1:',
 				),
-		
 		),
 				array (
 						'priority' => 270,
@@ -131,6 +122,7 @@ class SolicitudTesis extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'profesor',
 				),	
 		),
 				array (
@@ -217,7 +209,59 @@ class SolicitudTesis extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'integrante',
+					'name' => 'integrante1',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'integrante2',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'integrante3',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

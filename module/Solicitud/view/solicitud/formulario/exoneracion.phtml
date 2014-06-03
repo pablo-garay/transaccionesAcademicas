@@ -13,6 +13,8 @@
 	-webkit-border-radius: 200px; "> 
 	 SOLICITUD DE EXONERACIÓN DE ASISTENCIA </h4>
 	 <br> <br>
+	 
+
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
@@ -23,8 +25,8 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-				
-        ?>
+
+?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
@@ -33,6 +35,7 @@ foreach ($this->form1 as $element) {
 	    </div>
 </div>
 <?php
+	
 	if ( ($element->getName() == 'carrera')) {
 ?>
 	<h4> Solicito la exoneración para la: </h4>
@@ -67,3 +70,56 @@ foreach ($this->form1 as $element) {
 echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
+
+<script type="text/javascript">
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+      
+        	$('#carrera').html(data);
+        	     
+      },
+
+	}
+    );
+
+	});
+
+
+	$("#carrera").change(function() {
+	    $.ajax({
+		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      type: "POST",
+		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      success: function(data, textstatus, xhr){
+		       
+		        	$('#asignatura').html(data);
+		        	     
+		      },
+			}
+		    );
+
+	});
+	
+
+
+$("#asignatura").change(function() {
+
+});
+
+
+$("#seccion").change(function() {
+
+});
+
+
+$("#semestre_anho").change(function() {
+
+});
+
+
+</script>

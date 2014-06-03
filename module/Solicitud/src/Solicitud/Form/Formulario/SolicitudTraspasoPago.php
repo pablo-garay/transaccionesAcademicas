@@ -11,26 +11,26 @@ require_once "funcionesDB.php";
 class SolicitudTraspasoPago extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudTraspasoPagoExamen', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudTraspasoPagoExamen', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 		
 		//BD sapientia
 		
 		$sql       = "SELECT m.materia, m.nombre AS n_materia, h.fecha_de_examen FROM materias AS m 
 				INNER JOIN cursos AS c ON m.materia = c.materia
 				INNER JOIN alumnos_por_curso AS axc ON axc.curso = c.curso AND axc.curso_actual = TRUE
-				INNER JOIN inscripcion_examen_por_alumno AS ixa ON  ixa.curso = axc.curso AND ixa.numero_de_documento = ".$cedulaUsuario.
+				INNER JOIN inscripcion_examen_por_alumno AS ixa ON  ixa.curso = axc.curso AND ixa.numero_de_documento = ".$numeroDocumento.
 				"INNER JOIN horarios_de_examen AS h ON h.curso = ixa.curso";
 		//$usuarioLogueado
 		$statement = $sapientiaDbadapter->query($sql);
@@ -52,10 +52,11 @@ class SolicitudTraspasoPago extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
+						'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),	
 		),
 				array (
@@ -74,6 +75,7 @@ class SolicitudTraspasoPago extends Solicitud
 						),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'seccion',
 				),
 		),
 				array (
@@ -86,14 +88,17 @@ class SolicitudTraspasoPago extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Oportunidad pagada',
-						'value_options' => array(
-								'1' => '1',
-								'2' => '2',				
+// 						'value_options' => array(
+// 								'1' => '1',
+// 								'2' => '2',				
+// 				),
 				),
 				'attributes' => array(
+						'id' => 'oportunidad_pagada',
 						'required' => 'required',
+						
 				),
-			),
+			
 		),
 				array (
 						'priority' => 270,
@@ -111,6 +116,7 @@ class SolicitudTraspasoPago extends Solicitud
 				'attributes' => array(
 						'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
+						'id' => 'fecha_oportunidad_pagada',
 				),
 		
 		),
@@ -131,6 +137,7 @@ class SolicitudTraspasoPago extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'oportunidad_a_pagar',
 				),
 			),
 			array (
@@ -149,6 +156,7 @@ class SolicitudTraspasoPago extends Solicitud
 				'attributes' => array(
 						'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
+						'id' => 'fecha_oportunidad_a_pagar',
 				),
 		
 		),

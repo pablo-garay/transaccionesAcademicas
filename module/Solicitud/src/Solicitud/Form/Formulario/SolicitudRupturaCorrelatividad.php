@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudRupturaCorrelatividad extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudRupturaCorrelatividad', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudRupturaCorrelatividad', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
@@ -19,37 +19,35 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 		
 		//BD sapientia
 		
-		$sql       = "Select m.nombre AS n_materia FROM materias AS m";
-		//$usuarioLogueado
-		$statement = $sapientiaDbadapter->query($sql);
-		$result    = $statement->execute();
+// 		$sql       = "Select m.nombre AS n_materia FROM materias AS m";
+// 		//$usuarioLogueado
+// 		$statement = $sapientiaDbadapter->query($sql);
+// 		$result    = $statement->execute();
 		
-		$selectDataMat = array();
+// 		$selectDataMat = array();
 		
-		foreach ($result as $res) {
-			$selectDataMat[$res['n_materia']] = $res['n_materia'];
-			
-				
-		}
+// 		foreach ($result as $res) {
+// 			$selectDataMat[$res['n_materia']] = $res['n_materia'];		
+// 		}
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 	
-		$this->add(array(
-				'name' => 'semestre',
-				'type' => 'Zend\Form\Element\Select',
-				'options' => array(
-						'label' => 'Semestre ',
-						'empty_option' => 'Seleccione su semestre carrera..',
-						'value_options' => array('1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4',
-									'5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10'),
-				),
-				'attributes' => array(
-						'required' => 'required',
-				),
-		),
-				array (
-						'priority' => 290,
-				)
-		);
+// 		$this->add(array(
+// 				'name' => 'semestre',
+// 				'type' => 'Zend\Form\Element\Select',
+// 				'options' => array(
+// 						'label' => 'Semestre ',
+// 						'empty_option' => 'Seleccione su semestre carrera..',
+// 						'value_options' => array('1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4',
+// 									'5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10'),
+// 				),
+// 				'attributes' => array(
+// 						'required' => 'required',
+// 				),
+// 		),
+// 				array (
+// 						'priority' => 290,
+// 				)
+// 		);
 		
 		$this->add(array(
 				'name' => 'asignatura',
@@ -57,10 +55,11 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => $selectDataMat,
+						//'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 		),
 				array (
@@ -79,6 +78,7 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'semestre_asignatura',
 				),
 		),
 				array (
@@ -91,11 +91,12 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura Prerrequisito ',
-						'empty_option' => 'Seleccione el prerrequisito..',
-						'value_options' => $selectDataMat,
+// 						'empty_option' => 'Seleccione el prerrequisito..',
+						//'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'prerrequisito',
 				),
 		),
 				array (
@@ -114,6 +115,7 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'semestre_prerrequisito',
 				),
 		),
 				array (
@@ -141,23 +143,23 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 			$inputFilter = parent::getInputFilter();
 			$factory = new InputFactory ();
 	
-			$inputFilter->add ( $factory->createInput ( array (
-                    'name' => 'semestre',
-                    'filters' => array(
-                            array ( 'name' => 'digits' ),
+// 			$inputFilter->add ( $factory->createInput ( array (
+//                     'name' => 'semestre',
+//                     'filters' => array(
+//                             array ( 'name' => 'digits' ),
     
-                    ),
-                    'validators' => array (
-                            array (
-                                    'name' => 'digits',
-                                    'options' => array (
-                                            'messages' => array(
-                                    						'notDigits' => 'Solo especifique en números',	
-                                    		),
-                                    )
-                            ),
-                    )
-            )));
+//                     ),
+//                     'validators' => array (
+//                             array (
+//                                     'name' => 'digits',
+//                                     'options' => array (
+//                                             'messages' => array(
+//                                     						'notDigits' => 'Solo especifique en números',	
+//                                     		),
+//                                     )
+//                             ),
+//                     )
+//             )));
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'asignatura',

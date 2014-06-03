@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudTitulo extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudTitulo', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudTitulo', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
@@ -35,6 +35,7 @@ class SolicitudTitulo extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'nombre_titulo',
 				),
 		),
 				array (
@@ -291,6 +292,7 @@ class SolicitudTitulo extends Solicitud
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_otros',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

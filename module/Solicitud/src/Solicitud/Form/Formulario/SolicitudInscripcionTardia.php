@@ -9,26 +9,26 @@ require_once "funcionesDB.php";
 class SolicitudInscripcionTardia extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudInscripcionTardia', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudInscripcionTardia', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 		
 		
 		
 		$sql       = "SELECT m.materia, m.nombre AS n_materia, h.fecha_de_examen  FROM materias AS m
 						INNER JOIN cursos AS c ON m.materia = c.materia
 						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso
-						AND axc.numero_de_documento = ".$cedulaUsuario." AND axc.curso_actual = TRUE
+						AND axc.numero_de_documento = ".$numeroDocumento." AND axc.curso_actual = TRUE
 						INNER JOIN inscripcion_examen_por_alumno AS ie ON axc.curso = ie.curso
 						INNER JOIN Horarios_de_examen AS h ON h.curso = ie.curso";
 		
@@ -51,10 +51,11 @@ class SolicitudInscripcionTardia extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => $selectDataMat//$this->getSubjectsOfCareer(),
+						//'value_options' => $selectDataMat
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 		),
 		
@@ -68,11 +69,12 @@ class SolicitudInscripcionTardia extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Fecha de Examen',
-						'value_options' =>$selectDataFech,
+						//'value_options' =>$selectDataFech,
 				),
 				'attributes' => array(
 						'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
+						'id' => 'fecha_de_examen',
 				),
 		
 		),
@@ -87,15 +89,16 @@ class SolicitudInscripcionTardia extends Solicitud
 				'options' => array(
 						'label' => 'Oportunidad ',
 						'empty_option' => 'Elija una Oportunidad..',
-						'value_options' => array(
-								'1' => '1',
-								'2' => '2',
-								'3' => '3',
-								'E' => 'Extraordinario'
-						),
+// 						'value_options' => array(
+// 								'1' => '1',
+// 								'2' => '2',
+// 								'3' => '3',
+// 								'E' => 'Extraordinario'
+// 						),
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'oportunidad'
 				),
 		),
 				array (
@@ -248,6 +251,7 @@ class SolicitudInscripcionTardia extends Solicitud
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

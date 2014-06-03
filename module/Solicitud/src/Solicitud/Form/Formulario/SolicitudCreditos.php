@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudCreditos extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudCreditos', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudCreditos', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 	
@@ -24,11 +24,11 @@ class SolicitudCreditos extends Solicitud
 				'options' => array(
 						'label' => 'Tipo de actividad',
 						'empty_option' => 'Seleccione una actividad ',
-						'value_options' => array('Materia de Otra Carrera'=>'Materia de Otra Carrera',
-								'Curso de Extensión' => 'Curso de Extensión',
-								'Seminario' => 'Seminario',
-								'Trabajo' => 'Trabajo',
-								' ' => ' ')//$this->getSubjectsOfCareer(),
+						'value_options' => array(
+								'Materias' => 'Materias',
+								'Cursos, seminarios, trabajos u otras realizadas en la UC' => 'Cursos, seminarios, trabajos u otras realizadas en la UC',
+								'Cursos, seminarios, trabajos u otras realizadas en otras universidades' => 'Cursos, seminarios, trabajos u otras realizadas en otras universidades',
+								'Ayudantía de Cátedra u otras actividades' => 'Ayudantía de Cátedra u otras actividades')
 				),
 		
 		),
@@ -116,17 +116,7 @@ class SolicitudCreditos extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-								
+							),								
 					)
 			) ) );
 			
@@ -164,16 +154,7 @@ class SolicitudCreditos extends Solicitud
 					'validators' => array (
 							array (
 									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),								
+							),						
 					)
 			) ) );
 			

@@ -1,49 +1,55 @@
 <?php
 
+use Solicitud\Controller;
 use Zend\Db\Adapter\AdapterInterface;
+use Zend\Soap\Client;
 
 define ("AGOSTO", 8);
 
+require_once 'SapientiaClient.php';
 
 function getDatosSolicitante ($idSolicitud, $tipoSolicitud, AdapterInterface $dbAdapter, AdapterInterface $sapientiaDbAdapter){
 	
-	$sql  = "SELECT so.fecha_solicitada, a.cedula
+	$sql  = "SELECT so.fecha_solicitada, u.numero_de_documento, so.matricula
 					FROM solicitudes AS so 
 					INNER JOIN ".$tipoSolicitud." AS s ON so.solicitud = s.solicitud
 					AND s.solicitud =".$idSolicitud."
-					INNER JOIN usuarios AS u ON u.usuario = so.usuario_solicitante
-					INNER JOIN alumnos AS a ON u.usuario = a.usuario";
+					INNER JOIN usuarios AS u ON u.usuario = so.usuario_solicitante";
 	
 		
 	$statement = $dbAdapter->query($sql);
 	$result = $statement->execute();
 		
 	foreach ($result as $res) {
-		$cedulaSolicitante = $res['cedula'];
+		$numeroDocumento = $res['numero_de_documento'];
 		$fechaSolicitud = $res['fecha_solicitada'];
-		$asignaturaSolicitud = $res['asignatura'];	
+		$matriculaSolicitud = $res['matricula'];	
 	}
 	
-	$sql  = "SELECT axs.asignatura
+	$sql  = "SELECT axs.asignatura, axs.seccion, axs.semestre_anho, axs.semestre
 					FROM solicitudes AS so
 					INNER JOIN ".$tipoSolicitud." AS s ON so.solicitud = s.solicitud
 					INNER JOIN asignaturas_por_solicitud AS axs
 					ON axs.solicitud = s.solicitud AND s.solicitud =".$idSolicitud."
-					INNER JOIN usuarios AS u ON u.usuario = so.usuario_solicitante
-					INNER JOIN alumnos AS a ON u.usuario = a.usuario";
+					INNER JOIN usuarios AS u ON u.usuario = so.usuario_solicitante";
+	
 	
 	
 	$statement = $dbAdapter->query($sql);
 	$result = $statement->execute();
 	
+	
 	foreach ($result as $res) {
 		$asignaturaSolicitud = $res['asignatura'];
+		$seccionAsignatura = $res['seccion'];
+		$semestreAnhoAsignatura = $res['semestre_anho'];
+		$anhoAsignatura = $res['semestre'];
 	}
 	
 	$sql  = "SELECT c.nombre AS carrera, d.nombre AS departamento FROM
 			matriculas_por_alumno AS mxa
 			INNER JOIN  matriculas_por_carrera AS mxc ON mxa.matricula = mxc.matricula
-			AND mxa.numero_de_documento = ".$cedulaSolicitante."
+			AND mxa.numero_de_documento = ".$numeroDocumento."
 			INNER JOIN carreras AS c ON mxc.carrera = c.carrera
 			INNER JOIN departamentos AS d ON c.departamento = d.departamento";
 	
@@ -55,136 +61,83 @@ function getDatosSolicitante ($idSolicitud, $tipoSolicitud, AdapterInterface $db
 		$departamentoSolicitante = $res['departamento'];
 	}
 	
-	return array("cedula" => $cedulaSolicitante, "fecha_solicitada" => $fechaSolicitud,
+	return array("numero_de_documento" => $numeroDocumento, "fecha_solicitada" => $fechaSolicitud,
 				 "asignatura" => $asignaturaSolicitud, "carrera" => $carreraSolicitante,
-				"departamento" => $departamentoSolicitante);
-	
-}
-
-function getDatosReduccionExoneracion ($cedulaSolicitante, $asignaturaSolicitud, AdapterInterface $sapientiaDbAdapter){
-	
-	$anhoParaVerificar = date ('Y');
-	$mesActual = date ('n');
-		
-		
-	if ( $mesActual >= AGOSTO ) {
-		$semestreAnterior = 1;
-	}
-	else
-	{
-		$semestreAnterior = 2;
-		$anhoParaVerificar = $anhoParaVerificar - 1; // anho anterior
-	}
-		
-		
-	
-	$sql  = "SELECT avg((presencia::boolean::int)) AS asistencia FROM asistencias_por_alumno AS axa
-					INNER JOIN cursos AS c ON axa.curso = c.curso
-					AND axa.numero_de_documento = ".$cedulaSolicitante."
-					AND c.anho = ".$anhoParaVerificar."
-					AND c.semestre_anho = ".$semestreAnterior."
-					INNER JOIN materias AS m ON c.materia = m.materia AND m.nombre = '".$asignaturaSolicitud."'"; 
-		
-
-	$statement = $sapientiaDbAdapter->query($sql);
-	$result = $statement->execute();
-	
-	foreach ($result as $res) {
-		
-		$porcentajeAsistencia = $res['asistencia'];
-		
-	}
-	
-	
-	$sql = "SELECT iexa.oportunidad, iexa.presencia 
-			FROM inscripcion_examen_por_alumno AS iexa 
-			INNER JOIN cursos AS c ON iexa.curso = c.curso
-			INNER JOIN materias AS m ON c.materia = m.materia AND m.nombre = '".$asignaturaSolicitud."' AND iexa.numero_de_documento = ".$cedulaSolicitante."
-			AND c.anho = ".$anhoParaVerificar." AND c.semestre_anho = ".$semestreAnterior;
-	
-	$statement = $sapientiaDbAdapter->query($sql);
-	$result = $statement->execute();
-	
-	$oportunidades = array();
-	$i = 0;
-	
-	foreach ($result as $res) {
-		$oportunidades[$res["oportunidad"]] = $res['presencia'];
-	}
-	
-	
-	return array("porcentajeAsistencia" => $porcentajeAsistencia,
-				"examenesInscriptos" => $oportunidades);
-}
-
-function getCalificacionAsignatura ($cedulaSolicitante, $asignaturaSolicitud, AdapterInterface $sapientiaDbAdapter){
-	
-	$sql = "SELECT max(ca.calificacion) AS calificacion FROM calificaciones_por_alumno AS ca
-					INNER JOIN cursos AS c ON ca.curso = c.curso
-					INNER JOIN materias AS m ON c.materia = m.materia AND m.nombre = '".$asignaturaSolicitud."'
-					AND ca.numero_de_documento = ".$cedulaSolicitante;
-	
-	$statement = $sapientiaDbAdapter->query($sql);
-	$result = $statement->execute();
-	
-	foreach ($result as $res) {
-		$calificacionSolicitante = $res['calificacion'];
-	}
-	return $calificacionSolicitante;
+				"departamento" => $departamentoSolicitante,
+				"seccion_asignatura" => $seccionAsignatura,
+				"semestre_anho" => $semestreAnhoAsignatura,
+				"anho_asignatura" => $anhoAsignatura,
+				"matricula" => $matriculaSolicitud);
 	
 }
 
 function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbAdapter, AdapterInterface $sapientiaDbAdapter){
 	
 	date_default_timezone_set('America/Asuncion'); // setea la zona horaria para algunas funciones date()
+	
 	$requisitosVerificados = array();
 	
 	$datosSolicitud = getDatosSolicitante($idSolicitud, $tipoSolicitud, $dbAdapter, $sapientiaDbAdapter);
 		
-	$cedulaSolicitante = $datosSolicitud['cedula'];
+	$numeroDocumento = $datosSolicitud['numero_de_documento'];
 	$fechaSolicitud = $datosSolicitud['fecha_solicitada'];
 	$asignaturaSolicitud = $datosSolicitud['asignatura'];
 	$carreraSolicitante = $datosSolicitud['carrera'];
 	$dptoSolicitante = $datosSolicitud['departamento'];
+	$seccionAsignatura = $datosSolicitud['seccion_asignatura'];
+	$semestreAnhoAsignatura = $datosSolicitud['semestre_anho'];
+	$anhoAsignatura = $datosSolicitud['anho_asignatura'];
+	$matriculaSolicitud = $datosSolicitud['matricula'];
 	
 	$calificacionMinimaParaAprobar = 2; 
 	
 	switch ($tipoSolicitud){
 		
 		case 'solicitud_de_extraordinario':
-		
-			$requisitOportunidad = 3;
-			$requisitoAusencia = FALSE;
-			$requisitoLimiteDias = 5;
+			// servicios inscripcion a examen, horario de examen
+			$oportunidad = 3;			
+			$LimiteDias = 5;
+			$presenciaExamen = null;
 			
- 			$sql = "SELECT h.fecha_de_examen, iexa.presencia FROM horarios_de_examen AS h
-					INNER JOIN inscripcion_examen_por_alumno AS iexa ON h.curso = iexa.curso 
-					AND iexa.oportunidad = ".$requisitOportunidad."
-					AND iexa.numero_de_documento = ".$cedulaSolicitante."
-					INNER JOIN cursos AS c ON c.curso = iexa.curso
-					INNER JOIN materias AS m ON c.materia = m.materia AND m.nombre = '".$asignaturaSolicitud."'";
-				
-			$statement = $sapientiaDbAdapter->query($sql);
-			$result = $statement->execute();
+			$requisitOportunidad = 'NO_CUMPLE';
+			$requisitoAusencia = 'NO_CUMPLE';
+			$requisitoLimiteDias = 'NO_CUMPLE';
+
+			$resultInscripcion = getInscripcionesExamen($numeroDocumento, $matriculaSolicitud);
 			
-			foreach ($result as $res) {
-				$fechaExamen = $res['fecha_de_examen'];
-				$presenciaExamen = $res['presencia'];
+			
+			
+			foreach ($resultInscripcion as $res) {
 				
+				if ($res['asignatura'] == $asignaturaSolicitud && $res['oportunidad'] == $oportunidad){
+					$presenciaExamen = $res['presencia'];
+				}
+			}
+				
+			
+			$resultHorario = getHorariosExamen($carreraSolicitante);
+			
+			//llamada a horario
+			$fechaExamen = null;
+			
+			foreach ($resultHorario as $res) {
+				if (trim($res['asignatura']) == $asignaturaSolicitud){
+					$fechaExamen = $res['fecha_examen'];
+				}
 			}
 			
 			
 			
-			if ($fechaExamen){ //Si la consulta no nos devuelve nada no hay examen en Tercera
+			if (isset($fechaExamen)){ //Si la consulta no nos devuelve nada no hay examen en Tercera
 				$requisitOportunidad = 'CUMPLE';
-				if (!$presenciaExamen){
+				if ($presenciaExamen == 'f'){
 					$requisitoAusencia = 'CUMPLE';
 					
 					
 					$segundos=strtotime($fechaSolicitud) - strtotime($fechaExamen);
 					$diferenciaDias=intval($segundos/60/60/24);
 						
-					if ($diferenciaDias <= $requisitoLimiteDias){
+					if ($diferenciaDias <= $LimiteDias){
 						$requisitoLimiteDias = 'CUMPLE';
 					}
 					else 
@@ -197,12 +150,7 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 					$requisitoAusencia = 'NO_CUMPLE';
 				}
 			}
-			else
-			{
-				$requisitOportunidad = 'NO_CUMPLE';
-				$requisitoAusencia = 'NO_CUMPLE';
-				$requisitoLimiteDias = 'NO_CUMPLE';
-			}
+
 			
 			$sql = sprintf("UPDATE solicitud_de_extraordinario SET cumple_fecha = '%s', ausente_tercera_op = '%s', inscripto_tercera_op = '%s'  WHERE solicitud = %d", $requisitoLimiteDias, $requisitoAusencia, $requisitOportunidad, $idSolicitud );
 			
@@ -216,18 +164,31 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			
 		case 'solicitud_de_reduccion_de_asistencia':
 						
-			$requisitoAsistencia = 0.75; // requisito de la solicitud
-
-			$datosReduccion = getDatosReduccionExoneracion($cedulaSolicitante, $asignaturaSolicitud, $sapientiaDbAdapter);
-			$porcentajeAsistenciaSolicitante = $datosReduccion['porcentajeAsistencia'];
+			$asistenciaRequerida = 0.75; // requisito de la solicitud
 			 
-			if ($porcentajeAsistenciaSolicitante >= $requisitoAsistencia){
+ 			$resultAsistencia = getAsistencia($asignaturaSolicitud, $numeroDocumento, $semestreAnhoAsignatura, $seccionAsignatura, $anhoAsignatura);
+ 			
+ 			$sumAsistidas='0';
+ 			$sumTotales='0';
+ 			
+ 			foreach ($resultAsistencia as $res) {
+ 				$sumAsistidas += $res['horas_asistidas'];
+ 				$sumTotales += $res['horas_totales'];
+ 				
+ 			}
+ 			
+ 			$porcentajeAsistenciaSolicitante = $sumAsistidas/$sumTotales;
+ 			
+			if ($porcentajeAsistenciaSolicitante >= $asistenciaRequerida){
 				$requisitoAsistencia = "CUMPLE";
 			}
 			else 
 			{
 				$requisitoAsistencia = "NO_CUMPLE";
 			}
+			
+			$porcentajeAsistenciaSolicitante = $porcentajeAsistenciaSolicitante*100;
+			$porcentajeAsistenciaSolicitante = $porcentajeAsistenciaSolicitante."%";
 			
 			$sql = sprintf("UPDATE solicitud_de_reduccion_de_asistencia SET asistencia_minima = '%s'  WHERE solicitud = %d", $requisitoAsistencia, $idSolicitud );
 			
@@ -241,34 +202,28 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			
 		case 'solicitud_de_titulo':
 			
-			$tesis = 'Tesis';
-			$sql = "SELECT count(*) AS cantidad_materias FROM materias_por_carrera AS mxc
-					INNER JOIN carreras AS c ON mxc.carrera = c.carrera AND c.nombre = '".$carreraSolicitante."'
-					UNION
-					SELECT count (*) AS cantidad_materias FROM materias_por_carrera AS mxc
-					INNER JOIN cursos AS cr ON mxc.materia = cr.materia
-					INNER JOIN calificaciones_por_alumno AS ca ON cr.curso = ca.curso 
-					AND ca.calificacion >= ".$calificacionMinimaParaAprobar." AND numero_de_documento = ".$cedulaSolicitante."
-					ORDER BY cantidad_materias DESC";
+			$requisitoCreditos = 'NO_CUMPLE';
+			$requisitoAprobacionTotalMaterias = 'NO_CUMPLE';
+			$presentoTesis = 'NO_CUMPLE';
+			
+			// aprobación total y tesis
+			$resultCalificaciones = getCalificaciones($numeroDocumento, $matriculaSolicitud);
+			$filtro = 'TODAS';
+			$resultAsignaturas = getAsignaturas($carreraSolicitante, $matriculaSolicitud, $filtro);
+			
+			$cantidadAsignaturasAprobadas= 0;
+			foreach ($resultCalificaciones as $res){
+				if($res['calificacion'] >= '2'){
+					$cantidadAsignaturasAprobadas++;
+				}
+			}
+				
+			$totalMateriasPorCarrera = count($resultAsignaturas);
+			$totalMateriasAprobadas = $cantidadAsignaturasAprobadas;
 			
 
 			
-			$statement = $sapientiaDbAdapter->query($sql);
-			$result = $statement->execute();
-				
-			$totalMaterias = array();
-			$i = 0;
-			foreach ($result as $res) {
-				$totalMaterias[$i]= $res['total_materias'];
-				$i = $i + 1;
-			}
-				
-			$totalMateriasPorCarrera = $totalMaterias[0];
-			$totalMateriasAprobadas = $totalMaterias[1];
-			//$tesis = $totalMaterias[2];
-			$razonDeAprobacion = $totalMateriasAprobadas/$totalMateriasPorCarrera;
-			
-			if ($razonDeAprobacion == 1){
+			if ($totalMateriasAprobadas == $totalMateriasPorCarrera){
 				$requisitoAprobacionTotalMaterias = 'CUMPLE';
 				$presentoTesis = 'CUMPLE';
 			}
@@ -276,10 +231,34 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			{
 				$requisitoAprobacionTotalMaterias = 'NO_CUMPLE';
 				$presentoTesis = 'NO_CUMPLE';
-				//falta ver lo de los créditos
+				
 			}
 			
-			$requisitoCreditos = 'NO_CUMPLE'; // ver el tema de creditos
+			
+			// Creditos
+			$sql = "SELECT sum(creditos_otorgados) AS creditos FROM solicitud_de_creditos_academicos AS sca
+					INNER JOIN solicitudes AS s ON sca.solicitud = s.solicitud AND s.matricula = ".$matriculaSolicitud;
+			
+			$statement = $dbAdapter->query($sql);
+			$resultSumTotal = $statement->execute();
+			
+			foreach ($resultSumTotal as $res) {
+				$creditosAcumulados = $res['creditos'];
+			}
+			
+			$sql = "SELECT creditos_requeridos FROM  creditos_por_carrera WHERE nombre = '".$carreraSolicitante."'";
+			$statement = $dbAdapter->query($sql);
+			$resultCredPorCarrera = $statement->execute();
+			
+			foreach ($resultCredPorCarrera as $res) {
+				$creditosPorCarrera = $res['creditos_requeridos'];
+			}
+			
+			
+			if ($creditosAcumulados >= $creditosPorCarrera){
+				$requisitoCreditos = 'CUMPLE'; 
+			}
+			
 			
 			$sql = sprintf("UPDATE solicitud_de_titulo 
 					SET aprobacion_total_de_materias = '%s', cumple_creditos_requeridos = '%s', presento_tesis = '%s'  
@@ -296,57 +275,57 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			
 		case 'solicitud_de_colaborador_de_catedra':
 			
-			$requisitoNotaMinima = 3;
+			$notaMinima = '3';
 			$primerSemestreUltimoAnho = 9;
 			
-			$calificacionSolicitante = getCalificacionAsignatura($cedulaSolicitante, $asignaturaSolicitud, $sapientiaDbAdapter);
-		
+			$requisitoCalificacionMinima = 'NO_CUMPLE';
+			$requisitoUltimoAnho = 'NO_CUMPLE';
 			
-			$sql = "SELECT count (*) AS cantidad_materias FROM materias_por_carrera AS mxc
-					INNER JOIN cursos AS cr ON mxc.materia = cr.materia
-					INNER JOIN materias AS m ON cr.materia = m.materia
-					INNER JOIN calificaciones_por_alumno AS ca ON cr.curso = ca.curso
-					AND m.semestre_carrera < ".$primerSemestreUltimoAnho." 
-					AND ca.calificacion >= ".$calificacionMinimaParaAprobar." AND numero_de_documento = ".$cedulaSolicitante."
-					INNER JOIN carreras AS c ON mxc.carrera = c.carrera AND c.nombre = '".$carreraSolicitante."'
-					UNION
-					SELECT count (*) AS cantidad_materias FROM materias AS m
-					INNER JOIN materias_por_carrera AS mxc ON m.materia = mxc.materia
-					INNER JOIN carreras AS c ON c.nombre = '".$carreraSolicitante."' AND m.semestre_carrera < ".$primerSemestreUltimoAnho."
-					ORDER BY cantidad_materias DESC";
-			
-			
-			// como verificar lo de la licenciatura
-			$statement = $sapientiaDbAdapter->query($sql);
-			$result = $statement->execute();
-			
-			$totalMaterias = array();
-			$i = 0;
-			foreach ($result as $res) {
-				$totalMaterias[$i]= $res['total_materias'];
-				$i = $i + 1;
+			$resultCalificaciones = getCalificaciones($numeroDocumento, $matriculaSolicitud);
+
+			foreach ($resultCalificaciones as $res){
+
+				if ($res['asignatura'] == $asignaturaSolicitud && $res['calificacion'] >= $notaMinima){
+					$requisitoCalificacionMinima = 'CUMPLE';
+					
+				}			
 			}
 			
-			$totalMateriasPorCarrera = $totalMaterias[0];
-			$totalMateriasAprobadas = $totalMaterias[1];
-			//$tesis = $totalMaterias[2];
-			$razonDeAprobacion = $totalMateriasAprobadas/$totalMateriasPorCarrera;
 			
-			if ($razonDeAprobacion == 1){
+			//////////////////////***********************
+			$resultCalificaciones = getCalificaciones($numeroDocumento, $matriculaSolicitud);
+
+				
+			$cantidadAsignaturasAprobadas= 0;
+			foreach ($resultCalificaciones as $res){
+				if($res['calificacion'] >= '2' && $res['semestre_carrera'] <= $primerSemestreUltimoAnho){
+					$cantidadAsignaturasAprobadas++;
+				}
+			}
+			
+			$totalMateriasPorCarrera = count($resultAsignaturas);
+			$totalMateriasAprobadas = $cantidadAsignaturasAprobadas;
+
+			
+			$filtro = 'TODAS';
+			$resultAsignaturas = getAsignaturas($carreraSolicitante, $matriculaSolicitud, $filtro);
+			
+			$cantidadAsignaturasHastaPenultimoAnho=0;
+			foreach ($resultAsignaturas as $res){
+				if($res['semestre_carrera'] <= $primerSemestreUltimoAnho){
+					$cantidadAsignaturasHastaPenultimoAnho++;
+				}
+			}
+			
+			
+			if ($totalMateriasAprobadas >= $cantidadAsignaturasHastaPenultimoAnho){
 				$requisitoUltimoAnho = 'CUMPLE';
 			}
-			else 
-			{
-				$requisitoUltimoAnho = 'NO_CUMPLE';
-			}
 			
-			if ($calificacionSolicitante >= $calificacionMinimaParaAprobar){
-				$requisitoCalificacionMinima = 'CUMPLE';
-			}
-			else 
-			{
-				$requisitoCalificacionMinima = 'NO_CUMPLE';
-			}
+			
+			/////////////////////////*************************
+			
+
 			
 			$sql = sprintf("UPDATE solicitud_de_colaborador_de_catedra
 					SET nota_minima_requerida = '%s', solicitante_licenciado_ultimo_anho = '%s'
@@ -364,17 +343,22 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 		case 'solicitud_de_tutoria_de_catedra':
 		
 			
-			$requisitoCalificacionMinima = 3;
-			$calificacionSolicitante = getCalificacionAsignatura($cedulaSolicitante, $asignaturaSolicitud, $sapientiaDbAdapter);
+			$calificacionMinima = 3;
 			
-			if ($calificacionSolicitante >= $calificacionMinimaParaAprobar)
-			{
-				$requisitoCalificacionMinima = 'CUMPLE';	
+			
+			$requisitoCalificacionMinima = 'NO_CUMPLE';
+		
+				
+			$resultCalificaciones = getCalificaciones($numeroDocumento, $matriculaSolicitud);
+			
+			foreach ($resultCalificaciones as $res){
+			
+				if ($res['asignatura'] == $asignaturaSolicitud && $res['calificacion'] >= $calificacionMinima){
+					$requisitoCalificacionMinima = 'CUMPLE';
+						
+				}
 			}
-			else 
-			{
-				$requisitoCalificacionMinima = 'NO_CUMPLE';
-			}
+			
 			
 			
 			$sql = sprintf("UPDATE solicitud_de_tutoria_de_catedra
@@ -398,43 +382,40 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			$dptoSolicitante = str_replace(" ", "", $dptoSolicitante);
 			switch ($dptoSolicitante){
 				case "DEI":
-					$sql = "SELECT count (*) AS cantidad_materias FROM materias_por_carrera AS mxc
-						INNER JOIN cursos AS cr ON mxc.materia = cr.materia
-						INNER JOIN calificaciones_por_alumno AS ca ON cr.curso = ca.curso
-						INNER JOIN materias AS m ON cr.materia = m.materia
-						AND m.semestre_carrera <= ".$semestreMinimoDEI."
-						AND ca.calificacion >= ".$calificacionMinimaParaAprobar." AND numero_de_documento = ".$cedulaSolicitante."
-						INNER JOIN carreras AS c ON c.carrera = mxc.carrera AND c.nombre = '".$carreraSolicitante."'
-						UNION
-						SELECT count (*) AS cantidad_materias FROM materias_por_carrera AS mxc
-						INNER JOIN materias AS m ON mxc.materia = m.materia
-						AND m.semestre_carrera <= ".$semestreMinimoDEI."
-						INNER JOIN carreras AS c ON mxc.carrera = c.carrera AND c.nombre = '".$carreraSolicitante."'
-						ORDER BY cantidad_materias DESC";
-					
-					$statement = $sapientiaDbAdapter->query($sql);
-					$result = $statement->execute();
+					//////////////////////***********************
+					$requisitoAprobadoCuartoSemestre = 'NO_CUMPLE';
+					$resultCalificaciones = getCalificaciones($numeroDocumento, $matriculaSolicitud);
+		
 						
-					$totalMaterias = array();
-					$i = 0;
-					foreach ($result as $res) {
-						$totalMaterias[$i]= $res['cantidad_materias'];
-						$i = $i + 1;
+					$cantidadAsignaturasAprobadas= 0;
+					foreach ($resultCalificaciones as $res){
+						if($res['calificacion'] >= '2' && $res['semestre_carrera'] <= $semestreMinimoDEI){
+							$cantidadAsignaturasAprobadas++;
+						}
 					}
 					
-					$totalMateriasPorCarrera = $totalMaterias[0];
-					$totalMateriasAprobadas = $totalMaterias[1];
-					//$tesis = $totalMaterias[2];
-					$razonDeAprobacion = $totalMateriasAprobadas/$totalMateriasPorCarrera;
-						
-					if ($razonDeAprobacion == 1){
+					
+					$totalMateriasAprobadas = $cantidadAsignaturasAprobadas;
+		
+					
+					
+					$filtro = 'TODAS';
+					$resultAsignaturas = getAsignaturas($carreraSolicitante, $matriculaSolicitud, $filtro);
+					
+					$cantidadAsignaturasHastaCuartoSemestre=0;
+					foreach ($resultAsignaturas as $res){
+						if($res['semestre_carrera'] <= $semestreMinimoDEI){
+							$cantidadAsignaturasHastaCuartoSemestre++;
+						}
+					}
+					
+					
+					if ($totalMateriasAprobadas >= $cantidadAsignaturasHastaCuartoSemestre){
 						$requisitoAprobadoCuartoSemestre = 'CUMPLE';
-						
 					}
-					else
-					{
-						$requisitoAprobadoCuartoSemestre = 'NO_CUMPLE';
-					}
+					
+					
+					/////////////////////////*************************
 					
 					$sql = sprintf("UPDATE solicitud_de_ruptura_de_correlatividad
 					SET hasta_cuarto_semestre_regular = '%s'
@@ -448,25 +429,22 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 				break;
 				case "DICIA":
 				//DICIA
-					$sql ="SELECT avg (ca.calificacion) AS promedio FROM calificaciones_por_alumno AS ca
-					   INNER JOIN cursos AS cr ON ca.curso = cr.curso AND ca.numero_de_documento = ".$cedulaSolicitante."
-					   INNER JOIN materias AS m ON cr.materia = m.materia
-					   INNER JOIN materias_por_carrera AS mxc ON mxc.materia = m.materia
-					   INNER JOIN carreras AS c ON c.carrera = mxc.carrera AND c.nombre = '".$carreraSolicitud."'";
+					$requisitoPromedioDICIA = 'NO_CUMPLE';
+					$resultCalificaciones = getCalificaciones($numeroDocumento, $matriculaSolicitud);
 					
-					$statement = $sapientiaDbAdapter->query($sql);
-					$result = $statement->execute();
 					
-					foreach ($result as $res) {
-						$promedioSolicitante = $res['promedio'];
+					
+					$sumCalificaciones = 0;
+					
+					foreach ($resultCalificaciones as $res){
+						$sumCalificaciones	+= $res['calificacion'];
 					}
 					
-					if($promedioSolicitante >= $promedioMinimoDICIA){
+					$promedioActual = $sumCalificaciones/count($resultCalificaciones);
+					
+					
+					if ($promedioActual >= $promedioMinimoDICIA){
 						$requisitoPromedioDICIA = 'CUMPLE';
-					}
-					else
-					{
-						$requisitoPromedioDICIA = 'NO_CUMPLE';
 					}
 					
 					$sql = sprintf("UPDATE solicitud_de_ruptura_de_correlatividad
@@ -489,35 +467,41 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			
 		case 'solicitud_de_exoneracion':
 			
-			$requisitoAsistencia = 0.75; // requisito de la solicitud
-			
-			 $datosExoneracion = getDatosReduccionExoneracion($cedulaSolicitante, $asignaturaSolicitud, $sapientiaDbAdapter);
-			 $porcentajeAsistenciaSolicitante = $datosExoneracion['porcentajeAsistencia'];
-			 
-			 $examenesInscriptosSemestrePasado = $datosExoneracion['examenesInscriptos'];
-			 
-			 if ($examenesInscriptosSemestrePasado == array()){
-			 	$requisitoNoRendir = "CUMPLE";
-			 }
-			 else
-			 {
-			 	foreach ($examenesInscriptosSemestrePasado as $presencia){
-			 		if ($presencia){
-			 			$requisitoNoRendir = "NO_CUMPLE";
-			 			break;
-			 		}
-			 	}
-			 	$requisitoNoRendir = "CUMPLE";
-			 }
-			 
-			 
-			if ($porcentajeAsistenciaSolicitante >= $requisitoAsistencia){
+			$asistenciaRequerida = 0.75; // requisito de la solicitud
+			$requisitoAsistencia = "NO_CUMPLE";
+	 		$resultAsistencia = getAsistencia($asignaturaSolicitud, $numeroDocumento, $semestreAnhoAsignatura, $seccionAsignatura, $anhoAsignatura);
+ 			
+ 			$sumAsistidas='0';
+ 			$sumTotales='0';
+ 			
+ 			foreach ($resultAsistencia as $res) {
+ 				$sumAsistidas += $res['horas_asistidas'];
+ 				$sumTotales += $res['horas_totales'];
+ 				
+ 			}
+ 			
+ 			$porcentajeAsistenciaSolicitante = $sumAsistidas/$sumTotales;
+ 			
+			if ($porcentajeAsistenciaSolicitante >= $asistenciaRequerida){
 				$requisitoAsistencia = "CUMPLE";
 			}
-			else
-			{
-				$requisitoAsistencia = "NO_CUMPLE";
+			
+			$porcentajeAsistenciaSolicitante = $porcentajeAsistenciaSolicitante*100;
+			$porcentajeAsistenciaSolicitante = $porcentajeAsistenciaSolicitante."%";
+			
+			$resultInscripcion = getInscripcionesExamen($numeroDocumento, $matriculaSolicitud);
+	
+			$requisitoNoRendir = 'CUMPLE';
+			foreach ($resultInscripcion as $res) {
+			
+				if ($res['asignatura'] == $asignaturaSolicitud){
+					if ($res['presencia'] == 't'){
+						$requisitoNoRendir = 'NO_CUMPLE';
+					}
+				}
 			}
+			
+			
 			
 			$sql = sprintf("UPDATE solicitud_de_exoneracion
 					SET cumple_porcentaje_asistencia = '%s', ausencia_finales = '%s'
@@ -534,52 +518,89 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			break;
 			
 		case 'solicitud_de_tesis':
+					
+			$requisitoTotalMateriasAprobadas = 'NO_CUMPLE';
 			
-					$sql = "SELECT count (*) AS cantidad_materias FROM materias_por_carrera AS mxc
-						INNER JOIN cursos AS cr ON mxc.materia = cr.materia
-						INNER JOIN calificaciones_por_alumno AS ca ON cr.curso = ca.curso
-						INNER JOIN materias AS m ON cr.materia = m.materia
-						AND ca.calificacion >= ".$calificacionMinimaParaAprobar." AND numero_de_documento = ".$cedulaSolicitante."
-						INNER JOIN carreras AS c ON c.carrera = mxc.carrera AND c.nombre = '".$carreraSolicitante."'
-						UNION
-						SELECT count (*) AS cantidad_materias FROM materias_por_carrera AS mxc
-						INNER JOIN materias AS m ON mxc.materia = m.materia
-						INNER JOIN carreras AS c ON mxc.carrera = c.carrera AND c.nombre = '".$carreraSolicitante."'
-						ORDER BY cantidad_materias DESC";
-					
-					$statement = $sapientiaDbAdapter->query($sql);
-					$result = $statement->execute();
-						
-					$totalMaterias = array();
-					$i = 0;
-					foreach ($result as $res) {
-						$totalMaterias[$i]= $res['cantidad_materias'];
-						$i = $i + 1;
-					}
-					
-					$totalMateriasPorCarrera = $totalMaterias[0];
-					$totalMateriasAprobadas = $totalMaterias[1];
-					//$tesis = $totalMaterias[2];
-					$razonDeAprobacion = $totalMateriasAprobadas/$totalMateriasPorCarrera;
-						
-					if ($razonDeAprobacion == 1){
-						$requisitoTotalMateriasAprobadas = 'CUMPLE';
-						
-					}
-					else
-					{
-						$requisitoTotalMateriasAprobadas = 'NO_CUMPLE';
-					}
-					
-					$sql = sprintf("UPDATE solicitud_de_tesis
-					SET cumple_aprobacion_materias = '%s'
-					WHERE solicitud = %d",
-							$requisitoTotalMateriasAprobadas, $idSolicitud );
-						
-					$statement = $dbAdapter->query($sql);
-					$result = $statement->execute();
-					
-					$requisitosVerificados = array("Aprobación total de las materias de la carrera: " => $requisitoTotalMateriasAprobadas);
+			$resultCalificaciones = getCalificaciones($numeroDocumento, $matriculaSolicitud);
+			$filtro = 'TODAS';
+			$resultAsignaturas = getAsignaturas($carreraSolicitante, $matriculaSolicitud, $filtro);
+				
+			$cantidadAsignaturasAprobadas= 0;
+			foreach ($resultCalificaciones as $res){
+				if($res['calificacion'] >= '2'){
+					$cantidadAsignaturasAprobadas++;
+				}
+			}
+			
+			$totalMateriasPorCarrera = count($resultAsignaturas);
+			$totalMateriasAprobadas = $cantidadAsignaturasAprobadas;
+				
+			
+				
+			if ($totalMateriasAprobadas == $totalMateriasPorCarrera){
+				$requisitoTotalMateriasAprobadas = 'CUMPLE';
+			}
+		
+			
+			$sql = sprintf("UPDATE solicitud_de_tesis
+			SET cumple_aprobacion_materias = '%s'
+			WHERE solicitud = %d",
+					$requisitoTotalMateriasAprobadas, $idSolicitud );
+				
+			$statement = $dbAdapter->query($sql);
+			$result = $statement->execute();
+			
+			$requisitosVerificados = array("Aprobación total de las materias de la carrera: " => $requisitoTotalMateriasAprobadas);
+			break;
+			
+		case 'solicitud_de_traspaso_de_pago_examen':
+			$requisitoLimiteDeDias = 'NO_CUMPLE';
+			
+			$sql = "SELECT s.fecha_solicitada, st.fecha_oportunidad_a_pagar AS fecha_examen
+					FROM solicitud_de_traspaso_de_pago_examen AS st 
+					INNER JOIN solicitudes AS s ON s.solicitud =  st.solicitud AND s.solicitud =".$idSolicitud;
+			 
+			$statement = $dbAdapter->query($sql);
+			$result = $statement->execute();
+			
+			foreach ($result as $res) {
+				$fechaExamen = $res['fecha_examen'];
+				$fechaSolicitud = $res['fecha_solicitada'];
+			}
+			
+			$segundos=strtotime($fechaSolicitud) - strtotime($fechaExamen);
+			$diferenciaDias=intval($segundos/60/60/24);
+			
+			if ($diferenciasDias >= 2){
+				$requisitoLimiteDeDias = 'CUMPLE';
+			}
+			$requisitosVerificados = array("Cumple límite de días" => $requisitoLimiteDeDias);
+			
+			break;
+			
+		case'solicitud_de_inscripcion_tardia_a_examen':
+			$requisitoLimiteDeDias = 'NO_CUMPLE';
+				
+			$sql = "SELECT s.fecha_solicitada, st.fecha_de_examen AS fecha_examen
+					FROM solicitud_de_inscripcion_tardia_a_examen AS st
+					INNER JOIN solicitudes AS s ON s.solicitud =  st.solicitud AND s.solicitud =".$idSolicitud;
+			
+			$statement = $dbAdapter->query($sql);
+			$result = $statement->execute();
+				
+			foreach ($result as $res) {
+				$fechaExamen = $res['fecha_examen'];
+				$fechaSolicitud = $res['fecha_solicitada'];
+			}
+				
+			$segundos=strtotime($fechaSolicitud) - strtotime($fechaExamen);
+			$diferenciaDias=intval($segundos/60/60/24);
+				
+			if ($diferenciasDias >= 2){
+				$requisitoLimiteDeDias = 'CUMPLE';
+			}
+			$requisitosVerificados = array("Cumple límite de días" => $requisitoLimiteDeDias);
+			
 			break;
 			
 		default:

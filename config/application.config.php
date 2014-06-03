@@ -15,7 +15,7 @@ return array(
         'GoalioMailService',
         'GoalioForgotPassword',
         'Usuarios', //'sapientia',
-//     	'BjyAuthorize',
+     	'BjyAuthorize',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

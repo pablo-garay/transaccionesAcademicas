@@ -12,7 +12,7 @@ class SolicitudConvalidacionMaterias extends Form
 	protected $dbAdapter;
 
 	//parámetro del constructor: adaptador de la base de datos
-	public function __construct( $name = 'solicitudConvalidacionMaterias', AdapterInterface $databaseAdapter) {
+	public function __construct( $name = 'solicitudConvalidacionMaterias', AdapterInterface $dbadapter, $idUsuario) {
 		$this->dbAdapter = $databaseAdapter; //Asignación de nuestro adaptador de base de datos
 		parent::__construct($name);
 

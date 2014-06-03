@@ -129,37 +129,57 @@ class Module
                             ),
                     ));
                    
-//                     $form->add(array(
-//                         'name' => 'tipo_doc',
-//                         'type' => 'Zend\Form\Element\Radio',
-//                         'attributes' => array(
-//                                 'required' => 'required',
-//                         ),
-//                         'options' => array(
-//                                 'label' => 'Tipo de documento',
-//                                 'value_options' => array(
-//                                         'Cedula de Identidad' => 'Cedula de Identidad',
-//                                         'Pasaporte' => 'Pasaporte',
-//                                         'Carnet de Migraciones' => 'Carnet de Migraciones',
-//                                 		'Libreta Cívica' => 'Libreta Cívica',
-//                                 		'Libreta de Baja' => 'Libreta de Baja',
-//                                 		'RUC' => 'RUC',
-//                                 		'Indefinido' => 'Indefinido',
-//                                 ),
-//                             ),
-//                     ));
+                    $form->add(array(
+                        'name' => 'tipo_de_documento',
+                        'type' => 'Zend\Form\Element\Select',
+                        'attributes' => array(
+                                'required' => 'required',
+                        		'placeholder' => 'Elija el tipo de documento...',
+                        ),
+                        'options' => array(
+                                'label' => 'Tipo de documento',
+                                'value_options' => array(
+                                        'Cedula de Identidad' => 'Cedula de Identidad',
+                                        'Pasaporte' => 'Pasaporte',
+                                        'Carnet de Migraciones' => 'Carnet de Migraciones',
+                                		'Libreta Cívica' => 'Libreta Cívica',
+                                		'Libreta de Baja' => 'Libreta de Baja',
+                                		'RUC' => 'RUC',
+                                		'Indefinido' => 'Indefinido',
+                                ),
+                        		'empty_option' => 'Elija el tipo de su documento...'
+                            ),
+                    ));
 
-//                     $form->add(array(
-//                             'name' => 'documento',
-//                             'type' => 'Zend\Form\Element\Text',
-//                             'attributes' => array(
-//                                     'placeholder' => 'Escriba número de documento...',
-//                                     'required' => 'required',
-//                             ),
-//                             'options' => array(
-//                                     'label' => 'Número de Documento',
-//                             ),
-//                     ));
+                    $form->add(array(
+                            'name' => 'origen_de_documento',
+                            'type' => 'Zend\Form\Element\Select',
+                            'attributes' => array(
+                                    'placeholder' => 'Elija el origen de su documento...',
+                                    'required' => 'required',
+                            ),
+                            'options' => array(
+                                    'label' => 'Origen de documento',
+                            		'value_options' => array(
+                            				'Paraguay' => 'Paraguay',
+                            				'Otro' => 'Otro',
+                            		),
+                            		'empty_option' => 'Indique origen del documento'
+                            ),
+                    ));
+                    
+                    $form->add(array(
+                    		'name' => 'numero_de_documento',
+                    		'type' => 'Zend\Form\Element\Text',
+                    		'attributes' => array(
+                    				'placeholder' => 'Escriba el número de documento...',
+                    				'required' => 'required',
+                    				'pattern'  => '^\d+$'
+                    		),
+                    		'options' => array(
+                    				'label' => 'Número de Documento',
+                    		),
+                    ));
                 }
         );
  
@@ -275,31 +295,67 @@ class Module
                             )
                     ));
 
-//                     $filter->add ( array (
-//                             'name' => 'tipo_doc',
-//                             'filters' => array(
-//                                     array ( 'name' => 'StripTags' ),
-//                                     array ( 'name' => 'StringTrim' ),
-//                             ),
-//                             'validators' => array (
-//                                     array (
-//                                             'name' => 'NotEmpty',
-//                                     ),
-//                             )
-//                     ));
+                    $filter->add ( array (
+                            'name' => 'tipo_de_documento',
+                            'filters' => array(
+                                    array ( 'name' => 'StripTags' ),
+                                    array ( 'name' => 'StringTrim' ),
+                            ),
+                            'validators' => array (
+                                    array (
+                                            'name' => 'NotEmpty',
+                                    ),
+                            		array (
+                            				'name' => 'alnum',
+                            				'options' => array (
+                            						'messages' => array (
+                            								'notAlnum' => 'Se requieren sólo números y letras'
+                            						),
+                            						'allowWhiteSpace' => true,
+                            				)
+                            		),
+                            )
+                    ));
 
-//                     $filter->add (array (
-//                             'name' => 'documento',
-//                             'filters' => array(
-//                                     array ( 'name' => 'StripTags' ),
-//                                     array ( 'name' => 'StringTrim' ),
-//                             ),
-//                             'validators' => array (
-//                                     array (
-//                                             'name' => 'NotEmpty',
-//                                     ),
-//                             )
-//                     ));
+                    $filter->add (array (
+                            'name' => 'numero_de_documento',
+                            'filters' => array(
+                                    array ( 'name' => 'StripTags' ),
+                                    array ( 'name' => 'StringTrim' ),
+                            ),
+                            'validators' => array (
+	                            array (
+	                                    'name' => 'digits',
+	                                    'options' => array (
+                                            'messages' => array(
+                                    			'notDigits' => 'Solo especifique en números',	
+                                    		),
+	                                    )
+	                            ),                            		
+                            )
+                    ));
+                    
+                    $filter->add (array (
+                    		'name' => 'origen_de_documento',
+                    		'filters' => array(
+                    				array ( 'name' => 'StripTags' ),
+                    				array ( 'name' => 'StringTrim' ),
+                    		),
+                    		'validators' => array (
+                    				array (
+                    						'name' => 'NotEmpty',
+                    				),
+                    				array (
+                    						'name' => 'alnum',
+                    						'options' => array (
+                    								'messages' => array (
+                    										'notAlnum' => 'Se requieren sólo números y letras'
+                    								),
+                    								'allowWhiteSpace' => true,
+                    						)
+                    				),
+                    		)
+                    ));
                 }
         );
     }

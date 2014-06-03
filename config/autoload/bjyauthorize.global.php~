@@ -132,17 +132,17 @@ return array(
             	array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'secretariaacademica',
            				'roles' => array("secretaria_academica")),
             		
-        		/* Decano */
-        		array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'decano',
-        				'roles' => array("decano")),
-        				 
-        		/* Director Academico */
-        		array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'directoracademico',
-        				'roles' => array("director_academico")),
-        		
-        		/* Director Departamento */
-        		array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'directordepartamento',
-        				'roles' => array("director_departamento")),            	
+            		/* Secretaria General */
+            		array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'secretariageneral',
+            				'roles' => array("secretaria_general")),
+            				 
+            				/* Secretaria Academica */
+            		array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'secretariadepartamento',
+            				'roles' => array("secretaria_departamento")),
+            		
+            				/* Secretaria Academica */
+            		array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'secretariaacademica',
+            				'roles' => array("secretaria_academica")),            	
 
                 array('controller' => 'ZfcAdmin\Controller\AdminController','roles' => array('admin')),
                 // Below is the default index action used by the ZendSkeletonApplication

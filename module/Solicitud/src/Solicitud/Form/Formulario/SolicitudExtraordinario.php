@@ -10,24 +10,25 @@ require_once "funcionesDB.php";
 class SolicitudExtraordinario extends Solicitud
 {
 
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 
-		parent::__construct($name = 'extraordinario', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'extraordinario', $dbadapter, $idUsuario, $sapientiaDbadapter);
 
 		$this->setAttribute('method', 'post');
 
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 
-		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $cedulaUsuario, TRUE);
-		$selectDataMat = $datosAlumno['materias'] ;
-		$selectDataProf = $datosAlumno['profesores'];
+ 		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $numeroDocumento, TRUE);
+ 		$selectDataMat = $datosAlumno['materias'] ;
+// 		$selectDataProf = $datosAlumno['profesores'];
+		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 		
 	
@@ -42,6 +43,7 @@ class SolicitudExtraordinario extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 		),
 				array (
@@ -57,6 +59,7 @@ class SolicitudExtraordinario extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'fecha_extraordinario',
 				),
 		),
 				array (
@@ -75,6 +78,7 @@ class SolicitudExtraordinario extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'profesor',
 				),
 		),
 				array (
@@ -95,6 +99,7 @@ class SolicitudExtraordinario extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'motivo',
 				),
 		),
 				array (
@@ -106,12 +111,13 @@ class SolicitudExtraordinario extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						//'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
-						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => 'required',
-						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+						'placeholder' => 'Agregue la especificación del motivo aquí...',
+						//'required' => false,
+						'id' => 'especificacion_motivo',
+						
 				)
 		)
 				, array (
@@ -227,6 +233,7 @@ class SolicitudExtraordinario extends Solicitud
 
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -235,20 +242,20 @@ class SolicitudExtraordinario extends Solicitud
 									'name' => 'StringTrim'
 							)
 					),
-					'validators' => array (
-							array (
-									'name' => 'notEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
-					)
+// 					'validators' => array (
+// 							array (
+// 									'name' => 'notEmpty',
+// 							),
+// 							array (
+// 									'name' => 'alnum',
+// 									'options' => array (
+// 											'messages' => array (
+// 													'notAlnum' => 'Se requieren sólo números y letras'
+// 											),
+// 											'allowWhiteSpace' => true,
+// 									)
+// 							),
+// 					)
 			) ) );
 
 

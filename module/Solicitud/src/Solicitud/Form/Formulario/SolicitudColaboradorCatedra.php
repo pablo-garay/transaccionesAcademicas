@@ -9,9 +9,9 @@ use Zend\Db\Adapter\AdapterInterface;
 class SolicitudColaboradorCatedra extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudColaboradorCatedra', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudColaboradorCatedra', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
@@ -50,10 +50,11 @@ class SolicitudColaboradorCatedra extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'profesor',
 				),	
 		),
 				array (
-						'priority' => 850,
+						'priority' => 300,
 				)
 						);
 		
@@ -68,31 +69,33 @@ class SolicitudColaboradorCatedra extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 		),
 				array (
-						'priority' => 840,
+						'priority' => 350,
 				)
 		);
-		$this->add(array(
-				'name' => 'carreras_profesor',
-				'type' => 'Zend\Form\Element\Textarea',
-				'options' => array(
-						'label' => 'Carreras',
+// 		$this->add(array(
+// 				'name' => 'carreras_profesor',
+// 				'type' => 'Zend\Form\Element\Textarea',
+// 				'options' => array(
+// 						'label' => 'Carreras',
 		
 							
-				),
-				'attributes' => array(
-						'value' =>  $carreras,
-						'required' => 'required',
-// 						'disabled' => 'disabled'
-				),
+// 				),
+// 				'attributes' => array(
+// 						'value' =>  $carreras,
+// 						'required' => 'required',
+// 						'id' => 'carreras_profesor',
+// // 						'disabled' => 'disabled'
+// 				),
 		
-		),
-				array (
-						'priority' => 830,
-				)
-		);
+// 		),
+// 				array (
+// 						'priority' => 830,
+// 				)
+// 		);
 		
 	
 		$this->add(array(
@@ -104,6 +107,7 @@ class SolicitudColaboradorCatedra extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'descripcion_actividades',
 				),
 		),
 				array (
@@ -184,32 +188,32 @@ class SolicitudColaboradorCatedra extends Solicitud
 					)
 			) ) );
 			
-			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'carreras_profesor',
-					'filters' => array (
-							array (
-									'name' => 'StripTags'
-							),
-							array (
-									'name' => 'StringTrim'
-							)
-					),
-					'validators' => array (
-							array (
-									'name' => 'NotEmpty',
-							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
+// 			$inputFilter->add ( $factory->createInput ( array (
+// 					'name' => 'carreras_profesor',
+// 					'filters' => array (
+// 							array (
+// 									'name' => 'StripTags'
+// 							),
+// 							array (
+// 									'name' => 'StringTrim'
+// 							)
+// 					),
+// 					'validators' => array (
+// 							array (
+// 									'name' => 'NotEmpty',
+// 							),
+// 							array (
+// 									'name' => 'alnum',
+// 									'options' => array (
+// 											'messages' => array (
+// 													'notAlnum' => 'Se requieren sólo números y letras'
+// 											),
+// 											'allowWhiteSpace' => true,
+// 									)
+// 							),
 							
-					)
-			) ) );
+// 					)
+// 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'descripcion_actividades',
@@ -260,7 +264,6 @@ class SolicitudColaboradorCatedra extends Solicitud
 	public function getProfesores()	
 	{
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// recatar su cedula
 		$sql = 'SELECT nombre FROM Profesores'; // $usuarioLogueado
 		
 		
@@ -280,7 +283,6 @@ class SolicitudColaboradorCatedra extends Solicitud
 	public function getAsignaturaDeProfesor() // debe ser dinámico
 	{
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// recatar su cedula
 		$sql = 'SELECT m.nombre FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
 				INNER JOIN profesores_por_curso AS pxc ON c.curso = pxc.curso'; // $usuarioLogueado
 	

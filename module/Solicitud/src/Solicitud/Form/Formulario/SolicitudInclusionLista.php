@@ -10,22 +10,22 @@ require_once "funcionesDB.php";
 class SolicitudInclusionLista extends Solicitud
 {
 
-	public function __construct(AdapterInterface $dbadapter, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 
-		parent::__construct($name = 'inclusionLista', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'inclusionLista', $dbadapter, $idUsuario, $sapientiaDbadapter);
 
 		$this->setAttribute('method', 'post');
 		
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 
-		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $cedulaUsuario, $actual=FALSE);
+		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $numeroDocumento, $actual=FALSE);
 		$selectDataMat = $datosAlumno['materias'] ;
 		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
@@ -41,13 +41,30 @@ class SolicitudInclusionLista extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'asignatura',
 				),
 		),
 				array (
 						'priority' => 350,
 				)
 		);
-
+		
+		$this->add(array(
+				'name' => 'seccion',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Sección',
+		
+				),
+				'attributes' => array(
+						'required' => 'required',
+						'id' => 'seccion',
+				),
+		),
+				array (
+						'priority' => 345,
+				)
+		);
 
 		$this->add(array(
 				'type' => 'Zend\Form\Element\Radio',
@@ -62,6 +79,7 @@ class SolicitudInclusionLista extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required'
+						
 				),		
 		),
 				array (
@@ -154,7 +172,33 @@ class SolicitudInclusionLista extends Solicitud
 					)
 			) ) );
 
-
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'seccion',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+							),
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+			
+					)
+			) ) );
+				
 
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',

@@ -14,6 +14,7 @@
 	 SOLICITUD DE PASANTIA </h4>
 	 <br><br>
 	 
+	 
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
 $this->form1->setAttribute('class', 'form-horizontal');
@@ -24,7 +25,8 @@ echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
-        ?>
+
+?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
@@ -33,6 +35,7 @@ foreach ($this->form1 as $element) {
      </div>
 </div>
 <?php
+	
 	if ( ($element->getName() == 'email')) {
 ?>
 	   
@@ -83,3 +86,33 @@ foreach ($this->form1 as $element) {
 echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
+
+<script type="text/javascript">
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+       // $('#profesor').find('option').remove().end();
+       
+        	$('#carrera').html(data);
+        	     
+      },
+//       error: function(xhr, textstatus, errorThrown) {
+//     	 alert("AJAX call an epic failure");
+//    		}
+	}
+    );
+  
+	});
+
+
+
+$("#carrera").change(function() {
+	
+	});
+	
+
+</script>

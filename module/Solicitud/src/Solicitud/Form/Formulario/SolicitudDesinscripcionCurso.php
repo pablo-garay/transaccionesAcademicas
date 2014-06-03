@@ -11,24 +11,24 @@ require_once 'funcionesDB.php';
 class SolicitudDesinscripcionCurso extends Solicitud
 {
 	
-	public function __construct(AdapterInterface $dbadapter,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	public function __construct(AdapterInterface $dbadapter, $idUsuario,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
-		parent::__construct($name = 'solicitudDesinscripcionCurso', $dbadapter, $sapientiaDbadapter);
+		parent::__construct($name = 'solicitudDesinscripcionCurso', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-		$usuarioLogueado = 1;
+		// rescatar su numero_de_documento
+		$usuarioLogueado = $idUsuario;
 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$cedulaUsuario = $datos['cedula'];
+		$numeroDocumento = $datos['numero_de_documento'];
 		
 		
 		$sql       = "SELECT m.materia, m.nombre AS n_materia  FROM materias AS m 
 						INNER JOIN cursos AS c ON m.materia = c.materia
 						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso 
-						AND axc.numero_de_documento = ".$cedulaUsuario." AND axc.curso_actual = TRUE";
+						AND axc.numero_de_documento = ".$numeroDocumento." AND axc.curso_actual = TRUE";
 		
 		//$usuarioLogueado
 		$statement = $sapientiaDbadapter->query($sql);
@@ -50,8 +50,10 @@ class SolicitudDesinscripcionCurso extends Solicitud
 								'Curso completo' => 'Curso completo',
 								'Por asignatura' => 'Por asignatura'
 						),
-						//'value_options' => 'Curso completo',
-				),	
+				),
+				'attributes' => array(
+								'id' => 'curso_completo',
+					),
 		),
 				array (
 						'priority' => 280,
@@ -65,7 +67,10 @@ class SolicitudDesinscripcionCurso extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => $selectDataMat,//$this->getSubjectsOfCareer(),
+						//'value_options' => $selectDataMat,//$this->getSubjectsOfCareer(),
+				),
+				'attributes' => array(
+							'id' => 'asignatura',
 				),
 		),
 				array (
@@ -80,8 +85,11 @@ class SolicitudDesinscripcionCurso extends Solicitud
 				'options' => array(
 						'label' => 'Código Asignatura:',
 						'empty_option' => 'Seleccione código de asignatura ',
-						'value_options' => $this->getCodigoDeAsignatura(),//$this->getSubjectsOfCareer(),
-				),		
+						//'value_options' => $this->getCodigoDeAsignatura(),//$this->getSubjectsOfCareer(),
+				),	
+				'attributes' => array(
+						'id' => 'cod_asignatura',
+				),
 		),
 				array (
 						'priority' => 260,
@@ -198,7 +206,7 @@ class SolicitudDesinscripcionCurso extends Solicitud
 	public function getCodigoDeAsignatura() //@todo debe ser dinamico
 	{
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// recatar su cedula
+		// recatar su numero_de_documento
 		$dbAdapter = $this->sapientiaDbAdapter;
 		$sql       = 'SELECT m.materia FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
 				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = 4490334 AND c.anho = 2014 AND c.semestre_anho = 1';
@@ -218,7 +226,7 @@ class SolicitudDesinscripcionCurso extends Solicitud
 	public function getAsignaturas()
 	{
 		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// recatar su cedula
+		// recatar su numero_de_documento
 		$dbAdapter = $this->sapientiaDbAdapter;
 		$sql       = 'SELECT m.nombre FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
 				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = 4490334 AND c.anho = 2014 AND c.semestre_anho = 1';

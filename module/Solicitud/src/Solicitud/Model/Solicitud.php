@@ -22,9 +22,10 @@ class Solicitud extends AbstractTableGateway
 		// $fields = $this->getColumns(); // obtener columnas de tabla
 
 		$solicitudData = array(
-			'usuario_solicitante' => 1,
+			'usuario_solicitante' => $set['usuario'],
 			'carrera' => $set['carrera'],
 			'tipo_solicitud' => $set['tipo_solicitud'],
+			'matricula' => $set['matricula'],
 		);
 
 		parent::insert($solicitudData);
