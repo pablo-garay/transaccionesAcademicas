@@ -6,7 +6,7 @@ return array(
             'Solicitud\Controller\Formulario' => 'Solicitud\Controller\FormularioController',
         	'Solicitud\Controller\Actor' 	  => 'Solicitud\Controller\ActorController',
         	'Solicitud\Controller\Lista' 	  => 'Solicitud\Controller\ListaController',
-        	'Solicitud\Controller\SituacionAcademica' 	  => 'Solicitud\Controller\SituacionAcademicaController',
+        	'Solicitud\Controller\SituacionAcademica' => 'Solicitud\Controller\SituacionAcademicaController',
         ),
     ),
     'router' => array(
@@ -59,7 +59,7 @@ return array(
                 		'academica' => array(
                 				'type'    => 'Segment',
                 				'options' => array (
-                						'route' => '/academica[/:action][/:page]',
+                						'route' => '/situacionacademica[/:action][/:page]',
                 						'defaults' => array(
                 								'controller'    => 'SituacionAcademica',
                 								'action'        => 'index',

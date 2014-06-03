@@ -369,7 +369,7 @@ class ActorController extends AbstractActionController
 				$message = "Ha abandonado la solicitud";
 			}
 			
-			$this->sendNotificationEmailMessage('palenq@gmail.com', $message);
+			$this->sendNotificationEmailMessage($solicitudData['email'], $message);
 
 		
 			$this->flashmessenger()->addSuccessMessage($message);

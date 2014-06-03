@@ -8,7 +8,7 @@
  $settings = array(
     'transport_class' => 'Zend\Mail\Transport\Smtp',
     'options_class' => 'Zend\Mail\Transport\SmtpOptions',
-    'transport_options' => array(
+    'options' => array(
         'host' => 'smtp.gmail.com',
         'connection_class' => 'login',
         'connection_config' => array(

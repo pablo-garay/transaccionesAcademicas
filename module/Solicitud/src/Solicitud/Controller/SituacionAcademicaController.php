@@ -32,7 +32,9 @@ class SituacionAcademicaController extends AbstractActionController
 	public function indexAction()
 	{
 		//@todo Situacion Academica Index page
-		return array();
+		$this->viewModel = new ViewModel();
+		$this->viewModel->setTemplate('solicitud/situacionacademica/index');
+		return $this->viewModel;
 	}
 	
 	public function consultSapientiaDatabase($sql){
@@ -85,7 +87,7 @@ class SituacionAcademicaController extends AbstractActionController
 	
 	public function calificacionesAction(){
 	
-		$sql  = 'SELECT ma.nombre as materia, calificacion
+		$sql  = 'SELECT DISTINCT ON (ma.nombre) ma.nombre as materia, calificacion
 				FROM calificaciones_por_alumno ca
 				INNER JOIN cursos cu ON ca.curso = cu.curso
 				INNER JOIN materias ma ON cu.materia = ma.materia';
@@ -148,7 +150,7 @@ class SituacionAcademicaController extends AbstractActionController
 		$sql  = "SELECT DISTINCT m.nombre
 				FROM calificaciones_por_alumno ca INNER JOIN cursos c ON ca.curso = c.curso
 				INNER JOIN materias m ON c.materia = m.materia
-				WHERE calificacion > 1
+				WHERE ca.calificacion > '1'
 				ORDER by m.nombre";
 	
 		$dataItems = $this->consultSapientiaDatabase($sql);

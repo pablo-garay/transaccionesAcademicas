@@ -68,7 +68,7 @@ class ListaController extends AbstractActionController
 			$result = $model->getSql()->select()
 							->where(array('etapa_actual' => $etapa));
 		} else {
-			$result = $model->getSql()->select();
+			$result = $model->getSql()->select()->where(array('usuario_solicitante' => $this->zfcUserAuthentication()->getIdentity()->getId()));
 		}
 		
 		$adapter = new PaginatorDbAdapter($result, $model->getAdapter());
