@@ -96,6 +96,7 @@ return array(
 			),
 			'invokables' => array(
 					'table-gateway' => 'Solicitud\Service\Invokable\TableGateway',
+					'goaliomailservice_message' => 'GoalioMailService\Mail\Service\Message',
 			)
 	),
     'translator' => array(

@@ -75,7 +75,7 @@ class ActorController extends AbstractActionController
 	public function getSolicitudData($id_solicitud, $tipo_solicitud)
 	{
 		
-		$this->flashmessenger()->addSuccessMessage(print_r($tipo_solicitud, TRUE));
+// 		$this->flashmessenger()->addSuccessMessage(print_r($tipo_solicitud, TRUE));
 		
 		$sql = sprintf(
 				"SELECT *
@@ -270,19 +270,19 @@ class ActorController extends AbstractActionController
 	
     public function sendNotificationEmailMessage($to, $content)
     {
-        $mailService = $this->getServiceManager()->get('goaliomailservice_message');
-
-        $from = $this->getOptions()->getEmailFromAddress();
-        $subject = 'Notificacion de solicitud - Transacciones Académicas UCA';
-
-        $message = $mailService->createTextMessage($from, $to, $subject, 'notify/email/notificarSolicitud', 
-        											array('content' => $content));
-
-        $mailService->send($message);
+    	// el template que se tiene que crear dentro de la carpeta view del modulo en un carpeta email
+    	$viewTemplate = 'solicitud/notify/email/notificarSolicitud';
+    	// The ViewModel variables to pass into the renderer
+		$value = array('content' => $content);
+    	$to = 'palenq@gmail.com';
+    	$subject = 'Notificacion de solicitud - Transacciones Académicas UCA';
+    	$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
+    	$message = $mailService->createTextMessage('transaccionesuca@gmail.com', $to, $subject, $viewTemplate, $value);
+    	$mailService->send($message);
     }
 		
 	
-	public function solicitudActorHandler($form, $actor){
+	public function solicitudActorHandler($form, $actor, $actorDestino = 'Ninguno'){
 		
 		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
 		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
@@ -335,16 +335,16 @@ class ActorController extends AbstractActionController
 				
 				switch($actor) {
 					case 'recepcion':
-						$this->cambiarEstadoSolicitud('DEL_SG', 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 					case 'secretariageneral':
-						$this->cambiarEstadoSolicitud('DEL_DE', 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 					case 'secretariadepartamento':
-						$this->cambiarEstadoSolicitud('DEL_DD', 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 					case 'secretariaacademica':
-						$this->cambiarEstadoSolicitud('DEL_DA', 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 				}
 				$message = "La solicitud fue derivada";			
@@ -365,13 +365,15 @@ class ActorController extends AbstractActionController
 						'tipoSolicitud' => $tipo_solicitud,
 						'solicitudData' => $solicitudData
 				));
+			} else if (isset($data['Salir'])) {
+				$message = "Ha abandonado la solicitud";
 			}
 			
-			// $this->sendNotificationEmailMessage('palenq@gmail.com', $message);
+			$this->sendNotificationEmailMessage('palenq@gmail.com', $message);
 
 		
 			$this->flashmessenger()->addSuccessMessage($message);
-			$this->flashmessenger()->addSuccessMessage(print_r($id_solicitud, TRUE));
+// 			$this->flashmessenger()->addSuccessMessage(print_r($id_solicitud, TRUE));
 		
 			// redirect the user to its home page
 			return $this->redirect()->toRoute('zfcuser', array (
@@ -384,7 +386,7 @@ class ActorController extends AbstractActionController
 		$solicitudEspecificaDataColumns = $this->mapSolicitudDataColumns($tipo_solicitud);
 		$solicitudEspecificaDataColumnsValues = $this->combine_values_of_array_intersect($solicitudEspecificaDataColumns, $solicitudData);
 		
-		$this->flashmessenger()->addSuccessMessage(print_r($solicitudEspecificaDataColumnsValues, TRUE));
+		// $this->flashmessenger()->addSuccessMessage(print_r($solicitudEspecificaDataColumnsValues, TRUE));
 		
 		$this->viewModel->setVariables(array('data' => $solicitudData, 'form1'=> $form, 
 									'title' => $this->mapTituloTipoSolicitud($tipo_solicitud),
@@ -398,30 +400,126 @@ class ActorController extends AbstractActionController
 	public function recepcionAction()
 	{	
 		$this->setDbAdapter(); # init DB adapter
-		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);		
-		return $this->solicitudActorHandler($form, 'recepcion');
+		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
+		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
+		
+		switch($tipo_solicitud){
+			case "solicitud_de_desinscripcion_de_curso":
+				/* Puede aprobar */
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = TRUE, $vistoBuenoEnabled = FALSE);
+				break;
+			
+			case "solicitud_de_ruptura_de_correlatividad":			
+			case "solicitud_de_creditos_academicos":
+			case "solicitud_de_tesis":
+			case "solicitud_para_tomar_materia_fuera_de_la_malla_curricular":
+			case "solicitud_de_convalidacion_de_materias":
+			case "solicitud_de_pasantia":
+			case "solicitud_de_homologacion_de_materias":
+			case "solicitud_de_tutoria_de_catedra":
+				/* Derivar Scta Dpto */
+				$actorDestino = 'DEL_SD';
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);				
+				break;
+			
+			case "solicitud_de_traspaso_de_pago_de_examen":
+			case "solicitud_de_revision_de_escolaridad":
+			case "solicitud_de_reduccion_de_asistencia":
+			case "solicitud_de_exoneracion":
+			case "solicitud_de_revision_de_examen":
+			case "solicitud_de_inscripcion_tardia_a_examen":
+			case "solicitud_de_extraordinario":
+			case "solicitud_de_cambio_de_seccion":
+			case "solicitud_de_inclusion_en_lista":
+				/* Derivar Scta Academica */
+				$actorDestino = 'DEL_SA';
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+				break;
+			
+			case "solicitud_de_certificado_de_estudios":
+			case "solicitud_de_titulo":
+				/* Derivar Scta Gral */
+				$actorDestino = 'DEL_SG';
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+				break;
+			
+			default:
+				/* Derivar a todas sctas */
+				$actorDestino = 'DEL_SS';
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+				break;
+		}
+					
+		return $this->solicitudActorHandler($form, 'recepcion', $actorDestino);
 	}
 
 
 	public function secretariageneralAction()
 	{
 		$this->setDbAdapter(); # init DB adapter
-		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
-		return $this->solicitudActorHandler($form, 'secretariageneral');
+		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
+		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
+		
+		switch($tipo_solicitud){
+			case "solicitud_de_certificado_de_estudios":
+				/* Puede aprobar */
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = TRUE, $vistoBuenoEnabled = FALSE);
+				break;
+			case "solicitud_de_titulo":
+				/* Delega */
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+				break;
+			default:
+				/* Puede aprobar o delegar segun la info de solicitud */
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = TRUE, $vistoBuenoEnabled = TRUE);
+				break;
+		}
+				
+		return $this->solicitudActorHandler($form, 'secretariageneral', $actorDestino = 'DEL_DE');
 	}
 	
 	public function secretariadepartamentoAction()
 	{
 		$this->setDbAdapter(); # init DB adapter
+		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
+		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
+		
+		/* Siempre deriva a Direct Dpto */
 		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
-		return $this->solicitudActorHandler($form, 'secretariadepartamento');
+		return $this->solicitudActorHandler($form, 'secretariadepartamento', $actorDestino = 'DEL_DD');
 	}
 	
 	public function secretariaacademicaAction()
 	{
 		$this->setDbAdapter(); # init DB adapter
-		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
-		return $this->solicitudActorHandler($form, 'secretariaacademica');
+		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
+		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
+		
+		switch($tipo_solicitud){
+			case "solicitud_de_traspaso_de_pago_de_examen":
+			case "solicitud_de_revision_de_escolaridad":
+			case "solicitud_de_inclusion_en_lista":
+				/* Puede aprobar */
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = TRUE, $vistoBuenoEnabled = FALSE);
+				break;
+				
+			case "solicitud_de_reduccion_de_asistencia":
+			case "solicitud_de_exoneracion":
+			case "solicitud_de_revision_de_examen":
+			case "solicitud_de_inscripcion_tardia_a_examen":
+			case "solicitud_de_extraordinario":
+			case "solicitud_de_cambio_de_seccion":
+				/* Deriva a Dir Academico */
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
+				break;
+				
+			default:
+				/* Puede aprobar o delegar segun la info de solicitud */
+				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = TRUE, $vistoBuenoEnabled = TRUE);
+				break;
+		}
+				
+		return $this->solicitudActorHandler($form, 'secretariaacademica', $actorDestino = 'DEL_DA');
 	}
 
 	public function decanoAction()

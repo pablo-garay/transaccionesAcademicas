@@ -79,57 +79,43 @@ $("#matricula").change(function() {
         	$('#carrera').html(data);
         	     
       },
-//       error: function(xhr, textstatus, errorThrown) {
-//     	 alert("AJAX call an epic failure");
-//    		}
+
 	}
     );
-    $('#carrera').fadeIn(1000);
+    
 	});
-	$('#carrera').hide();
-
+	
 	$("#carrera").change(function() {
 	    $.ajax({
 		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
 		      type: "POST",
-		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      data:{"carrera_asignatura_inscriptas":$("#carrera").val(), "matricula_inscriptas":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
-		       // $('#profesor').find('option').remove().end();
 		       
 		        	$('#asignatura').html(data);
 		        	     
 		      },
-//		       error: function(xhr, textstatus, errorThrown) {
-//		     	 alert("AJAX call an epic failure");
-//		    		}
 			}
-		    );
-		
-	    $('#asignatura').fadeIn(1000);
+		   );
+
 	});
 	
-	$('#asignatura').hide();
 
 	$("#asignatura").change(function() { ////HACERR EL SELECT 
 		
 	    $.ajax({
 	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
 	      type: "POST",
-	      data:{"asignatura_fecha_tardia":$("#asignatura").val()},
+	      data:{"asignatura_fecha_revision_examen":$("#carrera").val()},
 	      success: function(data, textstatus, xhr){
-	       // $('#profesor').find('option').remove().end();
 	       
-	        	$('#fecha_examen').html(data);
+	        	$('#fecha').html(data);
 	        	     
 	      },
-//	       error: function(xhr, textstatus, errorThrown) {
-//	     	 alert("AJAX call an epic failure");
-//	    		}
 		}
 	    );
-	    $('#fecha_examen').fadeIn(1000);
 		});
-		$('#fecha_examen').hide();
+		
 
 		$("#asignatura").change(function() { //HACER EL SELECT 
 			
@@ -138,19 +124,14 @@ $("#matricula").change(function() {
 		      type: "POST",
 		      data:{"asignatura_op_tardia":$("#asignatura").val()},
 		      success: function(data, textstatus, xhr){
-		       // $('#profesor').find('option').remove().end();
 		       
 		        	$('#oportunidad').html(data);
 		        	     
 		      },
-//		       error: function(xhr, textstatus, errorThrown) {
-//		     	 alert("AJAX call an epic failure");
-//		    		}
 			}
 		    );
-		    $('#oportunidad').fadeIn(1000);
 			});
-			$('#oportunidad').hide();
+			
 
 		$("#asignatura").change(function() {
 			
@@ -159,7 +140,7 @@ $("#matricula").change(function() {
 		      type: "POST",
 		      data:{"materia":$("#asignatura").val()},
 		      success: function(data, textstatus, xhr){
-		       // $('#profesor').find('option').remove().end();
+		    
 		       
 		        	$('#profesor').html(data);
 		        	     
@@ -169,11 +150,8 @@ $("#matricula").change(function() {
 		   		}
 			}
 		    );
-		    $('#profesor').fadeIn(1500);
-		    $('#calificacion_previa').fadeIn(1500);			    
+		 			    
 			});
 
-			$('#profesor').hide();
-			$('#calificacion_previa').hide();
-	
+		
 </script>

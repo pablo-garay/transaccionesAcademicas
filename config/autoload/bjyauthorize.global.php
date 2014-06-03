@@ -111,10 +111,18 @@ return array(
             	array('controller' => array('Solicitud\Controller\Formulario'),
             			'roles' => array('alumno')),
             		
-            	/* Funcionarios */
+            	array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'alumno',
+            			'roles' => array('alumno')),
+            		
+            	/* Funcionarios y Alumno acceden a listas */
             	array('controller' => array('Solicitud\Controller\Lista'),
-            			'roles' => array("recepcion", "secretaria_general", "secretaria_academica", 
+            			'roles' => array("recepcion", "secretaria_general", "alumno", "secretaria_academica", 
             			"secretaria_departamento", "decano", "director_academico", "director_departamento")),
+            	
+            	/* Funcionarios ven situacion academica */
+            	array('controller' => array('Solicitud\Controller\SituacionAcademica'),
+            			'roles' => array("recepcion", "secretaria_general", "secretaria_academica",
+            					"secretaria_departamento", "decano", "director_academico", "director_departamento")),
             	
             	/* Recepcion */
             	array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'recepcion',

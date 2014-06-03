@@ -134,7 +134,7 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 			$factory = new InputFactory ();
 	
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'Asignatura',
+					'name' => 'asignatura',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -187,6 +187,7 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

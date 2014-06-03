@@ -28,7 +28,7 @@ foreach ($this->form1 as $element) {
 
 ?>
 <div class="control-group">
-	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
+	<h1> <?= $this->formElementErrors($element)?></h1><label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
             <?= $this->formElementErrors($element)?>
@@ -97,7 +97,7 @@ $("#matricula").change(function() {
 	    $.ajax({
 		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
 		      type: "POST",
-		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      data:{"carrera_asignatura":$("#carrera").val(), "matricula_asignatura":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
 		       // $('#profesor').find('option').remove().end();
 		       

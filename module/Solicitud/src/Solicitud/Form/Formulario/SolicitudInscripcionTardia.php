@@ -66,13 +66,12 @@ class SolicitudInscripcionTardia extends Solicitud
 		
 		$this->add(array(
 				'name' => 'fecha_de_examen',
-				'type' => 'Zend\Form\Element\Select',
+				'type' => 'Zend\Form\Element\Date',
 				'options' => array(
 						'label' => 'Fecha de Examen',
 						//'value_options' =>$selectDataFech,
 				),
 				'attributes' => array(
-						'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
 						'id' => 'fecha_de_examen',
 				),
@@ -89,12 +88,12 @@ class SolicitudInscripcionTardia extends Solicitud
 				'options' => array(
 						'label' => 'Oportunidad ',
 						'empty_option' => 'Elija una Oportunidad..',
-// 						'value_options' => array(
-// 								'1' => '1',
-// 								'2' => '2',
-// 								'3' => '3',
-// 								'E' => 'Extraordinario'
-// 						),
+						'value_options' => array(
+								'1' => '1',
+								'2' => '2',
+								'3' => '3',
+								'E' => 'Extraordinario'
+						),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -115,7 +114,6 @@ class SolicitudInscripcionTardia extends Solicitud
 								'Enfermedad' => 'Enfermedad',
 								'Duelo' => 'Duelo',
 								'Trabajo' => 'Trabajo',
-								'Repitente' => 'Repitente',
 								'Otro' => 'Otro'
 						),
 				),
@@ -250,8 +248,9 @@ class SolicitudInscripcionTardia extends Solicitud
 
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'especificacion_motivo',
 					'allow_empty' => true,
+					'name' => 'especificacion_motivo',
+					
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

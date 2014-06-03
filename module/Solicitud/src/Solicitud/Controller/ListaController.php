@@ -53,6 +53,9 @@ class ListaController extends AbstractActionController
 			case "director_departamento":
 				$etapa = 'DEL_DD'; $actorAction = 'directordepartamento';
 				break;
+			case "alumno":
+				$actorAction = 'alumno';
+				break;
 			
 		}
 		
@@ -61,9 +64,11 @@ class ListaController extends AbstractActionController
 		if ($filter){
 			$result = $model->getSql()->select()
 							->where(array('estado_solicitud' => $estadoSolicitud, 'etapa_actual' => $etapa));
-		} else {
+		} else if($role != 'alumno') {
 			$result = $model->getSql()->select()
 							->where(array('etapa_actual' => $etapa));
+		} else {
+			$result = $model->getSql()->select();
 		}
 		
 		$adapter = new PaginatorDbAdapter($result, $model->getAdapter());

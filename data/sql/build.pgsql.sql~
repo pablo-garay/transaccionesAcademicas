@@ -1,9 +1,9 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     6/3/2014 12:44:54 PM                         */
+/* Created on:     6/2/2014 8:20:41 PM                          */
 /*==============================================================*/
-
-
+-- 
+-- 
 -- drop index TIENE_FK3;
 -- 
 -- drop index ASIGNATURAS_POR_SOLICITUD_PK;
@@ -177,8 +177,6 @@
 -- drop domain D_CEDULA;
 -- 
 -- drop domain D_CODIGO_ASIGNATURA;
--- 
--- drop domain D_COMPLETO_ASIGNATURA;
 -- 
 -- drop domain D_COMPROBANTE;
 -- 
@@ -540,6 +538,7 @@ ROL
 create table SOLICITUDES (
    SOLICITUD            SERIAL not null,
    USUARIO_SOLICITANTE  INT4                 not null,
+   SOL_SOLICITUD        INT4                 null,
    TIPO_SOLICITUD       VARCHAR(80)          null,
    MESA_ENTRADA         INT4                 not null,
    MATRICULA            INT4                 null,
@@ -548,7 +547,7 @@ create table SOLICITUDES (
    ESTADO_SOLICITUD     VARCHAR(6)           not null
       constraint CKC_ESTADO_SOLICITUD_SOLICITU check (ESTADO_SOLICITUD in ('APROB','RECHAZ','ANUL','NUEVO','PEND','CANCEL')),
    ETAPA_ACTUAL         VARCHAR(6)           not null
-      constraint CKC_ETAPA_ACTUAL_SOLICITU check (ETAPA_ACTUAL in ('DEL_DE','DEL_DA','DEL_DD','DEL_SA','DEL_SD','DEL_SG','RCDA','FINAL','DEL_SS')),
+      constraint CKC_ETAPA_ACTUAL_SOLICITU check (ETAPA_ACTUAL in ('DEL_DE','DEL_DA','DEL_DD','DEL_SA','DEL_SD','DEL_SG','RCDA','FINAL')),
    OBSERVACIONES        TEXT                 null,
    RESULTADO_REQUISITOS VARCHAR(13)          not null
       constraint CKC_RESULTADO_REQUISI_SOLICITU check (RESULTADO_REQUISITOS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE')),
@@ -702,8 +701,8 @@ SOLICITUD
 create table SOLICITUD_DE_DESINSCRIPCION_DE_CURSO (
    SOLICITUD            INT4                 not null,
    MOTIVO_DESINSCRIPCION TEXT                 null,
-   CURSO_COMPLETO       VARCHAR(30)          null,
-   POR_ASIGNATURA       VARCHAR(30)          null,
+   CURSO_COMPLETO       BOOL                 not null,
+   POR_ASIGNATURA       BOOL                 not null,
    CUOTAS_PAGADAS       VARCHAR(13)          null
       constraint CKC_CUOTAS_PAGADAS_SOLICITU check (CUOTAS_PAGADAS is null or (CUOTAS_PAGADAS in ('CUMPLE','NO_CUMPLE','NO_VERIFICADO','FALTANTE'))),
    constraint PK_SOLICITUD_DE_DESINSCRIPCION primary key (SOLICITUD)

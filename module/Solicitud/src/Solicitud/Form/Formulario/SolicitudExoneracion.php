@@ -314,6 +314,7 @@ class SolicitudExoneracion extends Solicitud
 			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

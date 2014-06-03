@@ -132,14 +132,17 @@ $("#matricula").change(function() {
 	$("input:radio").click(function() {
 		//$('input[name=radioName]:checked', '#myForm').val()
  		if ($('input[name=curso_completo]:radio:checked').val() == 'Por asignatura'){
-			
+			$('#asignatura').fadeIn(1000);
+			$('#cod_asignatura').fadeIn(1000);
 			//$('#especificacion_motivo').attr( 'required','required');
  		}
  		if ($('input[name=curso_completo]:radio:checked').val() != 'Por asignatura'){
-
+ 				$('#asignatura').hide(100);
+ 				$('#cod_asignatura').hide(100);
 			//$('#especificacion_motivo').attr( 'required',false);
  		}
 	});
-	
+		$('#asignatura').hide(100);
+		$('#cod_asignatura').hide(100);
 
 </script>

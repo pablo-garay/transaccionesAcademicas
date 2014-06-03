@@ -7,7 +7,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Solicitud\Service\Factory\Database as DatabaseAdapter;
 use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDatabaseAdapter;
 
-require_once 'SapientiaClient.php';
+require_once 'SapiClient.php';
 class FormularioController extends AbstractActionController
 {
 	private $dbAdapter = null;
@@ -434,7 +434,7 @@ class FormularioController extends AbstractActionController
 			$dbAdapter = $this->getDbAdapterSapientia();
 			$sql = "SELECT DISTINCT ON (m.nombre) m.nombre AS n_asignatura FROM materias AS m INNER JOIN materias_por_carrera AS mxc ON mxc.materia = m.materia
 		    			INNER JOIN carreras AS c ON mxc.carrera = c.carrera AND c.nombre = '".$_POST['carrera_ruptura']."'";
-		
+	
 			$statement = $dbAdapter->query($sql);
 			$result    = $statement->execute();
 			$opciones = '<option value="0"> Elija la asignatura.. </option>';
@@ -512,17 +512,49 @@ class FormularioController extends AbstractActionController
 		if(isset($_POST["carrera_asignatura_inscriptas"]))
 		{
 			$opciones = '<option value="0"> Elija la asignatura .. </option>';
-			$result = getAsignaturas($_POST["carrera_asignatura_inscriptas"], $_POST["mat"], "CURSANDO");
+			$result = $this->getAsignaturasCarrera($_POST["carrera_asignatura_inscriptas"], $_POST["mat"]);
 			foreach ($result as $res) {
 				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
 			}
 			echo $opciones;
 		}
 		
+		//////////////////////////***************************
+		if(isset($_POST["carrera_asignatura"]))
+		{
+			$opciones = '<option value="0"> Elija la asignatura .. </option>';
+			$result = getAsignaturas($_POST["carrera_asignatura"], $_POST["matricula_asignatura"], "TODAS");
+			foreach ($result as $res) {
+				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
+			}
+			echo $opciones;
+		}
+		
+		/////////////////////////****************************
+		////////////////////////Revision examen
+		if(isset($_POST["carrera_fecha_revision_examen"]))
+		{
+			//$opciones = '<option value="0"> Elija la asignatura .. </option>';
+			$result = getHorarios("Ingeniería Informática");//$_POST["carrera_fecha_revision_examen"]
+			
+			$result = $this->getFechaOportunidad($_POST["asignatura_op_tardia"]);
+			
+// 			$dbAdapter = $this->getDbAdapterSapientia();
+// 			$statement = $dbAdapter->query($sql);
+// 			$result    = $statement->execute();
+			
+			foreach ($result as $res) {	
+					$opciones.='<option value="'.$res["fecha_examen"].'">'.$res["fecha_examen"].'</option>';
+			}
+			echo $opciones;
+		}
+		
+		
+		
 		/////////////*************Seccion de la asignatura actualmente inscripta
 		if(isset($_POST["asignatura_seccion"]))
 		{
-			$opciones = '<option value="0"> Elija la asignatura .. </option>';
+			$opciones = '<option value="0"> Elija la sección .. </option>';
 			$result = getAsignaturas($_POST["carrera_seccion"], $_POST["mat_seccion"], "CURSANDO");
 		
 			foreach ($result as $res) {

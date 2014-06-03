@@ -23,17 +23,17 @@ class SolicitudHomologacionMaterias extends Solicitud
 		
 		// Bd Sapientia
 		
-		$sql       = "SELECT c.carrera, c.plan_de_estudio, c.nombre AS n_carrera  FROM carreras AS c
-						INNER JOIN matriculas_por_carrera AS mxc ON mxc.carrera = c.carrera
-						INNER JOIN matriculas_por_alumno AS axm ON axm.matricula = mxc.matricula
-						AND axm.numero_de_documento =".$numeroDocumento;
+		$sql       = "SELECT  c.plan_de_estudio, c.nombre AS n_carrera  FROM carreras AS c";
+						
 		
 		//$usuarioLogueado
 		$statement = $sapientiaDbadapter->query($sql);
 		$result    = $statement->execute();
 		
+	
 		$selectDataCarr = array();
 		$selectDataPlan = array();
+		
 		foreach ($result as $res) {
 			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'];
 			$selectDataPlan[$res['plan_de_estudio']] = $res['plan_de_estudio'];
@@ -44,6 +44,24 @@ class SolicitudHomologacionMaterias extends Solicitud
 		$this->setAttribute('method', 'post');
 
 		$this->add(array(
+				'name' => 'plan_de_estudio_previo',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Plan de estudio de carrera a homologar ',
+						'value_options' => $selectDataPlan,
+							
+				),
+				'attributes' => array(
+						'required' => 'required',
+				),
+		),
+				array (
+						'priority' => 295,
+				)
+		);
+		
+		
+		$this->add(array(
 				'name' => 'carrera_anterior',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
@@ -53,6 +71,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'carrera_anterior',
 				),	
 		),
 				array (
@@ -60,22 +79,24 @@ class SolicitudHomologacionMaterias extends Solicitud
 				)
 				);
 	
+
+		
 		$this->add(array(
-				'name' => 'plan_de_estudio_previo',
+				'name' => 'plan_de_estudio_nuevo',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Plan de estudio de carrera a homologar ',
 						'value_options' => $selectDataPlan,
-					
+							
 				),
 				'attributes' => array(
 						'required' => 'required',
-				),	
+				),
 		),
 				array (
 						'priority' => 280,
 				)
-						);
+		);
 	
 		$this->add(array(
 				'name' => 'documento_adjunto',
@@ -190,6 +211,39 @@ class SolicitudHomologacionMaterias extends Solicitud
 			) ) );
 			
 			
+
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'plan_de_estudio_nuevo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'options' => array (
+											'messages' => array (
+													'isEmpty' => 'Carrera requerida'
+											)
+									),
+									array (
+											'name' => 'alnum',
+											'options' => array (
+													'messages' => array (
+															'notAlnum' => 'Se requieren sólo números y letras'
+													),
+													'allowWhiteSpace' => true,
+											)
+									),
+							)
+					)
+			) ) );
+			
+			
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'documento_adjunto',
 					'filters' => array (
@@ -216,6 +270,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 				
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_adjunto',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

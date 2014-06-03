@@ -100,7 +100,7 @@ $("#matricula").change(function() {
 	    $.ajax({
 		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
 		      type: "POST",
-		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      data:{"asignatura_seccion":$("#carrera").val(), "mat":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
 		       
 		        	$('#seccion').html(data);

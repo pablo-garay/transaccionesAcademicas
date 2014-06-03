@@ -11,10 +11,10 @@ require_once 'SapientiaClient.php';
 function getDatosSolicitante ($idSolicitud, $tipoSolicitud, AdapterInterface $dbAdapter, AdapterInterface $sapientiaDbAdapter){
 	
 	$sql  = "SELECT so.fecha_solicitada, u.numero_de_documento, so.matricula
-					FROM solicitudes AS so 
-					INNER JOIN ".$tipoSolicitud." AS s ON so.solicitud = s.solicitud
-					AND s.solicitud =".$idSolicitud."
-					INNER JOIN usuarios AS u ON u.usuario = so.usuario_solicitante";
+				FROM solicitudes AS so 
+				INNER JOIN ".$tipoSolicitud." AS s ON so.solicitud = s.solicitud
+				AND s.solicitud =".$idSolicitud."
+				INNER JOIN usuarios AS u ON u.usuario = so.usuario_solicitante";
 	
 		
 	$statement = $dbAdapter->query($sql);

@@ -68,9 +68,11 @@ class SolicitudTraspasoPago extends Solicitud
 	
 		$this->add(array(
 				'name' => 'seccion',
-				'type' => 'Zend\Form\Element\Text',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Sección',
+						'label' => 'Sección: ',
+						'empty_option' => 'Seleccione su sección..',
+						'value_options' => array("A" => "A", "B" => "B", "C" => "C", "D"=>"D"),
 						
 						),
 				'attributes' => array(
@@ -88,10 +90,11 @@ class SolicitudTraspasoPago extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Oportunidad pagada',
-// 						'value_options' => array(
-// 								'1' => '1',
-// 								'2' => '2',				
-// 				),
+						'empty_option' => 'Seleccione la oportunidad..',
+						'value_options' => array(
+								'1' => '1',
+								'2' => '2',				
+ 				),
 				),
 				'attributes' => array(
 						'id' => 'oportunidad_pagada',
@@ -108,13 +111,13 @@ class SolicitudTraspasoPago extends Solicitud
 		
 		$this->add(array(
 				'name' => 'fecha_oportunidad_pagada',
-				'type' => 'Zend\Form\Element\Select',
+				'type' => 'Zend\Form\Element\Date',
 				'options' => array(
 						'label' => 'Fecha de Oportunidad pagada',
-						'value_options' => $selectDataFech,							
+						
+						//'value_options' => $selectDataFech,							
 				),
 				'attributes' => array(
-						'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
 						'id' => 'fecha_oportunidad_pagada',
 				),
@@ -130,6 +133,7 @@ class SolicitudTraspasoPago extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Oportunidad a pagar',
+						'empty_option' => 'Seleccione la oportunidad..',
 						'value_options' => array(
 								'2' => '2',
 								'3' => '3',
@@ -148,13 +152,13 @@ class SolicitudTraspasoPago extends Solicitud
 		
 		$this->add(array(
 				'name' => 'fecha_oportunidad_a_pagar',
-				'type' => 'Zend\Form\Element\Select',
+				'type' => 'Zend\Form\Element\Date',
 				'options' => array(
 						'label' => 'Fecha de Oportunidad a pagar',
-						'value_options' => $selectDataFech,									
+						//'value_options' => $selectDataFech,									
 				),
 				'attributes' => array(
-						'value' =>  'dd/mm/aaaa',
+						//'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
 						'id' => 'fecha_oportunidad_a_pagar',
 				),

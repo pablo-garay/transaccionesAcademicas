@@ -88,11 +88,13 @@ class SolicitudRevisionEscolaridad extends Solicitud
 		
 		$this->add(array(
 				'name' => 'semestre',
-				'type' => 'Zend\Form\Element\Text',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Año:',
 						'empty_option' => 'Introduzca el año..',
-						//'value_options' => array("20" => "0", "1" => "1"),
+						'value_options' => array("2005" => "2005", "2006" => "2006", "2007" => "2007",
+												"2008" => "2008", "2009" => "2009", "2010" => "2010",
+												"2011" => "2011", "2012" => "2012", "2013" => "2013", "2014" => "2014"),
 				),
 				'attributes' => array(
 						'required' => 'required',

@@ -71,3 +71,24 @@ foreach ($this->form1 as $element) {
 echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
+
+
+<script type="text/javascript">
+
+$("#matricula").change(function() {
+	
+    $.ajax({
+      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"matricula":$("#matricula").val()},
+      success: function(data, textstatus, xhr){
+     
+        	$('#carrera').html(data);
+        	     
+      },
+
+	}
+    );
+    
+	});
+</script>

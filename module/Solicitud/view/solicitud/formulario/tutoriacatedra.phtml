@@ -80,19 +80,17 @@ $("#matricula").change(function() {
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
-       // $('#profesor').find('option').remove().end();
+     
        
         	$('#carrera').html(data);
         	     
       },
-//       error: function(xhr, textstatus, errorThrown) {
-//     	 alert("AJAX call an epic failure");
-//    		}
+
 	}
     );
-    $('#carrera').fadeIn(1000);
+  
 	});
-	$('#carrera').hide();
+	
 
 	$("#carrera").change(function() {
 	    $.ajax({
@@ -107,10 +105,9 @@ $("#matricula").change(function() {
 			}
 		    );
 		
-	    $('#asignatura').fadeIn(1000);
 	});
 	
-	$('#asignatura').hide();
+	
 
 
 $("#asignatura").change(function() {
@@ -128,9 +125,9 @@ $("#asignatura").change(function() {
 	}
     );
     
-    $('#profesor').fadeIn(1000);
+    
     
 	});
 	
-	$('#profesor').hide();
+	
 </script>

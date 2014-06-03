@@ -101,7 +101,7 @@ class SituacionAcademicaController extends AbstractActionController
 	
 	public function asistenciaAction(){
 	
-		$sql  = 'SELECT fecha, presencia
+		$sql  = 'SELECT fecha, horas_asistidas, horas_totales
 				FROM asistencias_por_alumno';
 	
 		$dataItems = $this->consultSapientiaDatabase($sql);
@@ -109,7 +109,7 @@ class SituacionAcademicaController extends AbstractActionController
 				$dataItems,
 				$headTitle = 'Asistencia', 
 				$header = 'Asistencia a Clases',
-				$columnHeader = array('Fecha', 'Presencia')
+				$columnHeader = array('Fecha', 'Horas Asistidas', 'Horas Totales')
 		);
 	}
 	

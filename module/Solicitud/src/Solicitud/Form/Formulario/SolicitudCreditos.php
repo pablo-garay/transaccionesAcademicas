@@ -85,8 +85,7 @@ class SolicitudCreditos extends Solicitud
 						'priority' => 260,
 		) );	
 
-	
-	
+
 		// This is the special code that protects our form beign submitted from automated scripts
 		$this->add(array(
 				'name' => 'csrf',

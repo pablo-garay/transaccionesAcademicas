@@ -58,7 +58,7 @@ class SolicitudTesis extends Solicitud
 		}
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 				
-		
+
 		$this->add(array(
 				'name' => 'tema_tesis',
 				'type' => 'Zend\Form\Element\Text',
@@ -68,6 +68,7 @@ class SolicitudTesis extends Solicitud
 				'attributes' => array(
 						'required' => 'required',
 						'id' => 'tema_tesis',
+						'placeholder' => 'Escriba el tema propuesto...',
 				),
 		),
 				array (
@@ -80,7 +81,11 @@ class SolicitudTesis extends Solicitud
 				'name' => 'integrante1',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Integrante1:',
+						'label' => 'Integrante 1:',
+				),
+				'attributes' => array(
+						'placeholder' => 'Escriba el integrante 1...',
+					
 				),
 		),
 				array (
@@ -92,19 +97,25 @@ class SolicitudTesis extends Solicitud
 				'name' => 'integrante2',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Integrante1:',
+						'label' => 'Integrante 2:',
+				),
+				'attributes' => array(
+						'placeholder' => 'Escriba el integrante 2...',
 				),
 		),
 				array (
 						'priority' => 270,
 				)
 		);
-		
+		//'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
 		$this->add(array(
 				'name' => 'integrante3',
 				'type' => 'Zend\Form\Element\Text',
 				'options' => array(
-						'label' => 'Integrante1:',
+						'label' => 'Integrante 3:',
+				),		
+				'attributes' => array(
+						'placeholder' => 'Escriba el integrante 3...',
 				),
 		),
 				array (

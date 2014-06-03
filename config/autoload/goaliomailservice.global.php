@@ -5,12 +5,10 @@
  * If you have a ./config/autoload/ directory set up for your project, you can
  * drop this config file in it and change the values as you wish.
  */
-$settings = array(
+ $settings = array(
     'transport_class' => 'Zend\Mail\Transport\Smtp',
-
     'options_class' => 'Zend\Mail\Transport\SmtpOptions',
-
-    'options' => array(
+    'transport_options' => array(
         'host' => 'smtp.gmail.com',
         'connection_class' => 'login',
         'connection_config' => array(

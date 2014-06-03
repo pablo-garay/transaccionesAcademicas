@@ -25,8 +25,9 @@ class Solicitud extends AbstractTableGateway
 			'usuario_solicitante' => $set['usuario'],
 			'carrera' => $set['carrera'],
 			'tipo_solicitud' => $set['tipo_solicitud'],
-			'matricula' => $set['matricula'],
 		);
+		
+		if (isset($set['matricula'])) $solicitudData['matricula'] = $set['matricula'];
 
 		parent::insert($solicitudData);
 		return $this->lastInsertValue;

@@ -1,5 +1,5 @@
 <?php
-
+namespace Solicitud\Controller;
 use Zend\Soap\Client;
 
 function getMatriculaCarrera($numeroDocumentoUsuario)

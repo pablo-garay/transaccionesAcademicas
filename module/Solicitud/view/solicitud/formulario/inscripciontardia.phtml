@@ -124,23 +124,7 @@ $("#matricula").change(function() {
 		});
 		
 
-		$("#asignatura").change(function() { //HACER EL SELECT 
-			
-		    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
-		      type: "POST",
-		      data:{"asignatura_op_tardia":$("#asignatura").val(), 'carrera_op_tardia':$("#carrera").val()},
-		      success: function(data, textstatus, xhr){
-		       // $('#profesor').find('option').remove().end();
-		       
-		        	$('#oportunidad').html(data);
-		        	     
-		      },
 
-			}
-		    );
-		    
-			});
 			
 
 </script>
