@@ -50,23 +50,25 @@ return array(
     ),
     
     // Below is the menu navigation for this module
-	'navigation' => array(
-		'default' => array(
-			array(
-				'label' => 'Visualize',
-				'route' => 'visualize/default',
-				'controller'=> 'visualize',
-				'pages' => array(
-					array(
-						'label' => 'Visualizar solicitud',
-						'route' => 'visualize/default',
-						'controller' => 'visualize',
-						'action' => 'index',
-						'resource' => 'visualize',
-						'privilege' => 'create',
-					),
-				)
-			)
-		)
-	),
+// 	'navigation' => array(
+// 		'default' => array(
+// 			array(
+// 				'label' => 'Visualize',
+// 				'route' => 'visualize/default',
+// 				'controller'=> 'visualize',
+// 				'resource' => 'visualize',
+// 				'privilege' => 'list',
+// 				'pages' => array(
+// 					array(
+// 						'label' => 'Visualizar solicitud',
+// 						'route' => 'visualize/default',
+// 						'controller' => 'visualize',
+// 						'action' => 'index',
+// 						'resource' => 'visualize',
+// 						'privilege' => 'create',
+// 					),
+// 				)
+// 			)
+// 		)
+// 	),
 );

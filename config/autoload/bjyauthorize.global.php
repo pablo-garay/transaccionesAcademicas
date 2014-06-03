@@ -56,7 +56,9 @@ return array(
         // in the ACL. like roles, they can be hierarchical
         'resource_providers' => array(
             'BjyAuthorize\Provider\Resource\Config' => array(
-                'pants' => array(),
+                'lista' => array(),
+            	'solicitudes' => array(),
+            	'formulario' => array(),
             ),
         ),
 
@@ -71,13 +73,22 @@ return array(
                 'allow' => array(
                     // allow guests and users (and admins, through inheritance)
                     // the "wear" privilege on the resource "pants"
-                    array(array('guest', 'user'), 'pants', 'wear')
+                	array(array("recepcion", "secretaria_general", "alumno", "secretaria_academica", 
+            			"secretaria_departamento", "decano", "director_academico", "director_departamento"), 
+                		'solicitudes', array('listar', 'list')),
+                	
+                	array(array("user"),
+                		'formulario', array('listar', 'convalidacion', 'varias')),
+                	
+                	array(array("alumno"),
+                		'formulario', array('listar', 'list'))
                 ),
 
                 // Don't mix allow/deny rules if you are using role inheritance.
                 // There are some weird bugs.
                 'deny' => array(
-                    // ...
+                		array(array("alumno"),
+                				'formulario', array('convalidacion'))
                 ),
             ),
         ),
