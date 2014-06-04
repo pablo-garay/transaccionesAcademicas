@@ -24,6 +24,11 @@ class IndexController extends AbstractActionController
                 );
 	}
 	
+	public function helpAction()
+	{
+		return array();
+	}
+	
 	public function aboutAction()
 	{
 		return array();

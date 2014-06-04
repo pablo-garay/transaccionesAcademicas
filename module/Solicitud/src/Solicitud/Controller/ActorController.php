@@ -274,7 +274,6 @@ class ActorController extends AbstractActionController
     	$viewTemplate = 'solicitud/notify/email/notificarSolicitud';
     	// The ViewModel variables to pass into the renderer
 		$value = array('content' => $content);
-    	$to = 'palenq@gmail.com';
     	$subject = 'Notificacion de solicitud - Transacciones Académicas UCA';
     	$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
     	$message = $mailService->createTextMessage('transaccionesuca@gmail.com', $to, $subject, $viewTemplate, $value);
@@ -303,6 +302,7 @@ class ActorController extends AbstractActionController
 			if(isset($data['Aprobar'])) {
 				$this->cambiarEstadoSolicitud('FINAL', 'APROB', $id_solicitud);
 				$message = "La solicitud fue aprobada";
+				//$this->sendNotificationEmailMessage($solicitudData['email'], $message);
 			
 			} else if(isset($data['Pendiente'])) {
 				
@@ -347,15 +347,17 @@ class ActorController extends AbstractActionController
 						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 				}
-				$message = "La solicitud fue derivada";			
+				$message = "La solicitud fue derivada";		
 			
 			} else if (isset($data['Anular'])) {
 				$this->cambiarEstadoSolicitud('FINAL', 'ANUL', $id_solicitud);
 				$message = "La solicitud fue anulada";
+				//$this->sendNotificationEmailMessage($solicitudData['email'], $message);
 				
 			} else if (isset($data['Rechazar'])) {
 				$this->cambiarEstadoSolicitud('FINAL', 'RECHAZ', $id_solicitud);
 				$message = "La solicitud fue rechazada";
+				//$this->sendNotificationEmailMessage($solicitudData['email'], $message);
 
 			} else if (isset($data['EnviarCorreo'])) {				
 				
@@ -369,7 +371,7 @@ class ActorController extends AbstractActionController
 				$message = "Ha abandonado la solicitud";
 			}
 			
-			$this->sendNotificationEmailMessage($solicitudData['email'], $message);
+			
 
 		
 			$this->flashmessenger()->addSuccessMessage($message);

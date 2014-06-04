@@ -112,6 +112,12 @@ return array(
     				array(
     					'label' => 'Facultad de Ciencias y Tecnología',
     					'uri'   => 'http://www.cyt.uc.edu.py/',
+    				),
+    				array(
+    						'label' => 'Ayuda',
+    						'route' => 'application/default',
+    						'controller' => 'index',
+    						'action' => 'help'
     				)
     			)
     		),

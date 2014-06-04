@@ -164,6 +164,7 @@ return array(
         				'roles' => array("director_departamento")),            	
 
                 array('controller' => 'ZfcAdmin\Controller\AdminController','roles' => array('admin')),
+                array('controller' => 'zfcuseradmin','roles' => array('admin')),
                 // Below is the default index action used by the ZendSkeletonApplication
                 // array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user')),
             ),

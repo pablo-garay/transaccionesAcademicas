@@ -241,8 +241,8 @@ CREATE TRIGGER revisionexamen_insert BEFORE INSERT ON solicitud_de_revision_de_e
 CREATE OR REPLACE FUNCTION usuario_register() RETURNS trigger AS $$
     BEGIN
 
-        INSERT INTO user_role_linker
-        VALUES (NEW.usuario, 2); -- Asignar rol User al registrarse
+--         INSERT INTO user_role_linker
+--         VALUES (NEW.usuario, 2); -- Asignar rol User al registrarse
         
         RETURN NEW;
     END;

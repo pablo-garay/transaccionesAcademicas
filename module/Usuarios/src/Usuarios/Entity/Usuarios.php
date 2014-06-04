@@ -10,20 +10,20 @@ class Usuarios implements UserInterface
      */
     protected $usuario;
 
-//     /**
-//      * @var string
-//      */
-//      protected $username;
+    /**
+     * @var string
+     */
+     protected $username;
 
     /**
      * @var string
      */
     protected $email;
 
-//     /**
-//      * @var string
-//      */
-//      protected $displayName;
+    /**
+     * @var string
+     */
+     protected $displayName;
 
     /**
      * @var string

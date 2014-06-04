@@ -16,6 +16,7 @@ return array(
         'GoalioForgotPassword',
         'Usuarios', //'sapientia',
      	'BjyAuthorize',
+        'RoleUserBridge',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
