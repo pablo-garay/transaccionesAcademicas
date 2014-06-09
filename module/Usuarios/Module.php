@@ -209,8 +209,17 @@ class Module
                                                     'messages' => array (
                                                             'isEmpty' => 'Se requiere nombres'
                                                     )
-                                            )
-                                    )
+                                            ),
+                                    ),
+                                    array (
+                                    		'name' => 'alpha',
+                                    		'options' => array (
+                                    				'messages' => array (
+                                    						'notAlpha' => 'Se requieren solo letras'
+                                    				),
+                                    				'allowWhiteSpace' => true,
+                                    		)
+                                    ),
                             )
                     ) );
  
@@ -232,8 +241,17 @@ class Module
                                                     'messages' => array (
                                                             'isEmpty' => 'Se requiere apellidos'
                                                     )
-                                            )
-                                    )
+                                            ),
+                                    ),
+                                    array (
+                                    		'name' => 'alpha',
+                                    		'options' => array (
+                                    				'messages' => array (
+                                    						'notAlpha' => 'Se requieren solo letras'
+                                    				),
+                                    				'allowWhiteSpace' => true,
+                                    		)
+                                    ),
                             )
                     ) );
 
@@ -276,6 +294,15 @@ class Module
                                             'name' => 'NotEmpty',
                                             //@todo validate que sea Alphanum
                                     ),
+                            		array (
+                            				'name' => 'alnum',
+                            				'options' => array (
+                            						'messages' => array (
+                            								'notAlnum' => 'Se requieren solo números y letras'
+                            						),
+                            						'allowWhiteSpace' => true,
+                            				)
+                            		),
                             )
                     ));
 
@@ -309,7 +336,7 @@ class Module
                             				'name' => 'alnum',
                             				'options' => array (
                             						'messages' => array (
-                            								'notAlnum' => 'Se requieren sólo números y letras'
+                            								'notAlnum' => 'Se requieren solo números y letras'
                             						),
                             						'allowWhiteSpace' => true,
                             				)
@@ -349,7 +376,7 @@ class Module
                     						'name' => 'alnum',
                     						'options' => array (
                     								'messages' => array (
-                    										'notAlnum' => 'Se requieren sólo números y letras'
+                    										'notAlnum' => 'Se requieren solo números y letras'
                     								),
                     								'allowWhiteSpace' => true,
                     						)

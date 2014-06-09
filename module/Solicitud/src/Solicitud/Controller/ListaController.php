@@ -25,7 +25,7 @@ class ListaController extends AbstractActionController
 		$this->viewModel->setTemplate('solicitud/lista/listarSolicitudes');
 	}
 	
-	public function listSolicitudes($estadoSolicitud = 'None', $filter = TRUE){
+	public function listSolicitudes($estadoSolicitud = null, $filter = TRUE){
 		
 		$authorize = $this->getServiceLocator()->get('BjyAuthorize\Provider\Identity\ProviderInterface');
 		$roles = $authorize->getIdentityRoles();
