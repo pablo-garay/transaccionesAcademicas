@@ -31,12 +31,12 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
      </div>
 </div>
 <?php
 	
-	if ( ($element->getName() == 'email')) {
+	if ( ($element->getName() == 'carrera')) {
 ?>
 	   
 
@@ -58,11 +58,15 @@ foreach ($this->form1 as $element) {
 <?php 
 	echo "\n";
 	}
-	else if ( ($element->getName() == 'Resultado_requisitos')) {
+	else if ( ($element->getName() == 'telefono_lugar')) {
 ?>
-	<h4 align="center"></h4>
+	<h5 align="left"><br>Motivo de la Solicitud:<br> <br></h5>
 <?php 
-    }
+    }else if ( ($element->getName() == 'especificacion_motivo')) {
+    	?>
+    	<h5 align="center">Con todo respeto.</h5>
+    <?php 
+        }
     } else if ($element->getName() == 'enviar')  {
         $element->setAttribute('class', 'btn btn-primary'); 
         ?>
@@ -91,7 +95,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
@@ -109,10 +113,22 @@ $("#matricula").change(function() {
 	});
 
 
-
-$("#carrera").change(function() {
+$("input:radio").click(function() {
+	if ($('input[name=motivo]:radio:checked').val() == 'Otro'){
+		
+		$('#especificacion_motivo').fadeIn(1000);
 	
-	});
+	
+	}
+	if ($('input[name=motivo]:radio:checked').val() != 'Otro'){
+			
+		$('#especificacion_motivo').hide(100);
+		
+	
+	}
+});
+$('#especificacion_motivo').hide(100);
+
 	
 
 </script>

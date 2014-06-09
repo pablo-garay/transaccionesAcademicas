@@ -30,8 +30,8 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
-	    </div>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
+	</div>
 </div>
 <?php
     } else if ($element->getName() == 'enviar')  {

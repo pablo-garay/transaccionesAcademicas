@@ -6,6 +6,7 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 require_once "funcionesDB.php";
+require_once "SapientiaClient.php";
 class SolicitudHomologacionMaterias extends Solicitud
 {
 	
@@ -47,7 +48,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 				'name' => 'plan_de_estudio_previo',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
-						'label' => 'Plan de estudio de carrera a homologar ',
+						'label' => 'Plan de estudio actual ',
 						'value_options' => $selectDataPlan,
 							
 				),
@@ -99,14 +100,18 @@ class SolicitudHomologacionMaterias extends Solicitud
 		);
 	
 		$this->add(array(
-				'name' => 'documento_adjunto',
+				'name' => 'tipo',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
 						'value_options' => array(
 								'Certificado de Estudios' => 'Certificado de Estudios',
-								'Otro' => 'Otro'
+								'Otros' => 'Otros'
 						),
+				'attributes' => array(
+						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
+						'id' => 'tipo',
+				)
 				),
 	
 		),
@@ -119,12 +124,11 @@ class SolicitudHomologacionMaterias extends Solicitud
 				'name' => 'especificacion_adjunto',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de documento adjunto'
+						//'label' => 'Especificación de documento adjunto'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
-						'required' => false,
-						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+						'id' => 'descripcion',
 				)
 		),
 				array (
@@ -245,7 +249,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 			
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'documento_adjunto',
+					'name' => 'tipo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -269,7 +273,7 @@ class SolicitudHomologacionMaterias extends Solicitud
 			) ) );
 				
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'especificacion_adjunto',
+					'name' => 'descripcion',
 					'allow_empty' => true,
 					'filters' => array (
 							array (

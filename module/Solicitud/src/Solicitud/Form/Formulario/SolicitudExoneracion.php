@@ -36,7 +36,7 @@ class SolicitudExoneracion extends Solicitud
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => $selectDataMat,//$this->getSubjectsOfCareer(),
+						//'value_options' => $selectDataMat,//$this->getSubjectsOfCareer(),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -55,7 +55,7 @@ class SolicitudExoneracion extends Solicitud
 				'options' => array(
 						'label' => 'Sección:',
 						'empty_option' => 'Seleccione la sección..',
-						'value_options' => array("A" => "A", "B" => "B", "C" => "C", "D" => "D"),
+						//'value_options' => array("A" => "A", "B" => "B", "C" => "C", "D" => "D"),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -89,12 +89,14 @@ class SolicitudExoneracion extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'semestre',
-				'type' => 'Zend\Form\Element\Text',
+				'name' => 'anho',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Año:',
-						'empty_option' => 'Introduzca el año..',
-						//'value_options' => array("20" => "0", "1" => "1"),
+						'empty_option' => 'Seleccione el año..',
+						'value_options' => array("2005" => "2005", "2006" => "2006", "2007" => "2007",
+								"2008" => "2008", "2009" => "2009", "2010" => "2010",
+								"2011" => "2011", "2012" => "2012", "2013" => "2013", "2014" => "2014"),
 				),
 				'attributes' => array(
 						'required' => 'required',
@@ -120,6 +122,7 @@ class SolicitudExoneracion extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'motivo',
 				),	
 		),
 				array (
@@ -131,12 +134,13 @@ class SolicitudExoneracion extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						//'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
-						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => false,
-						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+						'placeholder' => 'Describa el motivo aquí...',
+// 						'required' => false,
+// 						'disabled' => false, //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+						'id' => 'especificacion_motivo',
 				)
 		),
 				array (
@@ -157,6 +161,7 @@ class SolicitudExoneracion extends Solicitud
 				),
 				'attributes' => array(
 						'required' => 'required',
+						'id' => 'tipo',
 				),
 		),
 				array (
@@ -165,15 +170,16 @@ class SolicitudExoneracion extends Solicitud
 		);
 	
 		$this->add(array(
-				'name' => 'especificacion_adjunto',
+				'name' => 'descripcion',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de documento adjunto'
+						//'label' => 'Especificación de documento adjunto'
 				),
 				'attributes' => array(
-						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
-						'required' => false,
-						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+						'placeholder' => 'Agregue la descripción sobre el documento adjunto aquí...',
+						//'required' => false,
+						//'disabled' => false, //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+						'id' => 'descripcion',
 				)
 		),
 				array (
@@ -268,7 +274,7 @@ class SolicitudExoneracion extends Solicitud
 				
 				
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'semestre',
+					'name' => 'anho',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -338,7 +344,31 @@ class SolicitudExoneracion extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'especificacion_adjunto',
+					'name' => 'tipo',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+								
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'descripcion',
 					'allow_empty' => true,
 					'filters' => array (
 							array (

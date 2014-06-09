@@ -48,9 +48,11 @@ class SolicitudCambioSeccion extends Solicitud
 		
 		$this->add(array(
 				'name' => 'nueva_seccion_elegida',
-				'type' => 'Zend\Form\Element\Text',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Sección nueva: ',
+						'empty_option' => 'Seleccione una sección..',
+						'value_options' => array("A"=> "A", "B" => "B", "C" => "C", "D"=> "D"),
 		
 				),
 				'attributes' => array(

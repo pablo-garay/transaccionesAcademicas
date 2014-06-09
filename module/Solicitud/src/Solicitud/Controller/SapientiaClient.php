@@ -94,3 +94,16 @@ function getCorrelatividad($carreraSolicitante, $asignaturaSolicitante){
 	$response = $client->correlatividad($data);
 	return json_decode($response,True);
 }
+
+function getProfesoresPorCurso($asignatura, $semestreAnho, $anho, $seccion){
+	//Correlatividad
+	$client = new Client("http://servicios.localhost/profesores_asignatura_server.php?wsdl");
+	$client->setSoapVersion(SOAP_1_1);
+	$param = array( 'asign' => $asignatura,
+			'semestre' => $semestreAnho,
+			'anho' => $anho,
+			'seccion' => $seccion);
+	$data = json_encode($param);
+	$response = $client->profesores_asignatura($data);
+	return json_decode($response,True);
+}

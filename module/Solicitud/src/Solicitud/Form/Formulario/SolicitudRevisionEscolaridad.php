@@ -87,7 +87,7 @@ class SolicitudRevisionEscolaridad extends Solicitud
 		);
 		
 		$this->add(array(
-				'name' => 'semestre',
+				'name' => 'anho',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Año:',
@@ -195,7 +195,7 @@ class SolicitudRevisionEscolaridad extends Solicitud
 			
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'semestre',
+					'name' => 'anho',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

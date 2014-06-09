@@ -54,11 +54,13 @@ class SolicitudInclusionLista extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Sección',
+						'empty_option' => 'Seleccione la sección..',
 		
 				),
 				'attributes' => array(
 						'required' => 'required',
 						'id' => 'seccion',
+						
 				),
 		),
 				array (
@@ -72,13 +74,13 @@ class SolicitudInclusionLista extends Solicitud
 				'options' => array(
 						'label' => 'Motivo',
 						'value_options' => array(
-								'Enfermedad' => 'Enfermedad',
-								'Trabajo' => 'Trabajo',
+								'Beca' => 'Beca',
 								'Otro' => 'Otro'
 						),
 				),
 				'attributes' => array(
-						'required' => 'required'
+						'required' => 'required',
+						'id' => 'motivo',
 						
 				),		
 		),
@@ -92,12 +94,13 @@ class SolicitudInclusionLista extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						//'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => 'required',
-						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+						'id' => 'especificacion_motivo',
+						//'required' => 'required',
+						
 				)
 		),
 				array (
@@ -202,6 +205,7 @@ class SolicitudInclusionLista extends Solicitud
 
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'especificacion_motivo',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

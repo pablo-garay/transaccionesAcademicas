@@ -25,6 +25,7 @@ class SolicitudPasantia extends Solicitud
 				'attributes' => array(
 						'required' => 'required',
 						'id' => 'lugar',
+						'placeholder' => 'Ingrese el nombre del lugar..',
 				),
 	
 		),
@@ -43,6 +44,7 @@ class SolicitudPasantia extends Solicitud
 				'attributes' => array(
 						'required' => 'required',
 						'id' => 'direccion',
+						'placeholder' => 'Ingrese la dirección del lugar..',
 				),	
 		),
 				array (
@@ -59,6 +61,7 @@ class SolicitudPasantia extends Solicitud
         		'attributes' => array(
         				'required' => 'required',
         				'id' => 'correo_electronico',
+        				'placeholder' => 'Ingrese el email del lugar..',
         		),
         ),
         		array (
@@ -76,6 +79,7 @@ class SolicitudPasantia extends Solicitud
         		'attributes' => array (
         				'required' => 'required',
         				'id' => 'telefono',
+        				'placeholder' => 'Ingrese el teléfono del lugar..',
         				//'value' => '0981334566', // @todo getphone
         		),
         
@@ -109,12 +113,12 @@ class SolicitudPasantia extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						//'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
 						'required' => false,
-						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+						'id' => 'especificacion_motivo',
 				)
 		),
 				array (

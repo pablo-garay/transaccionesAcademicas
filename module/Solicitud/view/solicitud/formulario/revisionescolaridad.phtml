@@ -31,14 +31,19 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php
 	
-	if ( ($element->getName() == 'Especificacion_motivo')) {
+	if ( ($element->getName() == 'carrera')) {
 ?>
-	
+	<h5 align="left"><br>Solicito la revisión de escolaridad de la asignatura:<br><br></h5>
+<?php 
+	echo "\n";
+	} else if ( ($element->getName() == 'anho')) {
+?>
+	<h5 align="center">Con todo respeto.</h5>
 <?php 
 	echo "\n";
 	}
@@ -71,7 +76,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
@@ -87,11 +92,11 @@ $("#matricula").change(function() {
 	});
 	
 
-	$("#carrera").change(function() {
+$("#carrera").change(function() {
 	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      url:"/solicitud/formulario/procesardatos",
 		      type: "POST",
-		      data:{"carrera_asignatura_inscriptas":$("#carrera").val(), "matricula_inscriptas":$("#matricula").val()},
+		      data:{"carrera_asignaturas_inscriptas":$("#carrera").val(), "matricula_asignaturas_inscriptas":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
 		       
 		        	$('#asignatura').html(data);
@@ -100,10 +105,26 @@ $("#matricula").change(function() {
 
 			}
 		    );
-		
-	  
-	});
+});
+
+$("#asignatura").change(function() {
 	
+    $.ajax({
+      url:"/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"asignatura_seccion_inscripta":$("#asignatura").val(), "carrera_asignaturas_inscriptas":$("#carrera").val(), "matricula_asignaturas_inscriptas":$("#matricula").val() },
+      success: function(data, textstatus, xhr){
+
+        	$('#seccion').html(data);
+        	     
+      },
+      error: function(xhr, textstatus, errorThrown) {
+    	 alert("AJAX call an epic failure");
+   		}
+	}
+    );
+    
+});
 
 $("#asignatura").change(function() {
 

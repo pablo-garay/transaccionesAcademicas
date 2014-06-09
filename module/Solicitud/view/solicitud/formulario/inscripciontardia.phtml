@@ -30,14 +30,18 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php
 	
-	if ( ($element->getName() == 'Especificacion_motivo')){
+	if ( ($element->getName() == 'carrera')){
 ?>
-	<h5 align="center"> Con todo respeto. </h5>
+	<h5 align="left"> Solicito la inscripción al examen final del curso: <br><br></h5>
+<?php 
+	}else if ( ($element->getName() == 'oportunidad')){
+?>
+	<h5 align="left"> Motivo de la solicitud:<br><br> </h5>
 <?php 
 	}
     }else if ($element->getName() == 'enviar')  {
@@ -69,7 +73,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
@@ -78,51 +82,113 @@ $("#matricula").change(function() {
         	$('#carrera').html(data);
         	     
       },
+	});
+});
+	
+	
+$("#carrera").change(function() {
+    $.ajax({
+	      url:"/solicitud/formulario/procesardatos",
+	      type: "POST",
+	      data:{"carrera_asignaturas_inscriptas":$("#carrera").val(), "matricula_asignaturas_inscriptas":$("#matricula").val()},
+	      success: function(data, textstatus, xhr){
+	        	$('#asignatura').html(data);	     
+	      },
+    	}
+	    );
+});
+	
+	
+$("#asignatura").change(function() {
+	
+    $.ajax({
+      url:"/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"asignatura_seccion_inscripta":$("#asignatura").val(), "carrera_asignaturas_inscriptas":$("#carrera").val(), "matricula_asignaturas_inscriptas":$("#matricula").val() },
+      success: function(data, textstatus, xhr){
+
+        	$('#seccion').html(data);
+        	     
+      },
+      error: function(xhr, textstatus, errorThrown) {
+    	 alert("AJAX call an epic failure");
+   		}
+	}
+    );
+    
+});
+
+$("#semestre_anho").change(function() { 
+	
+    $.ajax({
+      url:"/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"asignatura_inscripcion_tardia":$("#asignatura").val(),'carrera_inscripcion_tardia':$("#carrera").val(), 
+          	'seccion_inscripcion_tardia':$('#seccion').val(),'semestre_anho_inscripcion_tardia':$("#semestre_anho").val(), 
+          	'anho_inscripcion_tardia':$("#anho").val()},
+      success: function(data, textstatus, xhr){
+
+       
+        	$('#fecha_de_examen').html(data);
+        	     
+      },
 
 	}
     );
-  
-	});
-	
-	
+});
 
-	$("#carrera").change(function() {
-	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
-		      type: "POST",
-		      data:{"carrera_asignatura_inscriptas":$("#carrera").val(), "mat":$("#matricula").val()},
-		      success: function(data, textstatus, xhr){
-		     
-		        	$('#asignatura').html(data);
-		        	     
-		      },
+$("#seccion").change(function() { 
+	
+    $.ajax({
+      url:"/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"asignatura_inscripcion_tardia":$("#asignatura").val(),'carrera_inscripcion_tardia':$("#carrera").val(), 
+          	'seccion_inscripcion_tardia':$('#seccion').val(),'semestre_anho_inscripcion_tardia':$("#semestre_anho").val(), 
+          	'anho_inscripcion_tardia':$("#anho").val()},
+      success: function(data, textstatus, xhr){
 
-			}
-		    );
+       
+        	$('#fecha_de_examen').html(data);
+        	     
+      },
+
+	}
+    );
+});
+$("#anho").change(function() { 
+	
+    $.ajax({
+      url:"/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"asignatura_inscripcion_tardia":$("#asignatura").val(),'carrera_inscripcion_tardia':$("#carrera").val(), 
+          	'seccion_inscripcion_tardia':$('#seccion').val(),'semestre_anho_inscripcion_tardia':$("#semestre_anho").val(), 
+          	'anho_inscripcion_tardia':$("#anho").val()},
+      success: function(data, textstatus, xhr){
+
+       
+        	$('#fecha_de_examen').html(data);
+        	     
+      },
+
+	}
+    );
+});
+	
+$("input:radio").click(function() {
+	if ($('input[name=motivo]:radio:checked').val() == 'Otro'){
 		
-
-	});
+		$('#especificacion_motivo').fadeIn(1000);
 	
 	
-
-	$("#asignatura").change(function() { ////HACERR EL SELECT 
+	}
+	if ($('input[name=motivo]:radio:checked').val() != 'Otro'){
+			
+		$('#especificacion_motivo').hide(100);
 		
-	    $.ajax({
-	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
-	      type: "POST",
-	      data:{"asignatura_fecha_tardia":$("#asignatura").val(),'carrera_fecha_tardia':$("#carrera").val()},
-	      success: function(data, textstatus, xhr){
-
-	       
-	        	$('#fecha_de_examen').html(data);
-	        	     
-	      },
-
-		}
-	    );
-	    
-		});
-		
+	
+	}
+});
+$('#especificacion_motivo').hide(100);
 
 
 			

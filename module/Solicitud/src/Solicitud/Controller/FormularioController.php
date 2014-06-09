@@ -6,8 +6,11 @@ use Solicitud\Form\Formulario as Form;
 use Zend\Mvc\Controller\AbstractActionController;
 use Solicitud\Service\Factory\Database as DatabaseAdapter;
 use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDatabaseAdapter;
+use Solicitud\Form\Formulario\getDatosUsuario;
 
 require_once 'SapiClient.php';
+require_once 'DatosDeUsuario.php';
+
 class FormularioController extends AbstractActionController
 {
 	private $dbAdapter = null;
@@ -47,7 +50,7 @@ class FormularioController extends AbstractActionController
 
     public function solicitudFormHandler($form, $tableName)
     {
-
+		
         if($this->getRequest()->isPost()) {
             $data = array_merge_recursive(
                 $this->getRequest()->getPost()->toArray(),
@@ -101,7 +104,8 @@ class FormularioController extends AbstractActionController
 				));
             } else {
             	// debug code -- borrar despues!
-            	$this->flashmessenger()->addSuccessMessage(print_r($info, TRUE));
+            	// the following line is a DEBUGGING CODE
+            	// $this->flashmessenger()->addSuccessMessage(print_r($info, TRUE));
             	$messages = $form->getMessages();
             }
         }
@@ -210,7 +214,7 @@ class FormularioController extends AbstractActionController
 	{
 		$this->setDbAdapter(); # init DB adapter
 		$this->setIdUsuario(); # identificacion usuario logueado
-		$form = new Form\SolicitudConvalidacionMaterias('solicitudConvalidacionMaterias', $this->dbAdapter); // instanciar formulario
+		$form = new Form\SolicitudConvalidacionMaterias('solicitudConvalidacionMaterias', $this->dbAdapter, $this->idUsuario); // instanciar formulario
 		return $this->solicitudFormHandler($form, 'solicitud_de_convalidacion_de_materias'); # llamar a manejador de formulario
 	}
 
@@ -286,24 +290,20 @@ class FormularioController extends AbstractActionController
 		return $this->solicitudFormHandler($form, 'solicitudes_varias'); # llamar a manejador de formulario
 	}	
 	
+	
+	
 	////////////*************Parte Datos Dinámicos ******************///////////////////
-	public function setMatriculaCarrera()
+	public function setMatriculaCarrera($numeroDocumentoUsuario)
 	{
 		if(isset($_POST["matricula"]))
 		{
-		
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "SELECT carr.nombre as n_carrera 
-					FROM matriculas_por_carrera AS c
-					INNER JOIN carreras AS carr ON c.carrera = carr.carrera 
-					AND c.matricula = ".$_POST["matricula"];
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
+			$result = getMatriculaCarrera($numeroDocumentoUsuario);
 			$opciones = '<option value="0"> Elija su carrera.. </option>';
 		
 			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["n_carrera"].'">'.$res["n_carrera"].'</option>';
+				if ($res['matricula'] == $_POST["matricula"]){
+					$opciones.='<option value="'.$res["n_carrera"].'">'.$res["n_carrera"].'</option>';
+				}
 			}
 			echo $opciones;
 		}		
@@ -319,72 +319,13 @@ class FormularioController extends AbstractActionController
 		
 			$statement = $dbAdapter->query($sql);
 			$result    = $statement->execute();
-		
-			// 			$selectCorrelativas = array();
-		
-			// 			foreach ($result as $res) {
-			// 				$selectCorrelativas[$res['correlativa']] = $res['correlativa'];
-			// 			}
-			// 			$correlativas = implode("'\n'", $selectCorrelativas);
-			// 			$correlativas = str_replace("  ", "", $correlativas);
-			//$opciones = '<option value="0"> Elija la asignatura.. </option>';
-		
+	
 			foreach ($result as $res) {
 				$opciones.='<option value="'.$res["semestre"].'">'.$res["semestre"].'</option>';
 			}
 			echo $opciones;
 		}
 		
-	}
-	
-	public function getFechaOportunidad($asignatura)
-	{
-		date_default_timezone_set('America/Asuncion'); // setea la zona horaria para algunas funciones date()
-		$anhoActual = date ('Y'); $mesActual = date ('n');
-		
-		if ( $mesActual > AGOSTO && $mesActual < MARZO ) {  $semestreActual = 2; }
-		else
-		{ $semestreActual = 1; }
-		
-		$dbAdapter = $this->getDbAdapterSapientia();
-		$sql = "SELECT  h.fecha_de_examen, h.oportunidad  FROM materias AS m
-						INNER JOIN cursos AS c ON m.materia = c.materia AND m.nombre = '".$asignatura."'
-						AND c.anho = ".$anhoActual." AND c.semestre_anho =".$semestreActual."
-						INNER JOIN Horarios_de_examen AS h ON h.curso = c.curso";
-			
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-		return $result;		
-	}
-	
-	
-	public function getAsignaturasCarrera($carrera, $matricula)
-	{
-		date_default_timezone_set('America/Asuncion'); // setea la zona horaria para algunas funciones date()
-		$anhoActual = date ('Y');
-		$mesActual = date ('n');
-	
-		if ( $mesActual > AGOSTO && $mesActual < MARZO ) {
-			$semestreActual = 2;
-		}
-		else
-		{
-			$semestreActual = 1;
-		}
-		$dbAdapter = $this->getDbAdapterSapientia();
-		$sql = "SELECT  DISTINCT ON (m.nombre, m.materia) m.materia AS cod_asignatura, m.nombre AS asignatura  
-				FROM matriculas_por_alumno AS mxa 
-				INNER JOIN alumnos_por_curso AS axc ON axc.numero_de_documento = mxa.numero_de_documento 
-				AND mxa.matricula = ".$matricula." 
-				INNER JOIN cursos AS c ON c.curso = axc.curso
-				AND axc.curso_actual = TRUE
-				INNER JOIN materias AS m ON c.materia = m.materia
-				INNER JOIN materias_por_carrera AS mxc ON mxc.materia = m.materia
-				INNER JOIN carreras AS carr ON mxc.carrera = carr.carrera AND carr.nombre = '".$carrera."'";
-			
-		$statement = $dbAdapter->query($sql);
-		$result    = $statement->execute();
-		return $result;
 	}
 	
 	public function getAsignaturasPorProfesor (){
@@ -403,22 +344,38 @@ class FormularioController extends AbstractActionController
 	}
 	
 	///////////**************Procesador Dinámico ***********//////////////////////
+	
 	public function procesardatosAction(){
 		
-	////////////////**********Extraer Datos del Usuario*********///////////////
-				
-		
-		
+	
+		////////////////**********Extraer Datos del Usuario*********///////////////
 		///////////*******Todas las solicitudes ****************//////////
-		$this->setMatriculaCarrera();
+		$this->setDbAdapter();
+		$this->setIdUsuario();
+		$datos = getDatosUsuario($this->dbAdapter, $this->idUsuario);
+		$numeroDocumento = $datos['numero_de_documento'];
+		
+		$this->setMatriculaCarrera($numeroDocumento);
 		///////////*******FIN*******//////////////////
 		
 		
 		////////////////**************** INICIO Solicitud de Extraordinario********************//////////
 		
-		if(isset($_POST["materia"]))
+		if(isset($_POST["anho_profesores"]) || isset($_POST["seccion_profesores"]) || isset($_POST["semestre_anho_profesores"]))
 		{
-			$opciones = $this->getAsignaturasPorProfesor($_POST["materia"]);
+			$result    = getProfesoresPorCurso($_POST["materia_profesores"], $_POST["seccion_profesores"],
+						 $_POST["semestre_anho_profesores"], $_POST["anho_profesores"]);
+			
+			if ($result != null){
+				$opciones = '<option value="0"> Elija un Profesor.. </option>';
+			}else{
+				$opciones = '<option value="0"> Ha elegido un curso inexistente.. </option>';
+			}
+			
+			foreach ($result as $res) {
+				$opciones.='<option value="'.$res["n_profesor"].'">'.$res["n_profesor"].'</option>';
+			}
+			
 			echo $opciones;
 		}
 		
@@ -429,44 +386,15 @@ class FormularioController extends AbstractActionController
 		
 		////////////////**************** INICIO Solicitud de Ruptura********************//////////
 		
-		if(isset($_POST["carrera_ruptura"]))
-		{
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "SELECT DISTINCT ON (m.nombre) m.nombre AS n_asignatura FROM materias AS m INNER JOIN materias_por_carrera AS mxc ON mxc.materia = m.materia
-		    			INNER JOIN carreras AS c ON mxc.carrera = c.carrera AND c.nombre = '".$_POST['carrera_ruptura']."'";
-	
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			$opciones = '<option value="0"> Elija la asignatura.. </option>';
-		
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["n_asignatura"].'">'.$res["n_asignatura"].'</option>';
-			}
-			echo $opciones;
-		}
 		
 		if(isset($_POST["asignatura_ruptura"]))
 		{
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "SELECT nombre AS correlativa FROM materias WHERE materia IN (SELECT cxc.materia_correlativa AS id_correlativa FROM materias AS m 
-					INNER JOIN correlativa_por_carrera AS cxc ON m.nombre = '".$_POST["asignatura_ruptura"]."' 
-					AND cxc.materia = m.materia)";
-		    			
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			
-// 			$selectCorrelativas = array();
-			
-// 			foreach ($result as $res) {
-// 				$selectCorrelativas[$res['correlativa']] = $res['correlativa'];
-// 			}
-// 			$correlativas = implode("'\n'", $selectCorrelativas);
-// 			$correlativas = str_replace("  ", "", $correlativas);
+			$result = getCorrelatividad($_POST["carrera_ruptura"], $_POST["asignatura_ruptura"]);
 			$opciones = '<option value="0"> Elija la asignatura correlativa.. </option>';
 		
 			foreach ($result as $res) {
 				
-				$opciones.='<option value="'.$res["correlativa"].'">'.$res["correlativa"].'</option>';
+				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
 			}
 			echo $opciones;
 		}
@@ -483,47 +411,53 @@ class FormularioController extends AbstractActionController
 		
 		////////////////**************** INICIO Solicitud de Inscripcion Tardia********************//////////
 
-		define ("AGOSTO", 8); //hacer una funcion 
-		define ("MARZO", 3);
-		if(isset($_POST["asignatura_fecha_tardia"]))
+		if(isset($_POST["anho_inscripcion_tardia"])||isset($_POST["seccion_inscripcion_tardia"])||isset($_POST["semestre_anho_inscripcion_tardia"])) // para rescatar la fecha de examen
 		{	
-			$result = getHorariosExamen($_POST["carrera_fecha_tardia"]);
-			//$opciones = '<option value="0"> Elija la fecha de examen.. </option>';
-		
+			$result = getHorariosExamen($_POST["carrera_inscripcion_tardia"]);
+			
+			$inscriptoBand = FALSE;
 			foreach ($result as $res) {
-				if($_POST["asignatura_fecha_tardia"] == $res['asignatura']){
-					$opciones.='<option value="'.$res["fecha_examen"].'">'.$res["fecha_examen"].'</option>';
+				if($_POST["asignatura_inscripcion_tardia"] == $res['asignatura'] && $_POST["seccion_inscripcion_tardia"] == $res['seccion']
+        			&& $_POST["semestre_anho_inscripcion_tardia"] == $res['semestre'] && $_POST["anho_inscripcion_tardia"] == $res['anho']){
+						$opciones = '<option value="0"> Elija la fecha de examen.. </option>';
+						$opciones.='<option value="'.$res["fecha_examen"].'">'.$res["fecha_examen"].'</option>';
+						$inscriptoBand = TRUE;
 				}
 			}
-			
-			echo $opciones;
+			if(!$inscriptoBand){
+				$opciones = '<option value="0"> No inscripto para este curso.. </option>';
+			}
+				echo $opciones;
 		}
 		
-		if(isset($_POST["asignatura_op_tardia"]))
-		{
-			$result = $this->getFechaOportunidad($_POST["asignatura_op_tardia"]);
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["oportunidad"].'">'.$res["oportunidad"].'</option>';
-			}
-			echo $opciones;
-		}
+
 		
 		////////////////*************Asignaturas actualmente inscriptas
-		if(isset($_POST["carrera_asignatura_inscriptas"]))
+		if(isset($_POST["carrera_asignaturas_inscriptas"]) || $_POST["asignatura_seccion_inscripta"])
 		{
 			$opciones = '<option value="0"> Elija la asignatura .. </option>';
-			$result = $this->getAsignaturasCarrera($_POST["carrera_asignatura_inscriptas"], $_POST["mat"]);
+			//$result = $this->getAsignaturasCarrera($_POST["carrera_asignatura_inscriptas"], $_POST["mat"]);
+			$result = getAsignaturas($_POST["carrera_asignaturas_inscriptas"], $_POST["matricula_asignaturas_inscriptas"], "CURSANDO");
 			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
+				
+				if(isset($_POST["asignatura_seccion_inscripta"]) && $res['asignatura'] == $_POST["asignatura_seccion_inscripta"]){
+					$opciones = '<option value="0"> Elija la seccion .. </option>';
+					$opciones.='<option value="'.$res["seccion"].'">'.$res["seccion"].'</option>';
+					break;
+				}else{
+					$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
+				}
+				
 			}
 			echo $opciones;
 		}
 		
 		//////////////////////////***************************
-		if(isset($_POST["carrera_asignatura"]))
+		if(isset($_POST["carrera_asignaturas_todas"]))
 		{
 			$opciones = '<option value="0"> Elija la asignatura .. </option>';
-			$result = getAsignaturas($_POST["carrera_asignatura"], $_POST["matricula_asignatura"], "TODAS");
+			$result = getAsignaturas($_POST["carrera_asignaturas_todas"], $_POST["matricula_asignaturas_todas"], "TODAS");
+			$opciones = '<option value="0"> Elija la asignatura .. </option>';
 			foreach ($result as $res) {
 				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
 			}
@@ -531,6 +465,93 @@ class FormularioController extends AbstractActionController
 		}
 		
 		/////////////////////////****************************
+		if(isset($_POST["carrera_asignaturas_cursadas"]) || isset($_POST["asignatura_seccion_cursada"]))
+		{	
+			
+			$opciones = '<option value="0"> Elija la asignatura .. </option>';
+			$resultAsignatura = getAsignaturas($_POST["carrera_asignaturas_cursadas"], $_POST["matricula_asignaturas_cursadas"], "CURSADAS");
+			$resultCalificaciones = getCalificaciones($numeroDocumento, $_POST["matricula_asignaturas_cursadas"]);
+			
+			//$rendidasNoAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] <  $calificacionMinima); });
+			$rendidasAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] >=  $calificacionMinima); });
+			
+			$asignaturasCursadasNoAprobadas = array();
+			
+			foreach( $resultAsignatura as $resCursadas ) {
+			   $aprobadoBandera = FALSE;
+			   foreach ( $rendidasAprobadas as $resAprobadas ){
+			   			if ($resCursadas['asignatura'] == $resAprobadas['asignatura']){
+			   				$aprobadoBandera = TRUE;
+			   				break;
+			   			}
+			   }
+			   if (!$aprobadoBandera){ // Solo agregamos si rindio y no paso, o no cursó y no rindió
+			   		array_push($asignaturasCursadasNoAprobadas, $resCursadas);
+			   }
+			}
+
+	
+			
+			foreach ($asignaturasCursadasNoAprobadas as $res) {
+				if(isset($_POST["asignatura_seccion_cursada"]) && $res['asignatura'] == $_POST["asignatura_seccion_cursada"]){
+					$opciones = '<option value="0"> Elija la seccion .. </option>';
+					$opciones.='<option value="'.$res["seccion"].'">'.$res["seccion"].'</option>';
+					break;
+				}else{
+					$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
+				}
+			}
+			//$opciones = array("asignaturas" => $opciones1, "secciones" => $opciones2);
+			echo $opciones;
+			
+		}
+		
+		////////////////////////***************************
+		
+		if(isset($_POST["carrera_asignaturas_no_cursadas"]) )
+		{
+				
+			$opciones = '<option value="0"> Elija la asignatura .. </option>';
+			$resultAsignatura = getAsignaturas($_POST["carrera_asignaturas_no_cursadas"], $_POST["matricula_asignaturas_no_cursadas"], "TODAS");
+			$resultCalificaciones = getCalificaciones($numeroDocumento, $_POST["matricula_asignaturas_no_cursadas"]);
+				
+			//$rendidasNoAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] <  $calificacionMinima); });
+			$rendidasAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] >=  $calificacionMinima); });
+				
+			$asignaturasNoAprobadas = array();
+				
+			foreach( $resultAsignatura as $resCursadas ) {
+				$aprobadoBandera = FALSE;
+				foreach ( $rendidasAprobadas as $resAprobadas ){
+					if ($resCursadas['asignatura'] == $resAprobadas['asignatura']){
+						$aprobadoBandera = TRUE;
+						break;
+					}
+				}
+				if (!$aprobadoBandera){  // Solo agregamos si no aprobó todavía la asignatura
+					array_push($asignaturasNoAprobadas, $resCursadas);
+				}
+			}
+		
+		
+				
+			foreach ($asignaturasNoAprobadas as $res) {
+// 				if(isset($_POST["asignatura_seccion_cursada"]) && $res['asignatura'] == $_POST["asignatura_seccion_cursada"]){
+// 					$opciones = '<option value="0"> Elija la seccion .. </option>';
+// 					$opciones.='<option value="'.$res["seccion"].'">'.$res["seccion"].'</option>';
+// 					break;
+// 				}else{
+					$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
+				//}
+			}
+			//$opciones = array("asignaturas" => $opciones1, "secciones" => $opciones2);
+			echo $opciones;
+				
+		}
+		
+		///////////////////////*****************************
+
+		
 		////////////////////////Revision examen
 		if(isset($_POST["carrera_fecha_revision_examen"]))
 		{
@@ -538,10 +559,7 @@ class FormularioController extends AbstractActionController
 			$result = getHorarios("Ingeniería Informática");//$_POST["carrera_fecha_revision_examen"]
 			
 			$result = $this->getFechaOportunidad($_POST["asignatura_op_tardia"]);
-			
-// 			$dbAdapter = $this->getDbAdapterSapientia();
-// 			$statement = $dbAdapter->query($sql);
-// 			$result    = $statement->execute();
+		
 			
 			foreach ($result as $res) {	
 					$opciones.='<option value="'.$res["fecha_examen"].'">'.$res["fecha_examen"].'</option>';
@@ -552,20 +570,24 @@ class FormularioController extends AbstractActionController
 		
 		
 		/////////////*************Seccion de la asignatura actualmente inscripta
+		
 		if(isset($_POST["asignatura_seccion"]))
 		{
 			$opciones = '<option value="0"> Elija la sección .. </option>';
-			$result = getAsignaturas($_POST["carrera_seccion"], $_POST["mat_seccion"], "CURSANDO");
+			$result = getAsignaturas($_POST["carrera_seccion"], $_POST["mat_seccion"], "TODAS");
 		
 			foreach ($result as $res) {
-				//if ($res['asignatura'] == $_POST["asignatura_seccion"]){
+				if ($res['asignatura'] == $_POST["asignatura_seccion"]){
 					$opciones.='<option value="'.$res["seccion"].'">'.$res["seccion"].'</option>';
-				//}
+				}
 			}
 			echo $opciones;
-		}	
+		}
 			
 		////////////////**************** FIN de Solicitud de Inscripcion Tardia********************//////////
+		
+		
+		////////////////*****************Solicitud de desinscripción
 		
 		if(isset($_POST["cod_asignatura"]))
 		{
@@ -580,116 +602,33 @@ class FormularioController extends AbstractActionController
 			}
 			echo $opciones;
 		}
+		
 		////////////////************Traspaso de pago de examen******************////////////
-		if(isset($_POST["examen_carrera"]))
+		
+		if(isset($_POST["carrera_examen_inscripto"]) || isset($_POST["asignatura_examen_inscripto"]))
 		{
 			$opciones = '<option value="0"> Seleccione la asignatura .. </option>';
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "SELECT DISTINCT m.nombre AS asignatura FROM 
-					matriculas_por_alumno AS mxa 
-					INNER JOIN alumnos_por_curso AS axc ON mxa.numero_de_documento = axc.numero_de_documento 
-					AND axc.curso_actual = TRUE AND  mxa.matricula = ".$_POST["matr"]."
-					INNER JOIN inscripcion_examen_por_alumno AS iexa ON iexa.numero_de_documento = mxa.numero_de_documento
-					INNER JOIN cursos AS c ON iexa.curso = c.curso
-					INNER JOIN materias AS m ON m.materia = c.materia
-					INNER JOIN matriculas_por_carrera AS mxcarr ON mxcarr.matricula = mxa.matricula 
-					INNER JOIN carreras AS carr ON carr.carrera = mxcarr.carrera AND carr.nombre = '".$_POST["examen_carrera"]."'";
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
+
+
+			$result = getInscripcionesExamen($numeroDocumento, $_POST["matricula_examen_inscripto"]);
 			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
+// 				if (isset($_POST["carrera_examen_inscripto"])){
+					$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
+					
+// 				}else if (isset($_POST["asignatura_examen_inscripto"])){
+// 					$opciones.='<option value="'.$res["seccion"].'">'.$res["seccion"].'</option>';
+					
+// 				}else if (isset($_POST["seccion_examen_inscripto"])){
+// 					$opciones.='<option value="'.$res["oportunidad"].'">'.$res["oportunidad"].'</option>';
+				
+// 				}else if (isset($_POST["seccion_examen_inscripto"])){
+// 					$opciones.='<option value="'.$res["oportunidad"].'">'.$res["oportunidad"].'</option>';
+// 				}
+				
 			}
 			echo $opciones;
 		}
 		
-		if(isset($_POST["seccion_asignatura"]))
-		{
-			//$opciones = '<option value="0"> Seleccione el código .. </option>';
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "";
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
-			}
-			echo $opciones;
-		}
-		
-		if(isset($_POST["opo_asignatura"]))
-		{
-			//$opciones = '<option value="0"> Seleccione el código .. </option>';
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "";
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
-			}
-			echo $opciones;
-		}
-		
-		if(isset($_POST["fecha_opo_asignatura"]))
-		{
-			//$opciones = '<option value="0"> Seleccione el código .. </option>';
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "";
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
-			}
-			echo $opciones;
-		}
-		
-		if(isset($_POST["opo_pagar_asignatura"]))
-		{
-			//$opciones = '<option value="0"> Seleccione el código .. </option>';
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "";
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
-			}
-			echo $opciones;
-		}
-		
-		if(isset($_POST["fecha_opo_pagar_asignatura"]))
-		{
-			//$opciones = '<option value="0"> Seleccione el código .. </option>';
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "";
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
-			}
-			echo $opciones;
-		}
-		//////////FIN traspaso de pago
-		
-	
-		///Colaborador Asignatura
-		if(isset($_POST["colaborador_asignatura"]))
-		{
-			//$opciones = '<option value="0"> Seleccione el código .. </option>';
-			$dbAdapter = $this->getDbAdapterSapientia();
-			$sql = "";
-		
-			$statement = $dbAdapter->query($sql);
-			$result    = $statement->execute();
-			foreach ($result as $res) {
-				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
-			}
-			echo $opciones;
-		}
-		///////FIN Colaborador	
 	}
 	
 }

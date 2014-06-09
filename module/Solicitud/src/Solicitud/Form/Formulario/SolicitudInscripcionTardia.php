@@ -65,10 +65,71 @@ class SolicitudInscripcionTardia extends Solicitud
 		);
 		
 		$this->add(array(
+				'name' => 'seccion',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Sección:',
+						'empty_option' => 'Seleccione la sección..',
+						//'value_options' => array("A" => "A", "B" => "B", "C" => "C", "D" => "D"),
+				),
+				'attributes' => array(
+						'required' => 'required',
+						'id' => 'seccion',
+		
+				),
+		),
+		
+				array (
+						'priority' => 290,
+				)
+		);
+		
+		$this->add(array(
+				'name' => 'semestre_anho',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Semestre año:',
+						'empty_option' => 'Seleccione la semestre anho..',
+						'value_options' => array("1" => "1", "2" => "2"),
+				),
+				'attributes' => array(
+						'required' => 'required',
+						'id' => 'semestre_anho',
+				),
+		),
+		
+				array (
+						'priority' => 290,
+				)
+		);
+		
+		$this->add(array(
+				'name' => 'anho',
+				'type' => 'Zend\Form\Element\Select',
+				'options' => array(
+						'label' => 'Año:',
+						'empty_option' => 'Seleccione el año..',
+						'value_options' => array("2005" => "2005", "2006" => "2006", "2007" => "2007",
+								"2008" => "2008", "2009" => "2009", "2010" => "2010",
+								"2011" => "2011", "2012" => "2012", "2013" => "2013", "2014" => "2014"),
+				),
+				'attributes' => array(
+						'required' => 'required',
+						'id' => 'anho',
+				),
+		),
+		
+				array (
+						'priority' => 290,
+				)
+		);
+		
+		$this->add(array(
 				'name' => 'fecha_de_examen',
-				'type' => 'Zend\Form\Element\Date',
+				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Fecha de Examen',
+						'empty_option' => 'Seleccione la fecha de examen..',
 						//'value_options' =>$selectDataFech,
 				),
 				'attributes' => array(
@@ -112,7 +173,6 @@ class SolicitudInscripcionTardia extends Solicitud
 						'label' => 'Motivo',
 						'value_options' => array(
 								'Enfermedad' => 'Enfermedad',
-								'Duelo' => 'Duelo',
 								'Trabajo' => 'Trabajo',
 								'Otro' => 'Otro'
 						),
@@ -130,11 +190,11 @@ class SolicitudInscripcionTardia extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						//'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
-						'required' => 'required',
+						'id' => 'especificacion_motivo',
 				)
 		),
 				array (
@@ -185,6 +245,69 @@ class SolicitudInscripcionTardia extends Solicitud
 							),
 							
 					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'seccion',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'alnum',
+									'options' => array (
+											'messages' => array (
+													'notAlnum' => 'Se requieren sólo números y letras'
+											),
+											'allowWhiteSpace' => true,
+									)
+							),
+			
+					)
+			) ) );
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'semestre_anho',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'name' => 'Digits',
+							)
+					)
+			) ) );
+			
+			
+			$inputFilter->add ( $factory->createInput ( array (
+					'name' => 'anho',
+					'filters' => array (
+							array (
+									'name' => 'StripTags'
+							),
+							array (
+									'name' => 'StringTrim'
+							)
+					),
+					'validators' => array (
+							array (
+									'name' => 'NotEmpty',
+									'name' => 'Digits',
+							)
+					)
+						
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (

@@ -41,7 +41,7 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php 
@@ -55,7 +55,7 @@ son las siguientes: </h5>
 <?php 
 	echo "\n";
 	}
-	else if ( ($element->getName() == 'asignatura')) {
+	else if ( ($element->getName() == 'anho')) {
 ?>
 		<h5>cuyo profesor es: </h5>
 <?php 
@@ -68,7 +68,7 @@ son las siguientes: </h5>
 	} else if ( ($element->getName() == 'carrera')){
 		
 ?>
-<h5>sea Colaborador/a de Cátedra, para el presente semestre lectivo, en la asignatura: <br></h5>
+<h5>sea Colaborador/a de Cátedra, para el presente semestre lectivo, en el curso siguiente: <br></h5>
 
 <?php 
 	} else if ( ($element->getName() == 'descripcion_actividades')){
@@ -104,7 +104,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
@@ -114,17 +114,16 @@ $("#matricula").change(function() {
         	     
       },
 
-	}
-    );
-    
+	});
+	
 	});
 
 	
 $("#carrera").change(function() {
 	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      url:"/solicitud/formulario/procesardatos",
 		      type: "POST",
-		      data:{"colaborador_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      data:{"carrera_asignaturas_todas":$("#carrera").val(), "matricula_asignaturas_todas":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
 		       
 		        	$('#asignatura').html(data);
@@ -138,13 +137,13 @@ $("#carrera").change(function() {
 	});
 	
 
-
-$("#asignatura").change(function() {
+$("#seccion").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
-      data:{"materia":$("#asignatura").val()},
+      data:{"materia_profesores":$("#asignatura").val(), "seccion_profesores":$("#seccion").val(),
+    	  "semestre_anho_profesores":$("#semestre_anho").val(), "anho_profesores":$("#anho").val()},
       success: function(data, textstatus, xhr){
 
        
@@ -157,7 +156,53 @@ $("#asignatura").change(function() {
 	}
     );
     
-	});
+});
+
+$("#semestre_anho").change(function() {
+	
+    $.ajax({
+      url:"/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"materia_profesores":$("#asignatura").val(), "seccion_profesores":$("#seccion").val(),
+    	  "semestre_anho_profesores":$("#semestre_anho").val(), "anho_profesores":$("#anho").val()},
+      success: function(data, textstatus, xhr){
+
+       
+        	$('#profesor').html(data);
+        	     
+      },
+      error: function(xhr, textstatus, errorThrown) {
+    	 alert("AJAX call an epic failure");
+   		}
+	}
+    );
+    
+});
+
+$("#anho").change(function() {
+	
+    $.ajax({
+      url:"/solicitud/formulario/procesardatos",
+      type: "POST",
+      data:{"materia_profesores":$("#asignatura").val(), "seccion_profesores":$("#seccion").val(),
+    	  "semestre_anho_profesores":$("#semestre_anho").val(), "anho_profesores":$("#anho").val()},
+      success: function(data, textstatus, xhr){
+
+       
+        	$('#profesor').html(data);
+        	     
+      },
+      error: function(xhr, textstatus, errorThrown) {
+    	 alert("AJAX call an epic failure");
+   		}
+	}
+    );
+    
+});
+
+
+
+
 	
 
 </script>

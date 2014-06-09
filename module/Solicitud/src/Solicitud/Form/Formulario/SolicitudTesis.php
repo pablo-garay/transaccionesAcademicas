@@ -6,6 +6,7 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 use User\Controller\AccountController;
+use Solicitud\Controller\getProfesoresPorCurso;
 
 class SolicitudTesis extends Solicitud
 {
@@ -29,8 +30,8 @@ class SolicitudTesis extends Solicitud
 		//BD sapientia
 		
 		$sql = "SELECT m.materia, m.nombre AS n_materia, p.profesor , p.nombre AS n_profesor FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
-				INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso AND axc.numero_de_documento = ".$numeroDocumento." 
-				INNER JOIN profesores_por_curso AS pxc ON  pxc.curso = c.curso  INNER JOIN profesores AS p ON pxc.profesor = p.profesor";
+		INNER JOIN materias_por_carrera AS mxc ON mxc.materia = m.materia INNER JOIN carreras AS carr ON mxc.carrera = carr.carrera
+		AND carr.nombre = 'Análisis de Sistemas' INNER JOIN profesores_por_curso AS pxc ON  pxc.curso = c.curso  INNER JOIN profesores AS p ON pxc.profesor = p.profesor";
 
 
 		$statement = $sapientiaDbadapter->query($sql);
@@ -144,7 +145,7 @@ class SolicitudTesis extends Solicitud
 
 	
 		$this->add(array(
-				'name' => 'documento_adjunto',
+				'name' => 'tipo',
 				'type' => 'Zend\Form\Element\Radio',
 				'options' => array(
 						'label' => 'Documento Adjunto',
@@ -161,15 +162,15 @@ class SolicitudTesis extends Solicitud
 						);
 	
 		$this->add(array(
-				'name' => 'especificacion_adjunto',
+				'name' => 'descripcion',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de documento adjunto'
+						//'label' => 'Especificación de documento adjunto'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue la descripción del documento adjunto aquí...',
 						'required' => false,
-						'disabled' => false //@todo: getCheckOption from adjunto, si se eligió otro, entonces habilitar especificación
+						'id' => 'descripcion',
 				)
 		),
 				array (
@@ -330,7 +331,7 @@ class SolicitudTesis extends Solicitud
 			) ) );
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'documento_adjunto',
+					'name' => 'tipo',
 					'filters' => array (
 							array (
 									'name' => 'StripTags'
@@ -354,7 +355,8 @@ class SolicitudTesis extends Solicitud
 			) ) );		
 			
 			$inputFilter->add ( $factory->createInput ( array (
-					'name' => 'especificacion_adjunto',
+					'name' => 'descripcion',
+					'allow_empty' => true,
 					'filters' => array (
 							array (
 									'name' => 'StripTags'

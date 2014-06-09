@@ -40,7 +40,15 @@ class Solicitud extends Form
 		$telefonoUsuario = $datos['telefono'];
 		$numeroDocumentoUsuario = $datos['numero_de_documento'];
 		$emailUsuario = $datos['email'];
-		 	
+		
+		$sqlGuest = "SELECT role_id FROM user_role_linker WHERE user_id =".$usuarioLogueado;
+		$statement = $databaseAdapter->query($sqlGuest);
+		$result    = $statement->execute();
+		$guest = 2;// numero identificador de usuario guest
+		$user = null;
+		foreach ($result as $res) {
+			$user =$res['role_id'];
+		} 
 		
 		// Sapientia
 
@@ -48,12 +56,18 @@ class Solicitud extends Form
 		$selectDataMat = array();
 		$selectDataCarr = array();
 		
-		foreach ($resultMatCarr as $res) {
-			// retornar nombre del usuario
-			$selectDataMat[$res['matricula']] = $res['matricula'];
-			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'] ;
+		if ($user == $guest){
+			$selectDataMat['00000'] = 00000;
+			$selectDataCarr['ninguna'] = 'ninguna' ;
+				
+		}else{
+			foreach ($resultMatCarr as $res) {
+				$selectDataMat[$res['matricula']] = $res['matricula'];
+				$selectDataCarr[$res['n_carrera']] = $res['n_carrera'] ;
+			
+			}
 		}
-		
+			
 		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
        
@@ -144,7 +158,7 @@ class Solicitud extends Form
 				'options' => array (
 						'label' => 'Carrera',
 						'empty_option' => 'Elija su carrera',
-						//'value_options' => $selectDataCarr,
+						'value_options' => $selectDataCarr,
 				),
 				'attributes' => array (
 						// Below: HTML5 way to specify that the input will be phone number

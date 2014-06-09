@@ -120,6 +120,7 @@ class SolicitudTraspasoPago extends Solicitud
 				'attributes' => array(
 						'required' => 'required',
 						'id' => 'fecha_oportunidad_pagada',
+						'value' => 'aaaa/mm/dd',
 				),
 		
 		),
@@ -161,6 +162,7 @@ class SolicitudTraspasoPago extends Solicitud
 						//'value' =>  'dd/mm/aaaa',
 						'required' => 'required',
 						'id' => 'fecha_oportunidad_a_pagar',
+						'value' => 'aaaa/mm/dd',
 				),
 		
 		),

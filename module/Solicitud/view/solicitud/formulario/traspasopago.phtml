@@ -32,17 +32,29 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php
 	
-	//if ( ($element->getName() == 'Especificacion_motivo')) {
+	if ( ($element->getName() == 'carrera')) {
 ?>
+	<h5 align="left"><br>Solicito el traspaso de pago de examen del curso: <br><br></h5>
+<?php 
+	//echo "\n";
+	} else if ( ($element->getName() == 'seccion')) {
+?>
+	<h5 align="left"><br>Datos del traspaso: <br><br></h5>
+	fecha_oportunidad_a_pagar
+<?php 
+	//echo "\n";
+	} else if ( ($element->getName() == 'fecha_oportunidad_a_pagar')) {
+?>
+	<h5 align="center">Con todo respeto.</h5>
 	
 <?php 
 	//echo "\n";
-	//}
+	}
 
     } else if ($element->getName() == 'enviar')  {
         $element->setAttribute('class', 'btn btn-primary'); 
@@ -73,7 +85,7 @@ echo $this->form()->closeTag();
 
 $("#matricula").change(function() {
 	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      url:"/solicitud/formulario/procesardatos",
 		      type: "POST",
 		      data:{"matricula":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
@@ -89,9 +101,9 @@ $("#matricula").change(function() {
 	
 $("#carrera").change(function() {
 	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      url:"/solicitud/formulario/procesardatos",
 		      type: "POST",
-		      data:{"examen_carrera":$("#carrera").val(), "matr":$("#matricula").val()},
+		      data:{"carrera_examen_inscripto":$("#carrera").val(), "matricula_examen_inscripto":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
 		        	$('#asignatura').html(data);
 		      },

@@ -26,7 +26,7 @@ function getDatosSolicitante ($idSolicitud, $tipoSolicitud, AdapterInterface $db
 		$matriculaSolicitud = $res['matricula'];	
 	}
 	
-	$sql  = "SELECT axs.asignatura, axs.seccion, axs.semestre_anho, axs.semestre
+	$sql  = "SELECT axs.asignatura, axs.seccion, axs.semestre_anho, axs.anho
 					FROM solicitudes AS so
 					INNER JOIN ".$tipoSolicitud." AS s ON so.solicitud = s.solicitud
 					INNER JOIN asignaturas_por_solicitud AS axs
@@ -43,7 +43,7 @@ function getDatosSolicitante ($idSolicitud, $tipoSolicitud, AdapterInterface $db
 		$asignaturaSolicitud = $res['asignatura'];
 		$seccionAsignatura = $res['seccion'];
 		$semestreAnhoAsignatura = $res['semestre_anho'];
-		$anhoAsignatura = $res['semestre'];
+		$anhoAsignatura = $res['anho'];
 	}
 	
 	$sql  = "SELECT c.nombre AS carrera, d.nombre AS departamento FROM
@@ -197,7 +197,10 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 				
 			
 			$requisitosVerificados = array("Asistencia Minima: " => $requisitoAsistencia,
-			"Porcentaje de Semestre Anterior: "=> $porcentajeAsistenciaSolicitante); // segundo valor devuelve el porcentaje de asistencia
+			"Porcentaje de Semestre Anterior: "=> $porcentajeAsistenciaSolicitante,
+			"Sección de la asignatura cursada" => $seccionAsignatura,
+			"Semestre año cursado" => $semestreAnhoAsignatura,
+			"Año Cursado" => $anhoAsignatura); // segundo valor devuelve el porcentaje de asistencia
 			break;
 			
 		case 'solicitud_de_titulo':
@@ -471,8 +474,8 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			$requisitoAsistencia = "NO_CUMPLE";
 	 		$resultAsistencia = getAsistencia($asignaturaSolicitud, $numeroDocumento, $semestreAnhoAsignatura, $seccionAsignatura, $anhoAsignatura);
  			
- 			$sumAsistidas='0';
- 			$sumTotales='0';
+ 			$sumAsistidas=0;
+ 			$sumTotales=0;
  			
  			foreach ($resultAsistencia as $res) {
  				$sumAsistidas += $res['horas_asistidas'];
@@ -513,6 +516,9 @@ function verificarRequisitos($idSolicitud, $tipoSolicitud, AdapterInterface $dbA
 			
 			$requisitosVerificados = array("Asistencia Minima" => $requisitoAsistencia,
 											"Porcentaje de Asistencia" => $porcentajeAsistenciaSolicitante,
+											"Sección de la asignatura cursada" => $seccionAsignatura,
+											"Semestre año cursado" => $semestreAnhoAsignatura,
+											"Año Cursado" => $anhoAsignatura,
 											"No rindio el semestre pasado" => $requisitoNoRendir);
 			
 			break;

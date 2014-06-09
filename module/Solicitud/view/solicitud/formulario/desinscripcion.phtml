@@ -32,7 +32,7 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php
@@ -77,7 +77,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
@@ -89,23 +89,11 @@ $("#matricula").change(function() {
 
 	}
     );
- 
 	});
 
 
 	$("#carrera").change(function() {
-	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
-		      type: "POST",
-		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
-		      success: function(data, textstatus, xhr){
-		       
-		        	$('#asignatura').html(data);
-		        	     
-		      },
 
-			}
-		    );
 		
 	});
 	
@@ -113,7 +101,7 @@ $("#matricula").change(function() {
 
 	$("#asignatura").change(function() {
 	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      url:"/solicitud/formulario/procesardatos",
 		      type: "POST",
 		      data:{"cod_asignatura":$("#asignatura").val()},
 		      success: function(data, textstatus, xhr){
@@ -132,11 +120,24 @@ $("#matricula").change(function() {
 	$("input:radio").click(function() {
 		//$('input[name=radioName]:checked', '#myForm').val()
  		if ($('input[name=curso_completo]:radio:checked').val() == 'Por asignatura'){
+ 		    $.ajax({
+ 			      url:"/solicitud/formulario/procesardatos",
+ 			      type: "POST",
+ 			      data:{"carrera_asignaturas_inscriptas":$("#carrera").val(), "matricula_asignaturas_inscriptas":$("#matricula").val()},
+ 			      success: function(data, textstatus, xhr){
+ 			       
+ 			        	$('#asignatura').html(data);
+ 			        	     
+ 			      },
+
+ 				}
+ 			   );
 			$('#asignatura').fadeIn(1000);
 			$('#cod_asignatura').fadeIn(1000);
 			//$('#especificacion_motivo').attr( 'required','required');
  		}
  		if ($('input[name=curso_completo]:radio:checked').val() != 'Por asignatura'){
+ 				//$('#asignatura').html('<option value="0"> Elija la asignatura .. </option>');
  				$('#asignatura').hide(100);
  				$('#cod_asignatura').hide(100);
 			//$('#especificacion_motivo').attr( 'required',false);

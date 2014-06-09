@@ -268,15 +268,18 @@ class ActorController extends AbstractActionController
 		return $res;
 	}
 	
-    public function sendNotificationEmailMessage($to, $content)
+	/* Enviar Email de notificacion con contenido $content al email $to */
+    public function sendSolicitudNotificationEmailMessage($solicitudData, $text)
     {
     	// el template que se tiene que crear dentro de la carpeta view del modulo en un carpeta email
     	$viewTemplate = 'solicitud/notify/email/notificarSolicitud';
     	// The ViewModel variables to pass into the renderer
+    	$content = sprintf("Tipo de Solicitud: %s\nFecha Solicitada: %s\n\nResolución: %s", 
+    						str_replace('_', ' ', strtoupper($solicitudData['tipo_solicitud'])), $solicitudData['fecha_solicitada'], strtoupper($text));
 		$value = array('content' => $content);
     	$subject = 'Notificacion de solicitud - Transacciones Académicas UCA';
     	$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
-    	$message = $mailService->createTextMessage('transaccionesuca@gmail.com', $to, $subject, $viewTemplate, $value);
+    	$message = $mailService->createTextMessage('transaccionesuca@gmail.com', $solicitudData['email'], $subject, $viewTemplate, $value);
     	$mailService->send($message);
     }
 		
@@ -302,7 +305,7 @@ class ActorController extends AbstractActionController
 			if(isset($data['Aprobar'])) {
 				$this->cambiarEstadoSolicitud('FINAL', 'APROB', $id_solicitud);
 				$message = "La solicitud fue aprobada";
-				//$this->sendNotificationEmailMessage($solicitudData['email'], $message);
+				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
 			
 			} else if(isset($data['Pendiente'])) {
 				
@@ -352,12 +355,12 @@ class ActorController extends AbstractActionController
 			} else if (isset($data['Anular'])) {
 				$this->cambiarEstadoSolicitud('FINAL', 'ANUL', $id_solicitud);
 				$message = "La solicitud fue anulada";
-				//$this->sendNotificationEmailMessage($solicitudData['email'], $message);
+				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
 				
 			} else if (isset($data['Rechazar'])) {
 				$this->cambiarEstadoSolicitud('FINAL', 'RECHAZ', $id_solicitud);
 				$message = "La solicitud fue rechazada";
-				//$this->sendNotificationEmailMessage($solicitudData['email'], $message);
+				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
 
 			} else if (isset($data['EnviarCorreo'])) {				
 				
@@ -370,11 +373,9 @@ class ActorController extends AbstractActionController
 			} else if (isset($data['Salir'])) {
 				$message = "Ha abandonado la solicitud";
 			}
-			
-			
 
 		
-			$this->flashmessenger()->addSuccessMessage($message);
+			if (isset($message)) $this->flashmessenger()->addSuccessMessage($message);
 // 			$this->flashmessenger()->addSuccessMessage(print_r($id_solicitud, TRUE));
 		
 			// redirect the user to its home page

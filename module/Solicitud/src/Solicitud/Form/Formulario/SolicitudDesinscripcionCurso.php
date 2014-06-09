@@ -84,7 +84,7 @@ class SolicitudDesinscripcionCurso extends Solicitud
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						//'label' => 'Código Asignatura:',
-						'empty_option' => 'Seleccione código de asignatura ',
+						'empty_option' => 'Elija el código de asignatura ',
 						//'value_options' => $this->getCodigoDeAsignatura(),//$this->getSubjectsOfCareer(),
 				),	
 				'attributes' => array(

@@ -32,7 +32,7 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php
@@ -65,7 +65,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){    
@@ -79,9 +79,9 @@ $("#matricula").change(function() {
 
 $("#carrera").change(function() {
     $.ajax({
-	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+	      url:"/solicitud/formulario/procesardatos",
 	      type: "POST",
-	      data:{"carrera_asignatura_inscriptas":$("#carrera").val(), "mat":$("#matricula").val()},
+	      data:{"carrera_asignaturas_inscriptas":$("#carrera").val(), "matricula_asignaturas_inscriptas":$("#matricula").val()},
 	      success: function(data, textstatus, xhr){
 	        	$('#asignatura').html(data);	     
 	      },
@@ -90,18 +90,18 @@ $("#carrera").change(function() {
 });
 
 
-$("#asignatura").change(function() {
-    $.ajax({
-	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
-	      type: "POST",
-	      data:{"asignatura_seccion":$("#asignatura").val(), "carrera_seccion":$("#carrera").val(), "mat_seccion":$("#matricula").val()},
-	      success: function(data, textstatus, xhr){
+// $("#asignatura").change(function() {
+//     $.ajax({
+// 	      url:"/solicitud/formulario/procesardatos",
+// 	      type: "POST",
+// 	      data:{"asignatura_seccion":$("#asignatura").val(), "carrera_seccion":$("#carrera").val(), "mat_seccion":$("#matricula").val()},
+// 	      success: function(data, textstatus, xhr){
 	      		
-	        	$('#seccion').html(data);     	     
-	      },
-    	}
-	    );
-});
+// 	        	$('#seccion').html(data);     	     
+// 	      },
+//     	}
+// 	    );
+// });
 
 
 

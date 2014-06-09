@@ -32,20 +32,24 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php
 	
-	if ( ($element->getName() == 'Email')) {
+	if ( ($element->getName() == 'carrera')) {
 ?>
-	
+	<h5 align="left">De la carrera:</h5>
 <?php 
 	echo "\n";
 	}
-	else if ( ($element->getName() == 'Descripcion')) {
+	else if ( ($element->getName() == 'carrera_asignatura')) {
 ?>
-	
+	<h5 align="left">Solcito cursar la asignatura:</h5>
+<?php 
+    }else if ( ($element->getName() == 'especificacion_motivo')) {
+?>
+	<h5 align="center">Con todo respeto.</h5>
 <?php 
     }
     } else if ($element->getName() == 'enviar')  {
@@ -76,7 +80,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
@@ -91,30 +95,12 @@ $("#matricula").change(function() {
 	});
 
 
-$("#carrera").change(function() {
-	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
-		      type: "POST",
-		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
-		      success: function(data, textstatus, xhr){
-		       // $('#profesor').find('option').remove().end();
-		       
-		        	$('#asignatura').html(data);
-		        	     
-		      },
-			}
-		    );
-		
-	
-	});
-	
-	
 
 $("#carrera_asignatura").change(function() {
     $.ajax({
-	      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+	      url:"/solicitud/formulario/procesardatos",
 	      type: "POST",
-	      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+	      data:{"carrera_asignaturas_todas":$("#carrera_asignatura").val(), "matricula_asignaturas_todas":$("#matricula").val()},
 	      success: function(data, textstatus, xhr){
 	       // $('#profesor').find('option').remove().end();
 	       
@@ -126,6 +112,23 @@ $("#carrera_asignatura").change(function() {
     
 
 });
+
+
+$("input:radio").click(function() {
+	if ($('input[name=motivo]:radio:checked').val() == 'Otro'){
+		
+		$('#especificacion_motivo').fadeIn(1000);
+	
+	
+	}
+	if ($('input[name=motivo]:radio:checked').val() != 'Otro'){
+			
+		$('#especificacion_motivo').hide(100);
+		
+	
+	}
+});
+$('#especificacion_motivo').hide(100);
 
 
 

@@ -54,7 +54,7 @@ El/la que suscribe  </h5>
 									<div class="controls">
 											
 								            <?= $this->formElement($element)?>
-								            <?= $this->formElementErrors($element)?>
+								            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 									    </div> </div>
 	<?php				
 			}else{
@@ -64,7 +64,7 @@ El/la que suscribe  </h5>
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php 
@@ -125,7 +125,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){

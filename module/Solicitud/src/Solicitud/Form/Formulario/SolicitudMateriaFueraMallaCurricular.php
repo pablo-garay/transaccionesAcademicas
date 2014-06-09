@@ -103,12 +103,13 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 				'name' => 'especificacion_motivo',
 				'type' => 'Zend\Form\Element\Textarea',
 				'options' => array(
-						'label' => 'Especificación de Motivo'
+						//'label' => 'Especificación de Motivo'
 				),
 				'attributes' => array(
 						'placeholder' => 'Agregue alguna información adicional aquí...',
 						'required' => false,
-						'disabled' => false //@todo: getCheckOption from motivo, si se eligió otros, entonces habilitar especificación
+						'id' => 'especificacion_motivo',
+				
 				)
 		),
 				array (

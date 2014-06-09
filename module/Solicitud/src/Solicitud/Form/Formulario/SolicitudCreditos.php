@@ -26,9 +26,15 @@ class SolicitudCreditos extends Solicitud
 						'empty_option' => 'Seleccione una actividad ',
 						'value_options' => array(
 								'Materias' => 'Materias',
-								'Cursos, seminarios, trabajos u otras realizadas en la UC' => 'Cursos, seminarios, trabajos u otras realizadas en la UC',
-								'Cursos, seminarios, trabajos u otras realizadas en otras universidades' => 'Cursos, seminarios, trabajos u otras realizadas en otras universidades',
-								'Ayudantía de Cátedra u otras actividades' => 'Ayudantía de Cátedra u otras actividades')
+								'Ayudantía de Cátedra' => 'Ayudantía de Cátedra',
+								'Cursos en la UC' => 'Cursos en la UC',
+								'Seminario en la UC' => 'Seminario en la UC',
+								'Trabajos en la UC' => 'Trabajos en la UC',
+								'Actividades en la UC' => 'Actividades en la UC',
+								'Cursos en otra Universidad' => 'Cursos en otra Universidad',
+								'Seminario en otra Universidad' => 'Seminario en otra Universidad',
+								'Trabajos en otra Universidad' => 'Trabajos en otra Universidad',
+								'Actividades en otra Universidad' => 'Actividades otra Universidad',)
 				),
 		
 		),

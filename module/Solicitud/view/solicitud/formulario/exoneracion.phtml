@@ -31,18 +31,39 @@ foreach ($this->form1 as $element) {
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
 	<div class="controls">
             <?= $this->formElement($element)?>
-            <?= $this->formElementErrors($element)?>
+            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
 	    </div>
 </div>
 <?php
 	
 	if ( ($element->getName() == 'carrera')) {
 ?>
-	<h4> Solicito la exoneración para la: </h4>
+	<h5> Solicito la exoneración para la asignatura:  </h5>
 <?php 
 	echo "\n";
+	} else if ( ($element->getName() == 'asignatura') ){
+?>
+	<h5> La cual cursé en la sección:  </h5>
+<?php 
+
+	}else if ( ($element->getName() == 'seccion') ){
+?>
+	<h5> En el semestre de año:  </h5>
+<?php 
+
+	}else if ( ($element->getName() == 'semestre_anho') ){
+?>
+	<h5> En el año:  </h5>
+<?php 
+
+	}else if ( ($element->getName() == 'anho') ){
+?>
+	<br>
+	<h5> Motivo de la solicitud:  </h5>
+<?php 
+
 	}
-	else if ( ($element->getName() == 'descripcion')) {
+	else if ( ($element->getName() == 'especificacion_motivo')) {
 ?>
 	
 <?php 
@@ -75,7 +96,7 @@ echo $this->form()->closeTag();
 $("#matricula").change(function() {
 	
     $.ajax({
-      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+      url:"/solicitud/formulario/procesardatos",
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
@@ -87,27 +108,39 @@ $("#matricula").change(function() {
 	}
     );
 
-	});
+});
 
 
-	$("#carrera").change(function() {
+$("#carrera").change(function() {
 	    $.ajax({
-		      url:"http://transacciones.localhost/solicitud/formulario/procesardatos",
+		      url:"/solicitud/formulario/procesardatos",
 		      type: "POST",
-		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+		      data:{"carrera_asignaturas_cursadas":$("#carrera").val(), "matricula_asignaturas_cursadas":$("#matricula").val()},
 		      success: function(data, textstatus, xhr){
 		       
 		        	$('#asignatura').html(data);
+		        	
 		        	     
 		      },
-			}
-		    );
+		}
+	);
 
-	});
+});
 	
 
 
 $("#asignatura").change(function() {
+    $.ajax({
+	      url:"/solicitud/formulario/procesardatos",
+	      type: "POST",
+	      data:{"asignatura_seccion_cursada":$("#asignatura").val(), "carrera_asignaturas_cursadas":$("#carrera").val(), "matricula_asignaturas_cursadas":$("#matricula").val()},
+	      success: function(data, textstatus, xhr){
+	       
+	        	$('#seccion').html(data);
+	        	     
+	      },
+	}
+);
 
 });
 
@@ -120,6 +153,47 @@ $("#seccion").change(function() {
 $("#semestre_anho").change(function() {
 
 });
+
+// $("#adjunto").click(function() {
+
+// 	$('#tipo').fadeIn(1000);
+// 	$('#descripcion').fadeIn(1000);
+// });
+// $('#tipo').hide();
+// $('#descripcion').hide();
+
+$("input:radio").click(function() {
+		if ($('input[name=motivo]:radio:checked').val() == 'Otro'){
+			
+			$('#especificacion_motivo').fadeIn(1000);
+		
+		
+		}
+		if ($('input[name=motivo]:radio:checked').val() != 'Otro'){
+				
+			$('#especificacion_motivo').hide(100);
+			
+		
+		}
+});
+	$('#especificacion_motivo').hide(100);
+
+
+$("input:radio").click(function() {
+		if ($('input[name=tipo]:radio:checked').val() == 'Otro'){
+			
+			$('#descripcion').fadeIn(1000);
+		
+		
+		}
+		if ($('input[name=tipo]:radio:checked').val() != 'Otro'){
+				
+			$('#descripcion').hide(100);
+			
+		
+		}
+});
+	$('#descripcion').hide(100);
 
 
 </script>

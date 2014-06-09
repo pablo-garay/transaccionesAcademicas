@@ -6,17 +6,32 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-
+require_once 'funcionesDB.php';
 class SolicitudConvalidacionMaterias extends Form
 {
 	protected $dbAdapter;
 
 	//parámetro del constructor: adaptador de la base de datos
-	public function __construct( $name = 'solicitudConvalidacionMaterias', AdapterInterface $dbadapter, $idUsuario) {
-		$this->dbAdapter = $databaseAdapter; //Asignación de nuestro adaptador de base de datos
+	public function __construct( $name = 'solicitudConvalidacionMaterias', AdapterInterface $dbAdapter, $idUsuario) {
+		$this->dbAdapter = $dbAdapter; //Asignación de nuestro adaptador de base de datos
 		parent::__construct($name);
 
 		$this->setAttribute('method', 'post');
+		
+		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		
+		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
+		$usuarioLogueado = $idUsuario;
+		$datos = getDatosUsuario ($this->dbAdapter, $usuarioLogueado);
+		
+		$nombresUsuario = $datos['nombres'];
+		$apellidosUsuario = $datos['apellidos'];
+		$telefonoUsuario = $datos['telefono'];
+		$numeroDocumentoUsuario = $datos['numero_de_documento'];
+		$emailUsuario = $datos['email'];
+		
+		
+		
 
        // Asi es como definimos un elemento (en este caso tipo texto)
         $this->add(array(
@@ -28,7 +43,9 @@ class SolicitudConvalidacionMaterias extends Form
         		'attributes' => array(
         		// These are the attributes that are passed directly to the HTML element
         				'placeholder' => 'Escriba su nombre...', // HTM5 placeholder attribute
-        				'required' => 'required' // Ex: <input required="true"
+        				'required' => 'required', // Ex: <input required="true"
+        				'value' => $nombresUsuario,
+        				'readonly' => 'true',
         				
         		),
         		'options' => array(
@@ -46,7 +63,9 @@ class SolicitudConvalidacionMaterias extends Form
 				'type' => 'Zend\Form\Element\Text',
 				'attributes' => array (
 						'placeholder' => 'Escriba su apellido...',
-						'required' => 'required'
+						'required' => 'required',
+						'value' => $apellidosUsuario,
+						'readonly' => 'true',
 						
 				),
 				'options' => array (
@@ -67,6 +86,8 @@ class SolicitudConvalidacionMaterias extends Form
 						'type' => 'tel',
 						'placeholder' => 'Escriba su teléfono...',
 						'required' => 'required',
+						'value' => $telefonoUsuario,
+						'readonly' => 'true',
 						// Below: HTML5 way to specify the allowed characters
 						'pattern'  => '^[\d-/]+$'
 				),
