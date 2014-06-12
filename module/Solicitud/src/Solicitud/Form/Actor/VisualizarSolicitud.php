@@ -17,7 +17,7 @@ class VisualizarSolicitud extends Form
 	public function __construct(AdapterInterface $dbadapter, 
 								$aprobarEnabled, $vistoBuenoEnabled,
 								$pendienteEnabled = TRUE, $anularEnabled = TRUE, $rechazarEnabled = TRUE, 
-								$enviarCorreoEnabled = TRUE, $observacionesEnabled = TRUE) 
+								$enviarCorreoEnabled = FALSE, $observacionesEnabled = TRUE) 
 	{ 
 		$this->adapter = $dbadapter; //Asignación de nuestro adaptador de base de datos
 		parent::__construct('solicitud');

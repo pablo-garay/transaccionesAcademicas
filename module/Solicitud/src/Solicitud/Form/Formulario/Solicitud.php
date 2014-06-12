@@ -58,7 +58,7 @@ class Solicitud extends Form
 		
 		if ($user == $guest){
 			$selectDataMat['00000'] = 00000;
-			$selectDataCarr['ninguna'] = 'ninguna' ;
+			$selectDataCarr['Ninguna'] = 'Ninguna' ;
 				
 		}else{
 			foreach ($resultMatCarr as $res) {

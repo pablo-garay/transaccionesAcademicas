@@ -62,18 +62,22 @@ class ListaController extends AbstractActionController
 		$model = new SolicitudModel();	
 		
 		if($role != 'alumno') { /* Funcionarios */
-			$result = $model->getSql()->select()
-							->where(array('etapa_actual' => $etapa))
-							->order(array('fecha_solicitada DESC'));
+			$result = $model->getSql()->select();
+			
+			if (in_array ($role , array('secretaria_general', 'secretaria_departamento', 'secretaria_academica')))
+				/* Secretarias */
+				$result->where(array('etapa_actual' => array($etapa, 'DEL_SS')));
+			else /* Superiores */
+				$result->where(array('etapa_actual' => $etapa));
 		} else { /* Alumno */
 			$result = $model->getSql()->select()
-							->where(array('usuario_solicitante' => $this->zfcUserAuthentication()->getIdentity()->getId()))
-							->order(array('fecha_solicitada DESC'));
+							->where(array('usuario_solicitante' => $this->zfcUserAuthentication()->getIdentity()->getId()));
 		}
 		
 		if ($filter){ /* Filtrar por Estado de la Solicitud */
 			$result->where(array('estado_solicitud' => $estadoSolicitud));
-		}
+		}		
+		$result->order(array('fecha_solicitada DESC')); /* ordenar por fecha */
 		
 		$adapter = new PaginatorDbAdapter($result, $model->getAdapter());
 		$paginator = new Paginator($adapter);

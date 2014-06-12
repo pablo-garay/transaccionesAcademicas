@@ -57,7 +57,21 @@ class ActorController extends AbstractActionController
 		}
 	}
 	
-	public function cambiarEstadoSolicitud($nueva_etapa, $nuevo_estado, $id_solicitud)
+	public function cambiarEstadoSolicitud($nuevo_estado, $id_solicitud)
+	{
+		$sql = new Sql($this->dbAdapter);
+	
+		$update =  $sql->update('solicitudes')
+		->set(array(
+				'estado_solicitud' => $nuevo_estado,
+		))
+		->where(array('solicitud' => $id_solicitud));
+	
+		$statement = $sql->prepareStatementForSqlObject($update);
+		$results = $statement->execute();
+	}
+	
+	public function cambiarEstadoEtapaSolicitud($nueva_etapa, $nuevo_estado, $id_solicitud)
 	{
 		$sql = new Sql($this->dbAdapter);
 		
@@ -303,7 +317,7 @@ class ActorController extends AbstractActionController
 			$form->setData($data);
 
 			if(isset($data['Aprobar'])) {
-				$this->cambiarEstadoSolicitud('FINAL', 'APROB', $id_solicitud);
+				$this->cambiarEstadoSolicitud('APROB', $id_solicitud);
 				$message = "La solicitud fue aprobada";
 				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
 			
@@ -311,25 +325,25 @@ class ActorController extends AbstractActionController
 				
 				switch($actor) {
 					case 'recepcion':
-						$this->cambiarEstadoSolicitud('RCDA', 'PEND', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud('RCDA', 'PEND', $id_solicitud);
 						break;
 					case 'secretariageneral':
-						$this->cambiarEstadoSolicitud('DEL_SG', 'PEND', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud('DEL_SG', 'PEND', $id_solicitud);
 						break;
 					case 'secretariadepartamento':
-						$this->cambiarEstadoSolicitud('DEL_SD', 'PEND', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud('DEL_SD', 'PEND', $id_solicitud);
 						break;
 					case 'secretariaacademica':
-						$this->cambiarEstadoSolicitud('DEL_SA', 'PEND', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud('DEL_SA', 'PEND', $id_solicitud);
 						break;
 					case 'decano':
-						$this->cambiarEstadoSolicitud('DEL_DE', 'PEND', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud('DEL_DE', 'PEND', $id_solicitud);
 						break;
 					case 'directoracademico':
-						$this->cambiarEstadoSolicitud('DEL_DA', 'PEND', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud('DEL_DA', 'PEND', $id_solicitud);
 						break;
 					case 'directordepartamento':
-						$this->cambiarEstadoSolicitud('DEL_DD', 'PEND', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud('DEL_DD', 'PEND', $id_solicitud);
 						break;
 				}
 				$message = "La solicitud fue marcada como pendiente";
@@ -338,31 +352,29 @@ class ActorController extends AbstractActionController
 				
 				switch($actor) {
 					case 'recepcion':
-						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 					case 'secretariageneral':
-						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 					case 'secretariadepartamento':
-						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 					case 'secretariaacademica':
-						$this->cambiarEstadoSolicitud($actorDestino, 'NUEVO', $id_solicitud);
+						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
 						break;
 				}
 				$message = "La solicitud fue derivada";		
 			
 			} else if (isset($data['Anular'])) {
-				$this->cambiarEstadoSolicitud('FINAL', 'ANUL', $id_solicitud);
+				$this->cambiarEstadoSolicitud('ANUL', $id_solicitud);
 				$message = "La solicitud fue anulada";
 				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
 				
 			} else if (isset($data['Rechazar'])) {
-				$this->cambiarEstadoSolicitud('FINAL', 'RECHAZ', $id_solicitud);
+				$this->cambiarEstadoSolicitud('RECHAZ', $id_solicitud);
 				$message = "La solicitud fue rechazada";
 				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
-
-			} else if (isset($data['EnviarCorreo'])) {				
 				
 			} else if (isset($data['Imprimir'])) {
 				return $this->forward()->dispatch('Visualize\Controller\Visualize', array(
@@ -372,6 +384,12 @@ class ActorController extends AbstractActionController
 				));
 			} else if (isset($data['Salir'])) {
 				$message = "Ha abandonado la solicitud";
+				$this->flashmessenger()->addSuccessMessage($message);
+				return $this->redirect()->toRoute('solicitud/list', array (
+					'controller' => 'lista',
+					'action'     => 'todas',
+				));
+				
 			}
 
 		

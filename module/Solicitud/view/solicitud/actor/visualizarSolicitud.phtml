@@ -66,7 +66,7 @@
    echo $this->form()->openTag($form);
    echo $this->formRow($form->get('observaciones'));
    ?>
-    <a href="/solicitud/situacionacademica/index" target="_blank"> Ver la Situación Académica</a>
+   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href="/solicitud/situacionacademica/index" target="_blank"> Ver la Situación Académica</a>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<a href=<?php echo sprintf("mailto:%s", $element['email']);?> target="_blank"> Enviar Correo al solicitante</a>
    </pre> <div style="text-align:center;"><br>
    <?php
    foreach ($this->form1 as $element){
