@@ -23,8 +23,10 @@ class Module
     	$authorize = $sm->get('BjyAuthorizeServiceAuthorize');
     	$acl = $authorize->getAcl();
     	$role = $authorize->getIdentity();
+    	/* Define que elementos del navigator son visibles segun el rol del usuario */
     	\Zend\View\Helper\Navigation::setDefaultAcl($acl);
-    	\Zend\View\Helper\Navigation::setDefaultRole($role);
+    	\Zend\View\Helper\Navigation::setDefaultRole($role); 
+
     	
     	
     	/* Translator */    	

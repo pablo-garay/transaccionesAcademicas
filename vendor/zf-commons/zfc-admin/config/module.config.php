@@ -52,7 +52,8 @@ return array(
     ),
 
     'navigation' => array(
-        'admin' => array(),
+        'admin' => array(
+    	),
     ),
 
     'router' => array(

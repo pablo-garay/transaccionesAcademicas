@@ -59,6 +59,7 @@ return array(
                 'lista' => array(),
             	'solicitudes' => array(),
             	'formulario' => array(),
+            	'admin' => array(),
             ),
         ),
 
@@ -81,7 +82,10 @@ return array(
                 		'formulario', array('listar', 'convalidacion', 'varias')),
                 	
                 	array(array("alumno"),
-                		'formulario', array('listar', 'list'))
+                		'formulario', array('listar', 'list')),
+                		
+                	array(array("admin"),
+                		'admin', array('listUsuarios'))
                 ),
 
                 // Don't mix allow/deny rules if you are using role inheritance.
@@ -162,7 +166,8 @@ return array(
         		/* Director Departamento */
         		array('controller' => array('Solicitud\Controller\Actor'), 'action' => 'directordepartamento',
         				'roles' => array("director_departamento")),            	
-
+				
+				/* Admin */
                 array('controller' => 'ZfcAdmin\Controller\AdminController','roles' => array('admin')),
                 array('controller' => 'zfcuseradmin','roles' => array('admin')),
                 // Below is the default index action used by the ZendSkeletonApplication
