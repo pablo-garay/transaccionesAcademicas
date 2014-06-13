@@ -13,25 +13,24 @@
                         ->prependStylesheet($this->basePath() . '/css/style.css')
                         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
                         ->prependStylesheet($this->basePath() . '/themes/1/js-image-slider.css')
-                        ->prependStylesheet($this->basePath() . '/generic.css')
-                        ->prependStylesheet($this->basePath() . '/css/prettyPhoto.css')
-                        ->prependStylesheet($this->basePath() . '/css/flexslider.css')
-                        ->prependStylesheet($this->basePath() . '/css/style2.css')
+//                         ->prependStylesheet($this->basePath() . '/generic.css')
+//                         ->prependStylesheet($this->basePath() . '/css/prettyPhoto.css')
+//                         ->prependStylesheet($this->basePath() . '/css/flexslider.css')
                         // ->prependStylesheet($this->basePath() . '/css/bootstrap.css')  ?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
                                       ->prependFile($this->basePath() . '/js/bootstrap.min.js')
-                                      // ->prependFile($this->basePath() . '/js/jquery.min.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.min.js')
                                       ->prependFile($this->basePath() . '/themes/1/js-image-slider.js') 
                                       // ->prependFile($this->basePath() . '/js/jquery.js')
                                       // ->prependFile($this->basePath() . '/js/bootstrap.js')
                                       // ->prependFile($this->basePath() . '/js/docs.js')
-                                      ->prependFile($this->basePath() . '/js/setup.js')
-                                      ->prependFile($this->basePath() . '/js/jquery.easing.1.3.js')
-                                      ->prependFile($this->basePath() . '/js/all-in-one.js')
-                                      ->prependFile($this->basePath() . '/js/jquery-ui-1.8.16.custom.min.js')
-                                      ->prependFile($this->basePath() . '/js/jquery2.min.js')?>
+//                                       ->prependFile($this->basePath() . '/js/setup.js')
+//                                       ->prependFile($this->basePath() . '/js/jquery.easing.1.3.js')
+//                                       ->prependFile($this->basePath() . '/js/all-in-one.js')
+//                                       ->prependFile($this->basePath() . '/js/jquery-ui-1.8.16.custom.min.js')
+//                                       ->prependFile($this->basePath() . '/js/jquery2.min.js')?>
 
     </head>
     <body>
@@ -52,8 +51,8 @@
                     	<ul class="nav">
 <?php
         $navHelper = $this->navigation('navigation');
-        $containers = $navHelper->getContainer();
-        foreach($containers->getPages() as $page) {
+        //$containers = $navHelper->getContainer();
+        foreach($navHelper->getPages() as $page) {
             $class = "";
             if ($page->isActive()) {
                 $class = "active";
@@ -79,11 +78,11 @@
                        printf("<li>%s</li>\n",$navHelper->htmlify($subPage));
                                         }
                        echo "</ul></li>\n";
-                  }
-                  else {
-                       printf("<li class=\"%s\">%s</li>\n",$class,$navHelper->htmlify($page));
-                       }
-                  }
+             }
+             else {
+          	 	 printf("<li class=\"%s\">%s</li>\n",$class,$navHelper->htmlify($page));
+             }
+       }
 ?>						</ul>
 					</div><!--/.nav-collapse -->
                     <ul class="nav navbar-nav pull-right">

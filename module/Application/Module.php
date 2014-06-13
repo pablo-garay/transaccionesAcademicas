@@ -26,6 +26,7 @@ class Module
     	\Zend\View\Helper\Navigation::setDefaultAcl($acl);
     	\Zend\View\Helper\Navigation::setDefaultRole($role);
     	
+    	
     	/* Translator */    	
         $translator = $e->getApplication()->getServiceManager()->get('translator');
         $eventManager        = $e->getApplication()->getEventManager();

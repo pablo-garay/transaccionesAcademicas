@@ -385,6 +385,7 @@ class ActorController extends AbstractActionController
 			} else if (isset($data['Salir'])) {
 				$message = "Ha abandonado la solicitud";
 				$this->flashmessenger()->addSuccessMessage($message);
+				//$redirectUrl = $this->getRequest()->getHeader('HTTP_REFERER', 0);
 				return $this->redirect()->toRoute('solicitud/list', array (
 					'controller' => 'lista',
 					'action'     => 'todas',
@@ -438,6 +439,7 @@ class ActorController extends AbstractActionController
 			case "solicitud_de_pasantia":
 			case "solicitud_de_homologacion_de_materias":
 			case "solicitud_de_tutoria_de_catedra":
+			case "solicitud_de_colaborador_de_catedra":
 				/* Derivar Scta Dpto */
 				$actorDestino = 'DEL_SD';
 				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);				

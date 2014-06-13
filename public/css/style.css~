@@ -35,18 +35,3 @@ div.container a.brand {
     margin-left: 0;
     padding: 8px 20px 12px 40px;
 }
-
-/* ================= Images ================= */
-img.alignleft {
-	float:left;
-	margin:10px 16px 10px 0;
-}
-img.aligncenter {
-	display:block;
-	margin-left:auto;
-	margin-right:auto;
-}
-img.alignright {
-	float:right;
-	margin:5px 0px 5px 11px;
-}

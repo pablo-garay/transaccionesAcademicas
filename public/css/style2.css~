@@ -1,0 +1,116 @@
+
+/* ================= Images ================= */
+img.alignleft {
+	float:left;
+	margin:10px 16px 10px 0;
+}
+img.aligncenter {
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+img.alignright {
+	float:right;
+	margin:5px 0px 5px 11px;
+}
+
+/* ================= Deviders ================= */
+.clear {
+	content:".";
+	display:block;
+	clear:both;
+	height:0;
+	visibility:hidden;
+}
+.padding3 {
+	padding-top:3px;
+	font-size:0;
+	line-height:0;
+}
+.padding5 {
+	padding-top:5px;
+	font-size:0;
+	line-height:0;
+}
+.padding10 {
+	padding-top:10px;
+	font-size:0;
+	line-height:0;
+}
+.padding12 {
+	padding-top:12px;
+	font-size:0;
+	line-height:0;
+}
+.padding15 {
+	padding-top:15px;
+	font-size:0;
+	line-height:0;
+}
+.padding17 {
+	padding-top:17px;
+	font-size:0;
+	line-height:0;
+}
+.padding20 {
+	padding-top:20px;
+	font-size:0;
+	line-height:0;
+}
+.padding25 {
+	padding-top:25px;
+	font-size:0;
+	line-height:0;
+}
+.padding30 {
+	padding-top:30px;
+	font-size:0;
+	line-height:0;
+}
+.padding40 {
+	padding-top:40px;
+	font-size:0;
+	line-height:0;
+}
+.padding50 {
+	padding-top:50px;
+	font-size:0;
+	line-height:0;
+}
+.padding60 {
+	padding-top:60px;
+	font-size:0;
+	line-height:0;
+}
+.padding80 {
+	padding-top:80px;
+	font-size:0;
+	line-height:0;
+}
+.none {
+	display:none;
+}
+.line {
+	font-size:0px;
+	border-top:1px solid #d9d9d9;
+}
+hr {
+	background:transparent;
+	border:0;
+	clear:both;
+	color:transparent;
+	height:1px;
+	margin:0;
+	padding:0
+}
+hr {
+	background: #d9d9d9;
+	color: #d9d9d9;
+	margin:5px 0 25px 0;
+}
+hr.dotted {
+	border-style: dotted;
+}
+p + hr {
+	margin:25px 0 20px 0;
+}
