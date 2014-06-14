@@ -24,13 +24,11 @@ $form->setAttribute('method', 'post');
             }
             echo $this->formElement($element);
             if ($this->formElementErrors($element)) : ?>
+            	<span style="color:#E00C0C">
                 <?php
-                echo $this->formElementErrors()
-                    ->setMessageOpenFormat('<p class="help-block">')
-                    ->setMessageSeparatorString('</p><p class="help-block">')
-                    ->setMessageCloseString('</p>')
-                    ->render($element);
+                echo $this->formElementErrors()->render($element);
                 ?>
+                </h5>
             <?php endif; ?>
     </div>
  

@@ -312,12 +312,21 @@ class ActorController extends AbstractActionController
     	$this->sendSolicitudNotificationEmailMessage($solicitudData['email'], $subject, $content);
     }
     
-    public function sendSolicitudDerivadaEmailMessage($solicitudData, $text){
+    public function sendSolicitudDerivadaEmailMessage($solicitudData, $to){
     	$subject = 'Notificación de Solicitud Derivada - Transacciones Académicas UCA';
     	$content = sprintf("Se le ha derivado una solicitud\n\nTipo de Solicitud: %s\nFecha Solicitada: %s\n\n
     						Por favor, ingrese al sistema de Transacciones Académicas para tomar una resolución a la solicitud.",
-    			str_replace('_', ' ', strtoupper($solicitudData['tipo_solicitud'])), $solicitudData['fecha_solicitada'], strtoupper($text));
-    	$this->sendSolicitudNotificationEmailMessage($solicitudData['email'], $subject, $content);
+    			str_replace('_', ' ', strtoupper($solicitudData['tipo_solicitud'])), $solicitudData['fecha_solicitada']);
+    	$this->sendSolicitudNotificationEmailMessage($to, $subject, $content);
+    }
+    
+    public function guardarObservacionesHechas($id_solicitud, $observacionesText){
+    	
+    	$sql = sprintf("UPDATE solicitudes
+						SET observaciones = '%s'
+						WHERE solicitud = %d", $observacionesText, $id_solicitud);
+    	
+    	return $this->dbAdapter->query($sql)->execute();
     }
 		
 	
@@ -326,6 +335,8 @@ class ActorController extends AbstractActionController
 		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
 		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
 		$solicitudData = $this->getSolicitudData($id_solicitud, $tipo_solicitud); #obtener datos de solicitud
+		
+		if ($form->has('observaciones')) $form->get('observaciones')->setAttribute('value', $solicitudData['observaciones']); # cargar campo de observaciones de solicitud
 		
 		$requisitos = verificarRequisitos($id_solicitud, $tipo_solicitud, $this->dbAdapter, $this->sapientiaDbAdapter);
 		
@@ -377,15 +388,14 @@ class ActorController extends AbstractActionController
 				$this->cambiarEstadoEtapaSolicitud($nuevaEtapaSolicitud, 'NUEVO', $id_solicitud); 
 				$message = "La solicitud fue derivada";
 				
-				$this->flashmessenger()->addSuccessMessage($rolActorDerivacionDestino);
-				if (isset($rolActorDerivacionDestino)){ /* si rol del actor a quien se deriva esta seteado */
+				if (isset($rolActorDerivacionDestino)){ /* si rol del actor a quien se deriva se especificó */
 					$emailAddresses = $this->getEmailActorDestino($rolActorDerivacionDestino); /* obtener direccion email */
 					
 					foreach ($emailAddresses as $row) { /* enviar email */
 						$email = $row['email'];
-						$this->flashmessenger()->addSuccessMessage($email);
-						//$this->sendSolicitudDerivadaEmailMessage($solicitudData, $message); /* email de notificacion */
+						$this->sendSolicitudDerivadaEmailMessage($solicitudData, $to = $email); /* email de notificacion */
 					}
+					// $this->flashmessenger()->addInfoMessage("Enviado email de notificación a " . $rolActorDerivacionDestino);
 				}
 
 			
@@ -407,7 +417,7 @@ class ActorController extends AbstractActionController
 				));
 			} else if (isset($data['Salir'])) {
 				$message = "Ha abandonado la solicitud";
-				$this->flashmessenger()->addSuccessMessage($message);
+				$this->flashmessenger()->addInfoMessage($message);
 				//$redirectUrl = $this->getRequest()->getHeader('HTTP_REFERER', 0);
 				return $this->redirect()->toRoute('solicitud/list', array (
 					'controller' => 'lista',
@@ -416,8 +426,8 @@ class ActorController extends AbstractActionController
 				
 			}
 
-		
-			if (isset($message)) $this->flashmessenger()->addSuccessMessage($message);
+			if (isset($data[observaciones])) $this->guardarObservacionesHechas($id_solicitud, $data[observaciones]);
+			if (isset($message)) $this->flashmessenger()->addInfoMessage($message);
 // 			$this->flashmessenger()->addSuccessMessage(print_r($id_solicitud, TRUE));
 		
 			// redirect the user to its home page

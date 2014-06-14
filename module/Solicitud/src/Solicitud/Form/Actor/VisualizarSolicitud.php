@@ -20,6 +20,7 @@ class VisualizarSolicitud extends Form
 								$enviarCorreoEnabled = FALSE, $observacionesEnabled = TRUE) 
 	{ 
 		$this->adapter = $dbadapter; //Asignación de nuestro adaptador de base de datos
+		$this->observacionesEnabled = $observacionesEnabled;
 		parent::__construct('solicitud');
 
 		$this->setAttribute('method', 'post');
@@ -163,7 +164,7 @@ class VisualizarSolicitud extends Form
 				'name' => 'Salir',
 				'type' => 'Zend\Form\Element\Submit',
 				'attributes' => array(
-						'value' => 'Volver a Lista',
+						'value' => 'Volver a Lista de Solicitudes',
 						'required' => 'false',
 		
 				),
@@ -190,7 +191,7 @@ class VisualizarSolicitud extends Form
 			$inputFilter = new InputFilter();
 			$factory = new InputFactory ();
 
-			if ($observacionesEnabled){
+			if ($this->observacionesEnabled){
 				$inputFilter->add ( $factory->createInput ( array (
 						'allow_empty' => true,
 						'name' => 'observaciones',
@@ -204,7 +205,7 @@ class VisualizarSolicitud extends Form
 						),
 						'validators' => array (
 								array (
-										'name' => 'notEmpty',
+										'name' => 'Alnum',
 	// 									'options' => array (
 	// 											'messages' => array (
 	// 													'notAlnum' => 'Se requieren sólo números y letras'

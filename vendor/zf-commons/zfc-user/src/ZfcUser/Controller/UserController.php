@@ -48,7 +48,7 @@ class UserController extends AbstractActionController
      * @todo Make this dynamic / translation-friendly
      * @var string
      */
-    protected $failedLoginMessage = 'Authentication failed. Please try again.';
+    protected $failedLoginMessage = 'Autenticación fallida. Inténtelo de nuevo.';
 
     /**
      * @var UserControllerOptionsInterface
@@ -218,7 +218,7 @@ class UserController extends AbstractActionController
             } elseif (in_array('username', $identityFields)) {
                 $post['identity'] = $user->getUsername();
             }
-            $post['credential'] = $post['password'];
+            $post['credential'] = $post['contrasena']; /* Utilizamos contrasena como field de tabla Usuarios en vez de "password" */
             $request->setPost(new Parameters($post));
             return $this->forward()->dispatch(static::CONTROLLER_NAME, array('action' => 'authenticate'));
         }
