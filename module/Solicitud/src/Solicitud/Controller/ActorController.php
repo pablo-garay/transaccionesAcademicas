@@ -274,6 +274,16 @@ class ActorController extends AbstractActionController
 		return $message[trim($estadoSolicitud)];
 	}
 	
+	public function getEmailActorDestino($role){
+		
+		$sql = sprintf("SELECT email
+						FROM usuarios u INNER JOIN user_role_linker url ON u.usuario = url.user_id
+						INNER JOIN user_role ur ON url.role_id = ur.id
+						WHERE ur.role_id = '%s'", $role);
+		
+		return $this->dbAdapter->query($sql)->execute();
+	}
+	
 	function combine_values_of_array_intersect($array1, $array2) {
 		$res = array();
 		foreach ( $array1 as $key => $val ) {
@@ -283,22 +293,35 @@ class ActorController extends AbstractActionController
 	}
 	
 	/* Enviar Email de notificacion con contenido $content al email $to */
-    public function sendSolicitudNotificationEmailMessage($solicitudData, $text)
+    public function sendSolicitudNotificationEmailMessage($to, $subject, $text)
     {
     	// el template que se tiene que crear dentro de la carpeta view del modulo en un carpeta email
     	$viewTemplate = 'solicitud/notify/email/notificarSolicitud';
     	// The ViewModel variables to pass into the renderer
-    	$content = sprintf("Tipo de Solicitud: %s\nFecha Solicitada: %s\n\nResolución: %s", 
-    						str_replace('_', ' ', strtoupper($solicitudData['tipo_solicitud'])), $solicitudData['fecha_solicitada'], strtoupper($text));
-		$value = array('content' => $content);
-    	$subject = 'Notificacion de solicitud - Transacciones Académicas UCA';
+
+		$value = array('content' => $text);
     	$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
-    	$message = $mailService->createTextMessage('transaccionesuca@gmail.com', $solicitudData['email'], $subject, $viewTemplate, $value);
+    	$message = $mailService->createTextMessage('transaccionesuca@gmail.com', $to, $subject, $viewTemplate, $value);
     	$mailService->send($message);
+    }
+    
+    public function sendSolicitudResolucionEmailMessage($solicitudData, $text){
+    	$subject = 'Notificación de solicitud - Transacciones Académicas UCA';
+    	$content = sprintf("Notificación de su solicitud\n\nTipo de Solicitud: %s\nFecha Solicitada: %s\n\nResolución: %s",
+    			str_replace('_', ' ', strtoupper($solicitudData['tipo_solicitud'])), $solicitudData['fecha_solicitada'], strtoupper($text));
+    	$this->sendSolicitudNotificationEmailMessage($solicitudData['email'], $subject, $content);
+    }
+    
+    public function sendSolicitudDerivadaEmailMessage($solicitudData, $text){
+    	$subject = 'Notificación de Solicitud Derivada - Transacciones Académicas UCA';
+    	$content = sprintf("Se le ha derivado una solicitud\n\nTipo de Solicitud: %s\nFecha Solicitada: %s\n\n
+    						Por favor, ingrese al sistema de Transacciones Académicas para tomar una resolución a la solicitud.",
+    			str_replace('_', ' ', strtoupper($solicitudData['tipo_solicitud'])), $solicitudData['fecha_solicitada'], strtoupper($text));
+    	$this->sendSolicitudNotificationEmailMessage($solicitudData['email'], $subject, $content);
     }
 		
 	
-	public function solicitudActorHandler($form, $actor, $actorDestino = 'Ninguno'){
+	public function solicitudActorHandler($form, $actor, $nuevaEtapaSolicitud = null, $rolActorDerivacionDestino = null){
 		
 		$id_solicitud = $this->params()->fromRoute('id', 0); # obtener id de solicitud de URL
 		$tipo_solicitud = $this->getTipoSolicitud($id_solicitud); #obtener tipo de solicitud
@@ -319,7 +342,7 @@ class ActorController extends AbstractActionController
 			if(isset($data['Aprobar'])) {
 				$this->cambiarEstadoSolicitud('APROB', $id_solicitud);
 				$message = "La solicitud fue aprobada";
-				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
+				//$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
 			
 			} else if(isset($data['Pendiente'])) {
 				
@@ -350,31 +373,31 @@ class ActorController extends AbstractActionController
 			
 			} else if (isset($data['VistoBueno'])) {
 				
-				switch($actor) {
-					case 'recepcion':
-						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
-						break;
-					case 'secretariageneral':
-						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
-						break;
-					case 'secretariadepartamento':
-						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
-						break;
-					case 'secretariaacademica':
-						$this->cambiarEstadoEtapaSolicitud($actorDestino, 'NUEVO', $id_solicitud);
-						break;
+				// Derivar a autoridad
+				$this->cambiarEstadoEtapaSolicitud($nuevaEtapaSolicitud, 'NUEVO', $id_solicitud); 
+				$message = "La solicitud fue derivada";
+				
+				$this->flashmessenger()->addSuccessMessage($rolActorDerivacionDestino);
+				if (isset($rolActorDerivacionDestino)){ /* si rol del actor a quien se deriva esta seteado */
+					$emailAddresses = $this->getEmailActorDestino($rolActorDerivacionDestino); /* obtener direccion email */
+					
+					foreach ($emailAddresses as $row) { /* enviar email */
+						$email = $row['email'];
+						$this->flashmessenger()->addSuccessMessage($email);
+						//$this->sendSolicitudDerivadaEmailMessage($solicitudData, $message); /* email de notificacion */
+					}
 				}
-				$message = "La solicitud fue derivada";		
+
 			
 			} else if (isset($data['Anular'])) {
 				$this->cambiarEstadoSolicitud('ANUL', $id_solicitud);
 				$message = "La solicitud fue anulada";
-				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
+				//$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
 				
 			} else if (isset($data['Rechazar'])) {
 				$this->cambiarEstadoSolicitud('RECHAZ', $id_solicitud);
 				$message = "La solicitud fue rechazada";
-				$this->sendSolicitudNotificationEmailMessage($solicitudData, $message); /* email de notificacion */
+				//$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
 				
 			} else if (isset($data['Imprimir'])) {
 				return $this->forward()->dispatch('Visualize\Controller\Visualize', array(
@@ -441,7 +464,7 @@ class ActorController extends AbstractActionController
 			case "solicitud_de_tutoria_de_catedra":
 			case "solicitud_de_colaborador_de_catedra":
 				/* Derivar Scta Dpto */
-				$actorDestino = 'DEL_SD';
+				$nuevaEtapaSolicitud = 'DEL_SD';
 				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);				
 				break;
 			
@@ -455,25 +478,25 @@ class ActorController extends AbstractActionController
 			case "solicitud_de_cambio_de_seccion":
 			case "solicitud_de_inclusion_en_lista":
 				/* Derivar Scta Academica */
-				$actorDestino = 'DEL_SA';
+				$nuevaEtapaSolicitud = 'DEL_SA';
 				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
 				break;
 			
 			case "solicitud_de_certificado_de_estudios":
 			case "solicitud_de_titulo":
 				/* Derivar Scta Gral */
-				$actorDestino = 'DEL_SG';
+				$nuevaEtapaSolicitud = 'DEL_SG';
 				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
 				break;
 			
 			default:
 				/* Derivar a todas sctas */
-				$actorDestino = 'DEL_SS';
+				$nuevaEtapaSolicitud = 'DEL_SS';
 				$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
 				break;
 		}
 					
-		return $this->solicitudActorHandler($form, 'recepcion', $actorDestino);
+		return $this->solicitudActorHandler($form, 'recepcion', $nuevaEtapaSolicitud);
 	}
 
 
@@ -498,7 +521,7 @@ class ActorController extends AbstractActionController
 				break;
 		}
 				
-		return $this->solicitudActorHandler($form, 'secretariageneral', $actorDestino = 'DEL_DE');
+		return $this->solicitudActorHandler($form, 'secretariageneral', $nuevaEtapaSolicitud = 'DEL_DE', $rolActorDerivacionDestino = 'decano');
 	}
 	
 	public function secretariadepartamentoAction()
@@ -509,7 +532,7 @@ class ActorController extends AbstractActionController
 		
 		/* Siempre deriva a Direct Dpto */
 		$form = new Form\VisualizarSolicitud($this->dbAdapter, $aprobarEnabled = FALSE, $vistoBuenoEnabled = TRUE);
-		return $this->solicitudActorHandler($form, 'secretariadepartamento', $actorDestino = 'DEL_DD');
+		return $this->solicitudActorHandler($form, 'secretariadepartamento', $nuevaEtapaSolicitud = 'DEL_DD', $rolActorDerivacionDestino = 'director_departamento');
 	}
 	
 	public function secretariaacademicaAction()
@@ -542,7 +565,7 @@ class ActorController extends AbstractActionController
 				break;
 		}
 				
-		return $this->solicitudActorHandler($form, 'secretariaacademica', $actorDestino = 'DEL_DA');
+		return $this->solicitudActorHandler($form, 'secretariaacademica', $nuevaEtapaSolicitud = 'DEL_DA', $rolActorDerivacionDestino = 'director_academico');
 	}
 
 	public function decanoAction()

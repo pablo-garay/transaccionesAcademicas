@@ -628,7 +628,7 @@ class FormularioController extends AbstractActionController
 			}
 			echo $opciones;
 		}
-		
+		return $this->response;
 	}
 	
 }

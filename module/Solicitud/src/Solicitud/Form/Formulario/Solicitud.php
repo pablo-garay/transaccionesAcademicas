@@ -198,7 +198,7 @@ class Solicitud extends Form
         		'attributes' => array(
         				'value' => 'Enviar',
         				'required' => 'false',
-        
+        				'onclick' => "return confirm('Confirma que desea enviar la solicitud?');"       
         		),
         		
         )
@@ -206,7 +206,7 @@ class Solicitud extends Form
         				'priority' => 0,
         		)
         		
-        		);
+       );
         
         $this->add(array(
         		'name' => 'cancelar',

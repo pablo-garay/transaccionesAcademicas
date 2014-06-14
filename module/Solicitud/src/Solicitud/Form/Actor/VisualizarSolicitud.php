@@ -163,7 +163,7 @@ class VisualizarSolicitud extends Form
 				'name' => 'Salir',
 				'type' => 'Zend\Form\Element\Submit',
 				'attributes' => array(
-						'value' => 'Salir',
+						'value' => 'Volver a Lista',
 						'required' => 'false',
 		
 				),
