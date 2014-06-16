@@ -109,7 +109,7 @@ class ListaController extends AbstractActionController
 		$paginator = new Paginator($adapter);
 		$currentPage = $this->params('page', 1); /* default page 1 */
 		$paginator->setCurrentPageNumber($currentPage); /* set current page */
-		$paginator->setItemCountPerPage(10); /* cant items por pagina */
+		$paginator->setItemCountPerPage(1); /* cant items por pagina */
 		
 		/* Get current action */
 		$listaAction = $this->getEvent()->getRouteMatch()->getParam('action');
@@ -120,6 +120,7 @@ class ListaController extends AbstractActionController
 				'page'=> $currentPage,
 				'order_by' => $order_by,
 				'order' => $order,
+				'filter' => $searchstring,
 				'form1' => new FiltrarForm()
 		));
 		

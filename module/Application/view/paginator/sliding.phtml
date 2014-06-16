@@ -9,7 +9,7 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 
 <!-- First page link -->
 <?php if (isset($this->previous)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->first, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->first, 'order_by' => $this->order_by, 'order' => $this->order), array('query' => array('filter' => $this->filter))); ?>">
     Primero
   </a> |
 <?php else: ?>
@@ -18,16 +18,23 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->previous, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->previous, 'order_by' => $this->order_by, 'order' => $this->order), array('query' => array('filter' => $this->filter))); ?>">
     < Anterior
   </a> |
 <?php else: ?>
   <span class="disabled">< Anterior</span> |
 <?php endif; ?>
 
+<!-- Numbered page links -->
+<?php foreach ($this->pagesInRange as $page): ?>
+	<?php if ($page == $this->current): echo $page; else: ?>
+	<a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $page, 'order_by' => $this->order_by, 'order' => $this->order), array('query' => array('filter' => $this->filter))); ?>"><?php echo $page; ?></a>
+    <?php endif; ?> |
+<?php endforeach; ?>
+
 <!-- Next page link -->
 <?php if (isset($this->next)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->next, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->next, 'order_by' => $this->order_by, 'order' => $this->order), array('query' => array('filter' => $this->filter))); ?>">
     Siguiente >
   </a> |
 <?php else: ?>
@@ -36,7 +43,7 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 
 <!-- Last page link -->
 <?php if (isset($this->next)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->last, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->last, 'order_by' => $this->order_by, 'order' => $this->order), array(), true); ?>">
     Último
   </a>
 <?php else: ?>

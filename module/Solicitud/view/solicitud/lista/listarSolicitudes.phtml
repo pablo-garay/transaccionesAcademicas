@@ -109,5 +109,6 @@ elseif ($this->order_by == 'estado_solicitud')
                                     'paginator/sliding',
                                     array('route' => 'solicitud/list',
 										  'action' => $this->listaAction,
-										  'order_by' => $this->order_by, 'order' => $this->order)
+										  'order_by' => $this->order_by, 'order' => $this->order,
+										  'filter' => $this->filter)
                                     );
