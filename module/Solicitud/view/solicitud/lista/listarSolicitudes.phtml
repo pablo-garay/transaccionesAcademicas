@@ -9,12 +9,36 @@ $this->headTitle($title);
 
 <?php if (count($this->solicitudes)): ?>
 
+<?php 
+$url_order = 'DESC';  // the following lines
+if ($this->order_by == 'tipo_solicitud')
+	$url_order = $this->order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($this->order_by == 'fecha_solicitada')
+	$url_order = $this->order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($this->order_by == 'estado_solicitud')
+	$url_order = $this->order == 'ASC' ? 'DESC' : 'ASC';
+?>
+
+
+
 <table class="table table-hover">
 <thead>
     <tr>
-        <th><?= $this->translate('Tipo de solicitud') ?></th>
-        <th><?= $this->translate('Fecha solicitada') ?></th>
-        <th><?= $this->translate('Estado') ?></th>
+        <th>
+        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'tipo_solicitud', 'order' => $url_order)) ?>">Tipo de solicitud<?php 
+        	if ($this->order_by == 'tipo_solicitud'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
+        	</a>
+        </th>
+        <th>
+        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'fecha_solicitada', 'order' => $url_order)) ?>">Fecha solicitada<?php 
+        	if ($this->order_by == 'fecha_solicitada'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
+        	</a>
+        </th>
+        <th>
+        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'estado_solicitud', 'order' => $url_order)) ?>">Estado<?php 
+        	if ($this->order_by == 'estado_solicitud'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
+        	</a>
+        </th>
         <th></th>
         <th></th>
         <th></th>
@@ -47,6 +71,33 @@ $this->headTitle($title);
 <?php endforeach; ?>
 </tbody>
 </table>
+<br><br><br>
+
+<div class="pull-right">
+<?php
+	$this->form1->setAttribute('class', 'form-horizontal');
+   $form = $this->form1;
+   $form->prepare();
+
+   echo $this->form()->openTag($form);
+	foreach ($this->form1 as $element) {
+	    if (! ($element instanceof Zend\Form\Element\Submit)) {			
+	        ?> 
+	            <?= $this->formElement($element)?>
+	            <?= $this->formElementErrors($element)?>
+		<?php
+	    } else {
+	        $element->setAttribute('class', 'btn btn-primary');
+	    ?>
+			<?=$this->formelement($element)?>
+		<?php
+	    }
+	}
+
+   echo $this->form()->closeTag();
+?>
+</div>
+
 <?php else:
 		echo 'No hay solicitudes que mostrar';
 	  endif; ?>
@@ -57,5 +108,6 @@ $this->headTitle($title);
                                     'Sliding',
                                     'paginator/sliding',
                                     array('route' => 'solicitud/list',
-										  'action' => $this->listaAction)
+										  'action' => $this->listaAction,
+										  'order_by' => $this->order_by, 'order' => $this->order)
                                     );

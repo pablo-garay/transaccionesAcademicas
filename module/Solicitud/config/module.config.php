@@ -45,13 +45,16 @@ return array(
                 	'list' => array(
                 		'type'    => 'Segment',
                 		'options' => array (
-                			'route' => '/lista[/:action][/:page]',
+                			'route' => '/lista[/:action][/:page][/order_by/:order_by][/:order]',
                 			'constraints' => array(
-                					'page'     => '[0-9]*',
+                					'action' => '(?!\bpage\b)(?!\border_by\b)[a-zA-Z][a-zA-Z0-9_-]*',
+                					'page'     => '[0-9]+',
+                					'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                					'order' => 'ASC|DESC',
                 			),
                 			'defaults' => array(
                 				'controller'    => 'Lista',
-                				'action'        => 'list',
+                				'action'        => 'todas',
                 				'page'          => '1',
                 			),
                 		)
@@ -123,6 +126,7 @@ return array(
 				'label' => 'Solicitudes',
 				'route' => 'solicitud/default',
 				'controller'=> 'lista',
+				'action' => 'todas',
 				'resource'   => 'solicitudes',
 				'privilege'  => 'listar',
 				'pages' => array(
@@ -184,8 +188,9 @@ return array(
 			),
 			array(
 				'label' => 'Crear Solicitud',
-				'route' => 'solicitud/default',
-				'controller'=> 'formulario',
+				'route' => 'application/default',
+				'controller'=> 'index',
+				'action' => 'help',
 				'resource'   => 'formulario',
 				'privilege'  => 'listar',
 				'pages' => array(

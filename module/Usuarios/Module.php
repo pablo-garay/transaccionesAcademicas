@@ -139,7 +139,7 @@ class Module
                         'options' => array(
                                 'label' => 'Tipo de documento',
                                 'value_options' => array(
-                                        'Cedula de Identidad' => 'Cedula de Identidad',
+                                        'Cédula de Identidad' => 'Cédula de Identidad',
                                         'Pasaporte' => 'Pasaporte',
                                         'Carnet de Migraciones' => 'Carnet de Migraciones',
                                 		'Libreta Cívica' => 'Libreta Cívica',

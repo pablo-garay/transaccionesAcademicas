@@ -9,7 +9,7 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 
 <!-- First page link -->
 <?php if (isset($this->previous)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->first)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->first, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
     Primero
   </a> |
 <?php else: ?>
@@ -18,7 +18,7 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 
 <!-- Previous page link -->
 <?php if (isset($this->previous)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->previous)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->previous, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
     < Anterior
   </a> |
 <?php else: ?>
@@ -27,7 +27,7 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 
 <!-- Next page link -->
 <?php if (isset($this->next)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->next)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->next, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
     Siguiente >
   </a> |
 <?php else: ?>
@@ -36,7 +36,7 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=itempagination
 
 <!-- Last page link -->
 <?php if (isset($this->next)): ?>
-  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->last)); ?>">
+  <a href="<?php echo $this->url($this->route, array('action' => $this->action, 'page' => $this->last, 'order_by' => $this->order_by, 'order' => $this->order)); ?>">
     Último
   </a>
 <?php else: ?>

@@ -24,11 +24,11 @@ $form->setAttribute('method', 'post');
             }
             echo $this->formElement($element);
             if ($this->formElementErrors($element)) : ?>
-            	<span style="color:#E00C0C">
+            	<h5><span style="color:#E00C0C">
                 <?php
                 echo $this->formElementErrors()->render($element);
                 ?>
-                </h5>
+                </span></h5>
             <?php endif; ?>
     </div>
  
