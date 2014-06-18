@@ -92,37 +92,13 @@ class FormularioController extends AbstractActionController
             	
             	if (array_key_exists ( 'asignatura' , $info )){ #caso en que solicitud involucra materia            		            		
             		# obtener campos de la tabla Asignaturas por Solicitud
-            		if ($tableName == 'solicitud_de_ruptura_de_correlatividad'){
-            			$sql = "insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['asignatura']."', ".$info['semestre_asignatura'].");";
-            			$statement = $this->dbAdapter->query($sql);
-            			$statement->execute(); 
-            			if ( $info['prerrequisito1'] != '0'){
-            				
-            				$sql="insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['prerrequisito1']."', ".$info['semestre_prerrequisito1'].");";
-            				$statement = $this->dbAdapter->query($sql);
-            				$statement->execute();
-            			}
-            			if ($info['prerrequisito2']!= '0' && $info['prerrequisito2'] != $info['prerrequisito1']){	
-								$sql="insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['prerrequisito2']."', ".$info['semestre_prerrequisito2'].");";
-								$statement = $this->dbAdapter->query($sql);
-								$statement->execute();
-            			}	
-            			if ($info['prerrequisito3']!= '0' && $info['prerrequisito3'] != $info['prerrequisito1'] && $info['prerrequisito3'] != $info['prerrequisito2'] ){
-								$sql="insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['prerrequisito3']."', ".$info['semestre_prerrequisito3'].");";
-									$statement = $this->dbAdapter->query($sql);
-									$statement->execute();			
-            			}
-
-            		}else{
-	            		$columns = $metadata->getColumnNames('asignaturas_por_solicitud');
-	            		# interseccion entre campos de form y campos de Asignaturas por Solicitud
-	            		$filtered = array_intersect_key($info, array_flip($columns));
-	
-	            		$asignaturasSolicitudModel = $this->serviceLocator->get('table-gateway')->get('asignaturas_por_solicitud');
-	            		$asignaturasSolicitudModel->insert($filtered);
-            		}
-            	}
-            	
+            		$columns = $metadata->getColumnNames('asignaturas_por_solicitud');
+             		# interseccion entre campos de form y campos de Asignaturas por Solicitud
+             		$filtered = array_intersect_key($info, array_flip($columns));
+ 
+             		$asignaturasSolicitudModel = $this->serviceLocator->get('table-gateway')->get('asignaturas_por_solicitud');
+             		$asignaturasSolicitudModel->insert($filtered);
+            	}            	
 				
 				
             	$this->flashmessenger()->addSuccessMessage('Solicitud Enviada');
@@ -136,7 +112,7 @@ class FormularioController extends AbstractActionController
             } else {
       
             	// debug code -- borrar despues!
-            	$this->flashmessenger()->addSuccessMessage(print_r($info, TRUE));
+            	// $this->flashmessenger()->addSuccessMessage(print_r($info, TRUE));
             	$messages = $form->getMessages();
             	//return $this->redirect()->refresh();
             }

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     6/17/2014 10:22:50 PM                        */
+/* Created on:     6/17/2014 10:43:00 PM                        */
 /*==============================================================*/
 
 
@@ -1080,8 +1080,7 @@ create table USUARIOS (
    TELEFONO             VARCHAR(30)          not null,
    EMAIL                VARCHAR(255)         null,
    CONTRASENA           VARCHAR(100)         not null,
-   ESTADO_CUENTA        INT4                 null
-      constraint CKC_ESTADO_CUENTA_USUARIOS check (ESTADO_CUENTA is null or (ESTADO_CUENTA in (A,I))),
+   ESTADO_CUENTA        INT4                 null,
    constraint PK_USUARIOS primary key (USUARIO)
 );
 
