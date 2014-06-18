@@ -17,12 +17,15 @@
 <?php
 
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
+//Preparamos el formulario
+$this->form1->setAttribute('id', 'form');
 $this->form1->setAttribute('class', 'form-horizontal');
 $this->form1->prepare();
 
 echo $this->form()->openTag($this->form1);
 echo '<fieldset>';
 
+// Extraemos y desplegamos cada elemento del formulario
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
 
@@ -86,6 +89,10 @@ foreach ($this->form1 as $element) {
 ?>
 <script type="text/javascript">
 
+
+
+//Carga dinamica de elementos del formulario 
+
 $("#matricula").change(function() {
 	
     $.ajax({
@@ -98,9 +105,7 @@ $("#matricula").change(function() {
         	     
       },
 
-	}
-    );
-    
+	});
 });
 	
 
@@ -115,6 +120,9 @@ $("#carrera").change(function() {
     	}
 	    );
 });
+
+
+
 
 $("#asignatura").change(function() {
 	
@@ -142,7 +150,8 @@ $("#asignatura").change(function() {
     $.ajax({
       url:"/solicitud/formulario/procesardatos",
       type: "POST",
-      data:{"materia":$("#asignatura").val()},
+      data:{"materia_profesores":$("#asignatura").val(), "seccion_profesores":$("#seccion").val(),
+    	  "semestre_anho_profesores":$("#semestre_anho").val(), "anho_profesores":$("#anho").val()},
       success: function(data, textstatus, xhr){
 
         	$('#profesor').html(data);

@@ -6,11 +6,13 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
+/* Solicitud de Materia Fuera de la Malla Curricular, que hereda de la clase Solicitud */
 class SolicitudMateriaFueraMallaCurricular extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudMateriaFueraMallaCurricular', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
@@ -28,15 +30,15 @@ class SolicitudMateriaFueraMallaCurricular extends Solicitud
 		$result    = $statement->execute();
 		
 		$selectDataCarr = array();
-		$selectDataMat = array();
+		
 		
 		foreach ($result as $res) {
-			$selectDataMat[$res['n_materia']] = $res['n_materia'];
 			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'];
 		}
+		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 		
-		
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
 		$this->add(array(
 				'name' => 'carrera_asignatura',//de la tabla asignatura
 				'type' => 'Zend\Form\Element\Select',

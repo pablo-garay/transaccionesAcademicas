@@ -358,7 +358,14 @@ class Module
                                     			'notDigits' => 'Solo especifique en números',	
                                     		),
 	                                    )
-	                            ),                            		
+	                            ),
+                            	array (
+			                        'name'    => 'StringLength',
+			                        'options' => array(
+			                            'min' => 4,
+			                            'max' => 10,
+			                        ),
+                            	),
                             )
                     ));
                     

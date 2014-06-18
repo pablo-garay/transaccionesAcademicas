@@ -6,12 +6,16 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-require_once 'funcionesDB.php';
+use Solicitud\Model\FuncionesDB as FuncionesDB;
+
+
+
+/* Solicitud de Convalidación de Materias, que NO hereda de la clase Solicitud */
 class SolicitudConvalidacionMaterias extends Form
 {
 	protected $dbAdapter;
 
-	//parámetro del constructor: adaptador de la base de datos
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct( $name = 'solicitudConvalidacionMaterias', AdapterInterface $dbAdapter, $idUsuario) {
 		$this->dbAdapter = $dbAdapter; //Asignación de nuestro adaptador de base de datos
 		parent::__construct($name);
@@ -19,10 +23,13 @@ class SolicitudConvalidacionMaterias extends Form
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
+		/* Para el caso de esta solicitud, la extracción de datos como nombres, apellidos, etc., 
+		 * lo realizamos aquí, ya que esta solicitud  no hereda de la clase Solicitud */
 		
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
 		$usuarioLogueado = $idUsuario;
-		$datos = getDatosUsuario ($this->dbAdapter, $usuarioLogueado);
+		$funcionesDB = new FuncionesDB();
+		
+		$datos = $funcionesDB->getDatosUsuario ($this->dbAdapter, $usuarioLogueado);
 		
 		$nombresUsuario = $datos['nombres'];
 		$apellidosUsuario = $datos['apellidos'];
@@ -30,10 +37,10 @@ class SolicitudConvalidacionMaterias extends Form
 		$numeroDocumentoUsuario = $datos['numero_de_documento'];
 		$emailUsuario = $datos['email'];
 		
-		
+		////////////////////***********FIN Extracción de Datos**************/////////////////
 		
 
-       // Asi es como definimos un elemento (en este caso tipo texto)
+       	/* A partir de aquí agregamos los elementos particulares a esta solicitud */
         $this->add(array(
         		'name' => 'nombres',// the unique name of the element in the form.
                                 	//Ex: <input name="..."
@@ -42,7 +49,7 @@ class SolicitudConvalidacionMaterias extends Form
         		// You can also use short names as “Text” instead of “Zend\Form\Element\Text
         		'attributes' => array(
         		// These are the attributes that are passed directly to the HTML element
-        				'placeholder' => 'Escriba su nombre...', // HTM5 placeholder attribute
+        				'placeholder' => 'Escriba su nombre..', // HTM5 placeholder attribute
         				'required' => 'required', // Ex: <input required="true"
         				'value' => $nombresUsuario,
         				'readonly' => 'true',
@@ -62,7 +69,7 @@ class SolicitudConvalidacionMaterias extends Form
 				'name' => 'apellidos',
 				'type' => 'Zend\Form\Element\Text',
 				'attributes' => array (
-						'placeholder' => 'Escriba su apellido...',
+						'placeholder' => 'Escriba su apellido..',
 						'required' => 'required',
 						'value' => $apellidosUsuario,
 						'readonly' => 'true',
@@ -84,7 +91,7 @@ class SolicitudConvalidacionMaterias extends Form
 				'attributes' => array(
 						// Below: HTML5 way to specify that the input will be phone number
 						'type' => 'tel',
-						'placeholder' => 'Escriba su teléfono...',
+						'placeholder' => 'Escriba su teléfono..',
 						'required' => 'required',
 						'value' => $telefonoUsuario,
 						'readonly' => 'true',
@@ -99,7 +106,7 @@ class SolicitudConvalidacionMaterias extends Form
         		'name' => 'universidad_origen',
         		'type' => 'Zend\Form\Element\Text',
         		'attributes' => array(
-        				'placeholder' => 'Escriba el nombre la Universidad...', // HTM5 placeholder attribute
+        				'placeholder' => 'Escriba el nombre..', // HTM5 placeholder attribute
         				'required' => 'required',
         		),
         		'options' => array(
@@ -113,7 +120,7 @@ class SolicitudConvalidacionMaterias extends Form
         		'name' => 'direccion_universidad_origen',
         		'type' => 'Zend\Form\Element\Text',
         		'attributes' => array(
-        				'placeholder' => 'Escriba la dirección...', // HTM5 placeholder attribute
+        				'placeholder' => 'Escriba la dirección..', // HTM5 placeholder attribute
         				'required' => 'required',
         		),
         		'options' => array(
@@ -131,7 +138,7 @@ class SolicitudConvalidacionMaterias extends Form
         		'attributes' => array(
         				// Below: HTML5 way to specify that the input will be phone number
         				'type' => 'tel',
-        				'placeholder' => 'Escriba el teléfono de su universidad de origen',
+        				'placeholder' => 'Escriba el teléfono..',
         				'required' => 'required',
         				// Below: HTML5 way to specify the allowed characters
         				'pattern'  => '^[\d-/]+$'
@@ -154,7 +161,7 @@ class SolicitudConvalidacionMaterias extends Form
         				// These are the attributes that are passed directly to the HTML element
         				'type' => 'email', // Ex: <input type="email"
         				// 'required' => true, // Ex: <input required="true"
-        				'placeholder' => 'Escriba dirección de email de la universidad de origen...', // HTM5 placeholder attribute
+        				'placeholder' => 'Escriba dirección de email..', // HTM5 placeholder attribute
         		)
         ));       
         
@@ -167,7 +174,7 @@ class SolicitudConvalidacionMaterias extends Form
         		),
         		'attributes' => array (
         				// Below: HTML5 way to specify that the input will be phone number
-        				'placeholder' => 'Escriba la carrera cursada en la universidad de origen...',
+        				'placeholder' => 'Escriba la carrera..',
         				'required' => 'required'
         		)
         ));

@@ -1,6 +1,6 @@
 ﻿CREATE OR REPLACE FUNCTION usuario_add() RETURNS trigger AS $$
     BEGIN
-        NEW.estado_cuenta := 'A';
+        NEW.estado_cuenta := 1;
         
         RETURN NEW;
     END;

@@ -5,42 +5,28 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-require_once 'funcionesDB.php';
 
 
+/* Solicitud de Desinscripción de Curso, que hereda de la clase Solicitud */
 class SolicitudDesinscripcionCurso extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudDesinscripcionCurso', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su numero_de_documento
+
 		$usuarioLogueado = $idUsuario;
-		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$numeroDocumento = $datos['numero_de_documento'];
-		
-		
-		$sql       = "SELECT m.materia, m.nombre AS n_materia  FROM materias AS m 
-						INNER JOIN cursos AS c ON m.materia = c.materia
-						INNER JOIN alumnos_por_curso AS axc ON c.curso = axc.curso 
-						AND axc.numero_de_documento = ".$numeroDocumento." AND axc.curso_actual = TRUE";
-		
-		//$usuarioLogueado
-		$statement = $sapientiaDbadapter->query($sql);
-		$result    = $statement->execute();
 		
 		$selectDataMat = array();
 		
-		foreach ($result as $res) {
-			$selectDataMat[$res['n_materia']] = 'Asignatura: '.$res['n_materia'].' Código: '.$res['materia'];		
-		}
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 	
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
 		$this->add(array(
 				'name' => 'curso_completo',
 				'type' => 'Zend\Form\Element\Radio',

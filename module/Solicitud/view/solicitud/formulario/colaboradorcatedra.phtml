@@ -23,17 +23,20 @@
 
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
+//Preparamos el formulario
 $this->form1->setAttribute('class', 'form-horizontal');
 $this->form1->prepare();
 
 echo $this->form()->openTag($this->form1);
 echo '<fieldset>';
 
+// Extraemos y desplegamos cada elemento del formulario
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
 	
 		if ( ($element->getName() == 'profesor')) {
 			?>
+			
 		<?php
 			}
         ?>
@@ -47,7 +50,7 @@ foreach ($this->form1 as $element) {
 <?php 
  if ( ($element->getName() == 'profesor')) {
 ?>
-		<h5 align = 'left'> quien fue propuesto
+	<h5 align = 'left'> quien fue propuesto
 	por el Consejo de Facultad para el presente semestre lectivo.</h5>
 	<h5>Las actividades que serán desarrolladas por el Alumno/a Colaborador/a de Cátedra son las <br>
 son las siguientes: </h5>
@@ -101,6 +104,9 @@ echo $this->form()->closeTag();
 ?>
 
 <script type="text/javascript">
+
+//Carga dinamica de elementos del formulario 
+
 $("#matricula").change(function() {
 	
     $.ajax({
@@ -108,15 +114,12 @@ $("#matricula").change(function() {
       type: "POST",
       data:{"matricula":$("#matricula").val()},
       success: function(data, textstatus, xhr){
-     
        
         	$('#carrera').html(data);
-        	     
+     	     
       },
-
 	});
-	
-	});
+});
 
 	
 $("#carrera").change(function() {
@@ -130,11 +133,10 @@ $("#carrera").change(function() {
 		        	     
 		      },
 
-			}
-		    );
+	});
 		
 	    $('#asignatura').fadeIn(1000);
-	});
+});
 	
 
 $("#seccion").change(function() {
@@ -153,9 +155,7 @@ $("#seccion").change(function() {
       error: function(xhr, textstatus, errorThrown) {
     	 alert("AJAX call an epic failure");
    		}
-	}
-    );
-    
+	});   
 });
 
 $("#semestre_anho").change(function() {
@@ -174,9 +174,7 @@ $("#semestre_anho").change(function() {
       error: function(xhr, textstatus, errorThrown) {
     	 alert("AJAX call an epic failure");
    		}
-	}
-    );
-    
+	}); 
 });
 
 $("#anho").change(function() {
@@ -187,7 +185,6 @@ $("#anho").change(function() {
       data:{"materia_profesores":$("#asignatura").val(), "seccion_profesores":$("#seccion").val(),
     	  "semestre_anho_profesores":$("#semestre_anho").val(), "anho_profesores":$("#anho").val()},
       success: function(data, textstatus, xhr){
-
        
         	$('#profesor').html(data);
         	     
@@ -195,14 +192,9 @@ $("#anho").change(function() {
       error: function(xhr, textstatus, errorThrown) {
     	 alert("AJAX call an epic failure");
    		}
-	}
-    );
-    
+	});
 });
 
 
-
-
-	
 
 </script>

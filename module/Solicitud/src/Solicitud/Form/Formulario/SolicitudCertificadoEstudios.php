@@ -5,23 +5,26 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-require_once "funcionesDB.php";
+use Solicitud\Model\FuncionesDB as FuncionesDB;
 
 
+/* Solicitud de Certificado de Estudios */
 class SolicitudCertificadoEstudios extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado	
 	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudExtraordinario', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
 		$usuarioLogueado = $idUsuario;
-		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$funcionesDB = new FuncionesDB();
+		$datos = $funcionesDB->getDatosUsuario($dbadapter, $usuarioLogueado);
 	
 		$emailUsuario = $datos['email'];
 		$numeroDocumento = $datos['numero_de_documento'];
@@ -54,21 +57,17 @@ class SolicitudCertificadoEstudios extends Solicitud
 				));
 		
 		$this->add(array(
-				'name' => 'email',// the unique name of the element in the form.
-				//Ex: <input name="..."
+				'name' => 'email',
 				'type' => 'Zend\Form\Element\Email',
-				// The above must be valid Zend Form element.
-				// You can also use short names as “Text” instead of “Zend\Form\Element\Text
 				'attributes' => array(
-						// These are the attributes that are passed directly to the HTML element
 						'required' => 'required', // Ex: <input required="true"
 						'value' => $emailUsuario,
 						'readonly' => 'true',
 						
 				),
 				'options' => array(
-						// This is list of options that we can add to the element.
-						'label' => 'Email ', // Label es la etiqueta que aparece antes del campo de formulario
+						// Label es la etiqueta que aparece antes del campo de formulario
+						'label' => 'Email ', 
 				),
 		
 		)
@@ -77,7 +76,6 @@ class SolicitudCertificadoEstudios extends Solicitud
 				));
 		
 		
-		// este campo de la base de datos debe ser llenado tambien con el campo carrera de la solicitud
 		$this->add ( array (
 				'name' => 'carrera_cursada',
 				'type' => 'Zend\Form\Element\Hidden',
@@ -87,8 +85,10 @@ class SolicitudCertificadoEstudios extends Solicitud
 				),
 				'attributes' => array (
 						'placeholder' => 'Elija su carrera...',
-						'value' => 'Carrera1',
-						'required' => 'required'
+						//'value' => 'Carrera1',
+						'required' => 'required',
+						'id' => 'carrera_cursada'
+						
 				)
 		), array (
 				'priority' => 280,
@@ -148,8 +148,8 @@ class SolicitudCertificadoEstudios extends Solicitud
 				'options' => array(
 						'label' => 'Especifique',
 						'value_options' => array(
-								'0' => 'Si',
-								'1' => 'No',
+								'1' => 'Si',
+								'0' => 'No',
 						),
 				),
 				'attributes' => array(

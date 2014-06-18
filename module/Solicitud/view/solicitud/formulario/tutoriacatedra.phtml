@@ -104,20 +104,20 @@ $("#matricula").change(function() {
 	});
 	
 
-	$("#carrera").change(function() {
-	    $.ajax({
-		      url:"/solicitud/formulario/procesardatos",
-		      type: "POST",
-		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
-		      success: function(data, textstatus, xhr){
+// 	$("#carrera").change(function() {
+// 	    $.ajax({
+// 		      url:"/solicitud/formulario/procesardatos",
+// 		      type: "POST",
+// 		      data:{"carrera_asignatura":$("#carrera").val(), "mat":$("#matricula").val()},
+// 		      success: function(data, textstatus, xhr){
 		       
-		        	$('#asignatura').html(data);
+// 		        	$('#asignatura').html(data);
 		        	     
-		      },
-			}
-		    );
+// 		      },
+// 			}
+// 		    );
 		
-	});
+// 	});
 	
 
 $("#carrera").change(function() {

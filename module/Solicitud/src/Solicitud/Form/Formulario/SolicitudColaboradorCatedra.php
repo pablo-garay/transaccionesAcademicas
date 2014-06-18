@@ -6,40 +6,26 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
+/* Solicitud de Colaborador de Cátedra, que hereda de la clase Solicitud */
 class SolicitudColaboradorCatedra extends Solicitud
 {
-	
-	public function __construct(AdapterInterface $dbadapter, $idUsuario,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
+	public function __construct(AdapterInterface $dbadapter, $idUsuario,  AdapterInterface $sapientiaDbadapter) { 
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudColaboradorCatedra', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
-		
-		$sql       = "SELECT p.nombre AS n_profesor, m.nombre AS n_materia, carr.nombre AS n_carrera 
-				FROM profesores AS p 
-				INNER JOIN profesores_por_curso AS pxc ON p.profesor = pxc.profesor
-				INNER JOIN cursos AS c ON pxc.curso = c.curso 
-				INNER JOIN materias AS m ON c.materia = m.materia
-				INNER JOIN materias_por_carrera AS mxc ON m.materia = mxc.materia
-				INNER JOIN carreras AS carr ON carr.carrera = mxc.carrera";
-		//$usuarioLogueado
-		$statement = $sapientiaDbadapter->query($sql);
-		$result    = $statement->execute();
-		
+		//// Toda la extracción de datos particulares a esta solicitud se realiza dinámicamente
 		$selectDataMat = array();
 		$selectDataProf = array();
 		$selectDataCarr = array();
-		foreach ($result as $res) {
-			$selectDataMat[$res['n_materia']] = $res['n_materia'];
-			$selectDataProf[$res['n_profesor']] = $res['n_profesor'];
-			$selectDataCarr[$res['n_carrera']] = $res['n_carrera'];
-		}
-		$carreras = implode("'\n'", $selectDataCarr);
-		$carreras = str_replace("  ", "", $carreras);
+		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
-	
+		
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
 		$this->add(array(
 				'name' => 'profesor',
 				'type' => 'Zend\Form\Element\Select',
@@ -351,15 +337,15 @@ class SolicitudColaboradorCatedra extends Solicitud
 							array (
 									'name' => 'NotEmpty',
 							),
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
+// 							array (
+// 									'name' => 'alnum',
+// 									'options' => array (
+// 											'messages' => array (
+// 													'notAlnum' => 'Se requieren sólo números y letras'
+// 											),
+// 											'allowWhiteSpace' => true,
+// 									)
+// 							),
 			
 					)
 						
@@ -376,75 +362,9 @@ class SolicitudColaboradorCatedra extends Solicitud
 	}
 
 	
-	public function getAsignaturasDeCarrera()
-	{
-		//@todo: Rescatar los asignaturas según la carrera elegida en el combo
-		$carreraElegida = $this->get('carrera')->getAttribute('value');
-	
-	}
-	
-	public function getProfesores()	
-	{
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		$sql = 'SELECT nombre FROM Profesores'; // $usuarioLogueado
-		
-		
-		$statement = $this->sapientiaDbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['nombre']] = $res['nombre'];
-		}
-			return $selectData;
-	}
-	
-	
-	
-	public function getAsignaturaDeProfesor() // debe ser dinámico
-	{
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		$sql = 'SELECT m.nombre FROM materias AS m INNER JOIN cursos AS c ON m.materia = c.materia
-				INNER JOIN profesores_por_curso AS pxc ON c.curso = pxc.curso'; // $usuarioLogueado
-	
-	
-		$statement = $this->sapientiaDbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['nombre']] = $res['nombre'];
-		}
-		return $selectData;
-	}
-	
-	public function getCarrerasDeProfesor()
-	{
-	
-		$sql = 'SELECT c.nombre FROM carreras AS c INNER JOIN carrera_por_materias AS cm ON c.carrera = cm.carrera
-				INNER JOIN cursos AS cr ON cr.materia = cm.materia'; // $usuarioLogueado
-	
-	
-		$statement = $this->sapientiaDbAdapter->query($sql);
-		$result    = $statement->execute();
-	
-		$selectData = array();
-	
-		foreach ($result as $res) {
-			$selectData[$res['nombre']] = $res['nombre'];
-		}
-		$string = implode ("'\n'", $selectData);
-		
-		$string = str_replace("  ", "", $string);
-		
-		return $string;
-	}
-	
 
 	
-	
+
 	public function setInputFilter(InputFilterInterface $inputFilter)
 	{
 		throw new \Exception('It is not allowed to set the input filter');

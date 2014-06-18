@@ -6,31 +6,24 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
+/* Solicitud de Ruptura de Correlatividad, que hereda de la clase Solicitud */
 class SolicitudRupturaCorrelatividad extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudRupturaCorrelatividad', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
 		
-		//BD sapientia
-		
-// 		$sql       = "Select m.nombre AS n_materia FROM materias AS m";
-// 		//$usuarioLogueado
-// 		$statement = $sapientiaDbadapter->query($sql);
-// 		$result    = $statement->execute();
-		
-// 		$selectDataMat = array();
-		
-// 		foreach ($result as $res) {
-// 			$selectDataMat[$res['n_materia']] = $res['n_materia'];		
-// 		}
+
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
-	
+		
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
+		
 // 		$this->add(array(
 // 				'name' => 'semestre',
 // 				'type' => 'Zend\Form\Element\Select',
@@ -128,6 +121,7 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'name' => 'prerrequisito2',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
+						'empty_option' => 'Seleccione el prerrequisito..',
 						'label' => 'Asignatura Prerrequisito ',
 						// 						'empty_option' => 'Seleccione el prerrequisito..',
 						//'value_options' => $selectDataMat,
@@ -163,6 +157,7 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 				'name' => 'prerrequisito3',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
+						'empty_option' => 'Seleccione el prerrequisito..',
 						'label' => 'Asignatura Prerrequisito ',
 						// 						'empty_option' => 'Seleccione el prerrequisito..',
 						//'value_options' => $selectDataMat,
@@ -330,15 +325,15 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 							)
 					),
 					'validators' => array (
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
+// 							array (
+// 									'name' => 'alnum',
+// 									'options' => array (
+// 											'messages' => array (
+// 													'notAlnum' => 'Se requieren sólo números y letras'
+// 											),
+// 											'allowWhiteSpace' => true,
+// 									)
+// 							),
 								
 					)
 			) ) );
@@ -375,15 +370,15 @@ class SolicitudRupturaCorrelatividad extends Solicitud
 							)
 					),
 					'validators' => array (
-							array (
-									'name' => 'alnum',
-									'options' => array (
-											'messages' => array (
-													'notAlnum' => 'Se requieren sólo números y letras'
-											),
-											'allowWhiteSpace' => true,
-									)
-							),
+// 							array (
+// 									'name' => 'alnum',
+// 									'options' => array (
+// 											'messages' => array (
+// 													'notAlnum' => 'Se requieren sólo números y letras'
+// 											),
+// 											'allowWhiteSpace' => true,
+// 									)
+// 							),
 								
 					)
 			) ) );

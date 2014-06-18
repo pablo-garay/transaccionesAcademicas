@@ -38,13 +38,13 @@ foreach ($this->form1 as $element) {
 		
 	if ( ($element->getName() == 'carrera')) {
 ?>
-	<h5 align = 'left'> Solicito, se me permita cursar la asignatura:</h5>
+	<h5 align = 'left'> Solicito, se me permita cursar la asignatura: <br></h5>
 <?php 
 	echo "\n";
 	}
 	else if ( ($element->getName() == 'semestre_asignatura')) {
 ?>
-	<h5 align="left"> y su/s prerrequisito/s. </h5>
+	<h5 align="left"> y su/s prerrequisito/s (se debe seleccionar al menos un prerrequisito, y como máximo tres) : <br><br> </h5>
 <?php 
     } else if ( ($element->getName() == 'semestre_prerrequisito3')){
 ?>

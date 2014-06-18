@@ -6,23 +6,36 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
+use Solicitud\Sapientia\SapientiaClient as SapientiaClient;
+use Solicitud\Model\FuncionesDB as FuncionesDB;
 
 // adaptador de sapientia
 use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDBAdapter;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
-require_once 'funcionesDB.php';
-require_once 'SapientiaClient.php';
+//require_once 'funcionesDB.php';
+//require_once 'SapientiaClient.php';
+
+/*
+ * La clase Solicitud es padre de casi todas las solicitudes específicas (la solicitud de 
+ * convalidación de materias es la única que no hereda de Solicitud), es decir todas las
+ * solicitudes heredan de esta clase, en la misma se encuentran datos comunes como nombres,
+ * apellidos, teléfono, matricula, carrera.*/
 class Solicitud extends Form
 {
-	protected $dbAdapter;
-	protected $sapientiaDbAdapter;
+	protected $dbAdapter;          // Declaramos variables que contendrán adaptadores de las BD.
+	protected $sapientiaDbAdapter; /* El adaptador de la BD de "sapientia" habíamos utilizado 
+	para la extracción de datos que se necesitan a lo largo del proceso de elaboración de una 
+	solicitud, pero posteriormente esta extracción directa la hemos cambiado a servicios, de
+	manera que todos los datos que provee realmente sapientia lo simulemos a través de los 
+	servicios.
+	*/
 
-	//parámetro del constructor: adaptador de la base de datos
+	//parámetros del constructor: nombre de la solicitud, adaptador de la base de datos, identificador de usuario logueado, adaptador de sapientia 
 	public function __construct( $name = 'solicitud', AdapterInterface $databaseAdapter, $idUsuario, AdapterInterface $sapientiaDbAdapter) {
-		$this->dbAdapter = $databaseAdapter; //Asignación de nuestro adaptador de base de datos
 		
-		$this->sapientiaDbAdapter = $sapientiaDbAdapter; //Asignación de nuestro adaptador de base de datos
+		$this->dbAdapter = $databaseAdapter; //Asignación de nuestro adaptador de base de datos
+		$this->sapientiaDbAdapter = $sapientiaDbAdapter; //Asignación del adaptador de Sapientia de base de datos
 		
 		parent::__construct($name);
 
@@ -31,9 +44,10 @@ class Solicitud extends Form
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////		
 		
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
 		$usuarioLogueado = $idUsuario;
-		$datos = getDatosUsuario ($databaseAdapter, $usuarioLogueado);
+		
+		$funcionesDB = new FuncionesDB();
+		$datos = $funcionesDB->getDatosUsuario ($databaseAdapter, $usuarioLogueado);
 		
 		$nombresUsuario = $datos['nombres'];
 		$apellidosUsuario = $datos['apellidos'];
@@ -41,26 +55,31 @@ class Solicitud extends Form
 		$numeroDocumentoUsuario = $datos['numero_de_documento'];
 		$emailUsuario = $datos['email'];
 		
+		/*VERIFICACIÓN de si el usuario es un alumno o sólo un guest, esto se hace,
+		 * para el caso de solicitudes varias, la cual puede ser realizada tanto por 
+		 * un usuario alumno como un usuario guest*/
+		
 		$sqlGuest = "SELECT role_id FROM user_role_linker WHERE user_id =".$usuarioLogueado;
 		$statement = $databaseAdapter->query($sqlGuest);
-		$result    = $statement->execute();
-		$guest = 2;// numero identificador de usuario guest
+		$result    = $statement->execute(); // Extraemos el rol del usuario
+		$guest = 2;				// numero identificador de usuario guest
 		$user = null;
 		foreach ($result as $res) {
-			$user =$res['role_id'];
+			$user =$res['role_id'];   // Guardamos la información acerca del rol del usuario
 		} 
 		
 		// Sapientia
+		$sapientiaClient = new SapientiaClient();
 
-		$resultMatCarr = getMatriculaCarrera($numeroDocumentoUsuario);
+		$resultMatCarr = $sapientiaClient->getMatriculaCarrera($numeroDocumentoUsuario);
 		$selectDataMat = array();
 		$selectDataCarr = array();
 		
-		if ($user == $guest){
-			$selectDataMat['00000'] = 00000;
-			$selectDataCarr['Ninguna'] = 'Ninguna' ;
+		if ($user == $guest){ //Aquí es donde preguntamos si el usuario loqueado es sólo un guest 
+			$selectDataMat['00000'] = 00000;  			// El guest no tiene matrícula...
+			$selectDataCarr['ninguna'] = 'ninguna' ;  	// Y por ende tampoco una carrera
 				
-		}else{
+		}else{  // Si no es un guest, debe ser un alumno
 			foreach ($resultMatCarr as $res) {
 				$selectDataMat[$res['matricula']] = $res['matricula'];
 				$selectDataCarr[$res['n_carrera']] = $res['n_carrera'] ;
@@ -85,7 +104,6 @@ class Solicitud extends Form
         				'required' => 'required', // Ex: <input required="true"
         				'value' => $nombresUsuario,
         				'readonly' => 'true',
-        				//'disabled' => 'disabled'
         		),
         		'options' => array(
         				// This is list of options that we can add to the element.
@@ -104,8 +122,7 @@ class Solicitud extends Form
 						'placeholder' => 'Escriba su apellido...',
 						'required' => 'required',
 						'value' => $apellidosUsuario,
-						'readonly' => 'true',
-						//'disabled' => 'disabled'
+						'readonly' => 'true',	
 				),
 				'options' => array (
 						'label' => 'Apellidos',
@@ -126,7 +143,6 @@ class Solicitud extends Form
 				'attributes' => array (
 						'value' => $telefonoUsuario, 
 						'readonly' => 'true',
-						//'disabled' => 'disabled'
 				),
 		
 		), array (
@@ -188,17 +204,18 @@ class Solicitud extends Form
 // 				)
 // 		);
 		
-		
-
 
         //This is the submit button
         $this->add(array(
         		'name' => 'enviar',
         		'type' => 'Zend\Form\Element\Submit',
+        		
         		'attributes' => array(
         				'value' => 'Enviar',
         				'required' => 'false',
-        				'onclick' => "return confirm('Confirma que desea enviar la solicitud?');"       
+        				'id' => 'enviar',
+        				'onclick' => 'return confirm("¿Está seguro de enviar la solicitud?");',		
+        
         		),
         		
         )
@@ -206,7 +223,7 @@ class Solicitud extends Form
         				'priority' => 0,
         		)
         		
-       );
+        		);
         
         $this->add(array(
         		'name' => 'cancelar',
@@ -235,12 +252,14 @@ class Solicitud extends Form
 
 	}
 
-	public function getInputFilter()
+/* Filters y Validators para cada elemento añadido al formulario */
+	public function getInputFilter() 	
 	{
 		if (! $this->filter) {
 			$inputFilter = new InputFilter();
 			$factory = new InputFactory ();
 
+			/* Por ejemplo aquí se asignan los filters y validators para el elemento nombres */
 			$inputFilter->add ( $factory->createInput ( array (
 					'name' => 'nombres',
 					'filters' => array (

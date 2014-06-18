@@ -6,13 +6,15 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 use User\Controller\AccountController;
-use Solicitud\Controller\getProfesoresPorCurso;
+use Solicitud\Model\FuncionesDB as FuncionesDB;
 
+/* Solicitud de Solicitud de Tesis, que hereda de la clase Solicitud */
 class SolicitudTesis extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudTesis', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
@@ -20,11 +22,10 @@ class SolicitudTesis extends Solicitud
 		
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su numero_de_documento
+
 		$usuarioLogueado = $idUsuario;
-		
-		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
+		$funcionesDB = new FuncionesDB();
+		$datos = $funcionesDB->getDatosUsuario($dbadapter, $usuarioLogueado);
 		$numeroDocumento = $datos['numero_de_documento'];
 		
 		//BD sapientia
@@ -59,7 +60,8 @@ class SolicitudTesis extends Solicitud
 		}
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 				
-
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
+		
 		$this->add(array(
 				'name' => 'tema_tesis',
 				'type' => 'Zend\Form\Element\Text',

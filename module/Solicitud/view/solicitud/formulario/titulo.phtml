@@ -38,26 +38,7 @@ El/la que suscribe  </h5>
 <?php
 		}
 		
-			if ($element->getName() == 'descripcion'){
-?>
-						<div style="float:right; 
-							width:20px; height:20px;
-							position:absolute;
-							bottom:0%;
-							right:50%;
-							margin-top: -100px;
-							margin-left: -100px;
-							 ">	
-							 <br><br> <br><br> <br><br> <br><br> <br><br> <br> 
-							 
-							<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
-									<div class="controls">
-											
-								            <?= $this->formElement($element)?>
-								            <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
-									    </div> </div>
-	<?php				
-			}else{
+
  	
 ?>
 <div class="control-group">
@@ -68,8 +49,7 @@ El/la que suscribe  </h5>
 	    </div>
 </div>
 <?php 
-	}
-
+	
 	if ( ($element->getName() == 'carrera')) {
 ?>
 	<h5 align = 'left'>; adjuntando el Certificado de Estudios Legalizado, se dirige a usted <br>

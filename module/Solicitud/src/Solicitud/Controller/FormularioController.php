@@ -8,8 +8,10 @@ use Solicitud\Service\Factory\Database as DatabaseAdapter;
 use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDatabaseAdapter;
 use Solicitud\Form\Formulario\getDatosUsuario;
 
-require_once 'SapiClient.php';
-require_once 'DatosDeUsuario.php';
+use Solicitud\Sapientia\SapientiaClient as SapientiaClient;
+use Solicitud\Model\FuncionesDB as FuncionesDB;
+
+
 
 class FormularioController extends AbstractActionController
 {
@@ -52,27 +54,31 @@ class FormularioController extends AbstractActionController
     {
 		
         if($this->getRequest()->isPost()) {
+        	
             $data = array_merge_recursive(
                 $this->getRequest()->getPost()->toArray(),
                 // Notice: make certain to merge the Files also to the post data
                 $this->getRequest()->getFiles()->toArray()
             );
             $form->setData($data);
+           
             if($form->isValid()) {
+             	
+             	//unset($form->get('enviar'));
             	// You can use the standard way of instantiating a table gateway
             	//$model = new UserModel();
             	// Or if you have many db tables that do need special treatment of the incoming data
             	// you can use the table gateway service
 
             	$info = $form->getData(); //The form's getData returns an array of key/value pairs
-
+				
             	$solicitudesModel = $this->serviceLocator->get('table-gateway')->get('solicitudes');
             	$info['usuario'] = $this->idUsuario; // tipo de solicitud insertada
             	$info['tipo_solicitud'] = $tableName; // tipo de solicitud insertada
             	$id = $solicitudesModel->insert($info); // @todo valor id: posible problema de concurrencia
             	
             	$info['solicitud'] = $id; // id de solicitud insertada
-            	
+            	//echo print_r($info);
             	# obtener campos de la tabla de la Solicitud Especifica
             	$metadata = new \Zend\Db\Metadata\Metadata($this->dbAdapter);
             	$columns = $metadata->getColumnNames($tableName);
@@ -86,27 +92,53 @@ class FormularioController extends AbstractActionController
             	
             	if (array_key_exists ( 'asignatura' , $info )){ #caso en que solicitud involucra materia            		            		
             		# obtener campos de la tabla Asignaturas por Solicitud
-            		$columns = $metadata->getColumnNames('asignaturas_por_solicitud');
-            		# interseccion entre campos de form y campos de Asignaturas por Solicitud
-            		$filtered = array_intersect_key($info, array_flip($columns));
+            		if ($tableName == 'solicitud_de_ruptura_de_correlatividad'){
+            			$sql = "insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['asignatura']."', ".$info['semestre_asignatura'].");";
+            			$statement = $this->dbAdapter->query($sql);
+            			$statement->execute(); 
+            			if ( $info['prerrequisito1'] != '0'){
+            				
+            				$sql="insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['prerrequisito1']."', ".$info['semestre_prerrequisito1'].");";
+            				$statement = $this->dbAdapter->query($sql);
+            				$statement->execute();
+            			}
+            			if ($info['prerrequisito2']!= '0' && $info['prerrequisito2'] != $info['prerrequisito1']){	
+								$sql="insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['prerrequisito2']."', ".$info['semestre_prerrequisito2'].");";
+								$statement = $this->dbAdapter->query($sql);
+								$statement->execute();
+            			}	
+            			if ($info['prerrequisito3']!= '0' && $info['prerrequisito3'] != $info['prerrequisito1'] && $info['prerrequisito3'] != $info['prerrequisito2'] ){
+								$sql="insert into asignaturas_por_solicitud ( solicitud, asignatura, semestre) values (".$id.",'".$info['prerrequisito3']."', ".$info['semestre_prerrequisito3'].");";
+									$statement = $this->dbAdapter->query($sql);
+									$statement->execute();			
+            			}
 
-            		$asignaturasSolicitudModel = $this->serviceLocator->get('table-gateway')->get('asignaturas_por_solicitud');
-            		$asignaturasSolicitudModel->insert($filtered);
+            		}else{
+	            		$columns = $metadata->getColumnNames('asignaturas_por_solicitud');
+	            		# interseccion entre campos de form y campos de Asignaturas por Solicitud
+	            		$filtered = array_intersect_key($info, array_flip($columns));
+	
+	            		$asignaturasSolicitudModel = $this->serviceLocator->get('table-gateway')->get('asignaturas_por_solicitud');
+	            		$asignaturasSolicitudModel->insert($filtered);
+            		}
             	}
             	
-
+				
+				
             	$this->flashmessenger()->addSuccessMessage('Solicitud Enviada');
 
 				// redirect the user to its home page
+				
 				return $this->redirect()->toRoute('zfcuser', array (
 						'controller' => 'zfcuser',
 						'action'     => 'index',
 				));
             } else {
+      
             	// debug code -- borrar despues!
-            	// the following line is a DEBUGGING CODE
-            	// $this->flashmessenger()->addSuccessMessage(print_r($info, TRUE));
+            	$this->flashmessenger()->addSuccessMessage(print_r($info, TRUE));
             	$messages = $form->getMessages();
+            	//return $this->redirect()->refresh();
             }
         }
 
@@ -293,11 +325,11 @@ class FormularioController extends AbstractActionController
 	
 	
 	////////////*************Parte Datos Dinámicos ******************///////////////////
-	public function setMatriculaCarrera($numeroDocumentoUsuario)
+	public function setMatriculaCarrera($numeroDocumentoUsuario, $sapientiaClient)
 	{
 		if(isset($_POST["matricula"]))
 		{
-			$result = getMatriculaCarrera($numeroDocumentoUsuario);
+			$result = $sapientiaClient->getMatriculaCarrera($numeroDocumentoUsuario);
 			$opciones = '<option value="0"> Elija su carrera.. </option>';
 		
 			foreach ($result as $res) {
@@ -306,7 +338,8 @@ class FormularioController extends AbstractActionController
 				}
 			}
 			echo $opciones;
-		}		
+		}
+		return $this->response;		
 	}
 	
 	public function setSemestreAsignatura ($asignatura)
@@ -325,7 +358,7 @@ class FormularioController extends AbstractActionController
 			}
 			echo $opciones;
 		}
-		
+		return $this->response;
 	}
 	
 	public function getAsignaturasPorProfesor (){
@@ -346,16 +379,16 @@ class FormularioController extends AbstractActionController
 	///////////**************Procesador Dinámico ***********//////////////////////
 	
 	public function procesardatosAction(){
-		
-	
+		$sapientiaClient = new SapientiaClient();
+		$funcionesDB = new FuncionesDB();
 		////////////////**********Extraer Datos del Usuario*********///////////////
 		///////////*******Todas las solicitudes ****************//////////
 		$this->setDbAdapter();
 		$this->setIdUsuario();
-		$datos = getDatosUsuario($this->dbAdapter, $this->idUsuario);
+		$datos = $funcionesDB->getDatosUsuario($this->dbAdapter, $this->idUsuario);
 		$numeroDocumento = $datos['numero_de_documento'];
 		
-		$this->setMatriculaCarrera($numeroDocumento);
+		$this->setMatriculaCarrera($numeroDocumento, $sapientiaClient);
 		///////////*******FIN*******//////////////////
 		
 		
@@ -363,12 +396,11 @@ class FormularioController extends AbstractActionController
 		
 		if(isset($_POST["anho_profesores"]) || isset($_POST["seccion_profesores"]) || isset($_POST["semestre_anho_profesores"]))
 		{
-			$result    = getProfesoresPorCurso($_POST["materia_profesores"], $_POST["seccion_profesores"],
+			$result    = $sapientiaClient->getProfesoresPorCurso($_POST["materia_profesores"], $_POST["seccion_profesores"],
 						 $_POST["semestre_anho_profesores"], $_POST["anho_profesores"]);
 			
-			if ($result != null){
-				$opciones = '<option value="0"> Elija un Profesor.. </option>';
-			}else{
+			$opciones = '<option value="0"> Elija un Profesor.. </option>';
+			if ($result == null){
 				$opciones = '<option value="0"> Ha elegido un curso inexistente.. </option>';
 			}
 			
@@ -389,7 +421,7 @@ class FormularioController extends AbstractActionController
 		
 		if(isset($_POST["asignatura_ruptura"]))
 		{
-			$result = getCorrelatividad($_POST["carrera_ruptura"], $_POST["asignatura_ruptura"]);
+			$result = $sapientiaClient->getCorrelatividad($_POST["carrera_ruptura"], $_POST["asignatura_ruptura"]);
 			$opciones = '<option value="0"> Elija la asignatura correlativa.. </option>';
 		
 			foreach ($result as $res) {
@@ -413,19 +445,19 @@ class FormularioController extends AbstractActionController
 
 		if(isset($_POST["anho_inscripcion_tardia"])||isset($_POST["seccion_inscripcion_tardia"])||isset($_POST["semestre_anho_inscripcion_tardia"])) // para rescatar la fecha de examen
 		{	
-			$result = getHorariosExamen($_POST["carrera_inscripcion_tardia"]);
+			$result = $sapientiaClient->getHorariosExamen($_POST["carrera_inscripcion_tardia"]);
 			
 			$inscriptoBand = FALSE;
+			$opciones = '<option value="0"> Elija la fecha de examen.. </option>';
 			foreach ($result as $res) {
 				if($_POST["asignatura_inscripcion_tardia"] == $res['asignatura'] && $_POST["seccion_inscripcion_tardia"] == $res['seccion']
         			&& $_POST["semestre_anho_inscripcion_tardia"] == $res['semestre'] && $_POST["anho_inscripcion_tardia"] == $res['anho']){
-						$opciones = '<option value="0"> Elija la fecha de examen.. </option>';
 						$opciones.='<option value="'.$res["fecha_examen"].'">'.$res["fecha_examen"].'</option>';
 						$inscriptoBand = TRUE;
 				}
 			}
 			if(!$inscriptoBand){
-				$opciones = '<option value="0"> No inscripto para este curso.. </option>';
+				$opciones = '<option value="0"> Curso no válido.. </option>';
 			}
 				echo $opciones;
 		}
@@ -435,9 +467,9 @@ class FormularioController extends AbstractActionController
 		////////////////*************Asignaturas actualmente inscriptas
 		if(isset($_POST["carrera_asignaturas_inscriptas"]) || $_POST["asignatura_seccion_inscripta"])
 		{
-			$opciones = '<option value="0"> Elija la asignatura .. </option>';
-			//$result = $this->getAsignaturasCarrera($_POST["carrera_asignatura_inscriptas"], $_POST["mat"]);
-			$result = getAsignaturas($_POST["carrera_asignaturas_inscriptas"], $_POST["matricula_asignaturas_inscriptas"], "CURSANDO");
+			$opciones = '<option> Elija la asignatura .. </option>';
+			//$result = $this->$sapientiaClient->getAsignaturasCarrera($_POST["carrera_asignatura_inscriptas"], $_POST["mat"]);
+			$result = $sapientiaClient->getAsignaturas($_POST["carrera_asignaturas_inscriptas"], $_POST["matricula_asignaturas_inscriptas"], "CURSANDO");
 			foreach ($result as $res) {
 				
 				if(isset($_POST["asignatura_seccion_inscripta"]) && $res['asignatura'] == $_POST["asignatura_seccion_inscripta"]){
@@ -456,7 +488,7 @@ class FormularioController extends AbstractActionController
 		if(isset($_POST["carrera_asignaturas_todas"]))
 		{
 			$opciones = '<option value="0"> Elija la asignatura .. </option>';
-			$result = getAsignaturas($_POST["carrera_asignaturas_todas"], $_POST["matricula_asignaturas_todas"], "TODAS");
+			$result = $sapientiaClient->getAsignaturas($_POST["carrera_asignaturas_todas"], $_POST["matricula_asignaturas_todas"], "TODAS");
 			$opciones = '<option value="0"> Elija la asignatura .. </option>';
 			foreach ($result as $res) {
 				$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
@@ -469,19 +501,19 @@ class FormularioController extends AbstractActionController
 		{	
 			
 			$opciones = '<option value="0"> Elija la asignatura .. </option>';
-			$resultAsignatura = getAsignaturas($_POST["carrera_asignaturas_cursadas"], $_POST["matricula_asignaturas_cursadas"], "CURSADAS");
-			$resultCalificaciones = getCalificaciones($numeroDocumento, $_POST["matricula_asignaturas_cursadas"]);
+			$resultAsignatura = $sapientiaClient->getAsignaturas($_POST["carrera_asignaturas_cursadas"], $_POST["matricula_asignaturas_cursadas"], "CURSADAS");
+			$resultCalificaciones = $sapientiaClient->getCalificaciones($numeroDocumento, $_POST["matricula_asignaturas_cursadas"]);
 			
 			//$rendidasNoAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] <  $calificacionMinima); });
-			$rendidasAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] >=  $calificacionMinima); });
+			$rendidasAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] >= $calificacionMinima ); });
 			
 			$asignaturasCursadasNoAprobadas = array();
 			
 			foreach( $resultAsignatura as $resCursadas ) {
-			   $aprobadoBandera = FALSE;
+			   $aprobadoBandera = false;
 			   foreach ( $rendidasAprobadas as $resAprobadas ){
 			   			if ($resCursadas['asignatura'] == $resAprobadas['asignatura']){
-			   				$aprobadoBandera = TRUE;
+			   				$aprobadoBandera = true;
 			   				break;
 			   			}
 			   }
@@ -512,8 +544,8 @@ class FormularioController extends AbstractActionController
 		{
 				
 			$opciones = '<option value="0"> Elija la asignatura .. </option>';
-			$resultAsignatura = getAsignaturas($_POST["carrera_asignaturas_no_cursadas"], $_POST["matricula_asignaturas_no_cursadas"], "TODAS");
-			$resultCalificaciones = getCalificaciones($numeroDocumento, $_POST["matricula_asignaturas_no_cursadas"]);
+			$resultAsignatura = $sapientiaClient->getAsignaturas($_POST["carrera_asignaturas_no_cursadas"], $_POST["matricula_asignaturas_no_cursadas"], "TODAS");
+			$resultCalificaciones = $sapientiaClient->getCalificaciones($numeroDocumento, $_POST["matricula_asignaturas_no_cursadas"]);
 				
 			//$rendidasNoAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] <  $calificacionMinima); });
 			$rendidasAprobadas = array_filter($resultCalificaciones, function($el) { $calificacionMinima = 2; return ($el['calificacion'] >=  $calificacionMinima); });
@@ -574,7 +606,7 @@ class FormularioController extends AbstractActionController
 		if(isset($_POST["asignatura_seccion"]))
 		{
 			$opciones = '<option value="0"> Elija la sección .. </option>';
-			$result = getAsignaturas($_POST["carrera_seccion"], $_POST["mat_seccion"], "TODAS");
+			$result = $sapientiaClient->getAsignaturas($_POST["carrera_seccion"], $_POST["mat_seccion"], "TODAS");
 		
 			foreach ($result as $res) {
 				if ($res['asignatura'] == $_POST["asignatura_seccion"]){
@@ -591,7 +623,7 @@ class FormularioController extends AbstractActionController
 		
 		if(isset($_POST["cod_asignatura"]))
 		{
-			//$opciones = '<option value="0"> Seleccione el código .. </option>';
+			$opciones = '<option value="0"> Seleccione el código .. </option>';
 			$dbAdapter = $this->getDbAdapterSapientia();
 			$sql = "SELECT materia AS cod_asignatura FROM materias WHERE nombre = '".$_POST["cod_asignatura"]."'";
 				
@@ -610,11 +642,16 @@ class FormularioController extends AbstractActionController
 			$opciones = '<option value="0"> Seleccione la asignatura .. </option>';
 
 
-			$result = getInscripcionesExamen($numeroDocumento, $_POST["matricula_examen_inscripto"]);
-			foreach ($result as $res) {
+			$resultInscriptos = $sapientiaClient->getInscripcionesExamen($numeroDocumento, $_POST["matricula_examen_inscripto"]);
+			$resultActuales = $sapientiaClient->getAsignaturas($_POST["carrera_examen_inscripto"], $_POST["matricula_examen_inscripto"], "CURSANDO");
+			
+			foreach ($resultInscriptos as $resI) {
 // 				if (isset($_POST["carrera_examen_inscripto"])){
-					$opciones.='<option value="'.$res["asignatura"].'">'.$res["asignatura"].'</option>';
-					
+				foreach ($resultActuales as $resA) {
+					if ($resI['asignatura'] == $resA['asignatura']){
+						$opciones.='<option value="'.$resI["asignatura"].'">'.$resI["asignatura"].'</option>';
+					}
+				}
 // 				}else if (isset($_POST["asignatura_examen_inscripto"])){
 // 					$opciones.='<option value="'.$res["seccion"].'">'.$res["seccion"].'</option>';
 					

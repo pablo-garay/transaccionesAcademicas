@@ -17,12 +17,14 @@
 
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
+//Preparamos el formulario
 $this->form1->setAttribute('class', 'form-horizontal');
 $this->form1->prepare();
 
 echo $this->form()->openTag($this->form1);
 echo '<fieldset>';
 
+// Extraemos y desplegamos cada elemento del formulario
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
 
@@ -93,6 +95,9 @@ echo $this->form()->closeTag();
 ?>
 
 <script type="text/javascript">
+
+//Carga dinamica de elementos del formulario 
+
 $("#matricula").change(function() {
 	
     $.ajax({

@@ -6,15 +6,19 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 
+/* Solicitud de Créditos, que hereda de la clase Solicitud */
 class SolicitudCreditos extends Solicitud
 {
 	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario,  AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudCreditos', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 	
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
 		$this->add(array(
 				'name' => 'tipo_actividad',
 				'type' => 'Zend\Form\Element\Select',

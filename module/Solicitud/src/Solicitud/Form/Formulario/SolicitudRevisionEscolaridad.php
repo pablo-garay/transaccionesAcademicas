@@ -5,36 +5,32 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-require_once 'funcionesDB.php';
+
+/* Solicitud de Revisión de Escolaridad, que hereda de la clase Solicitud */
 class SolicitudRevisionEscolaridad extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudRevisionEscolaridad', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
-			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su numero_de_documento
-		$usuarioLogueado = $idUsuario;
-		
-		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$numeroDocumento = $datos['numero_de_documento'];
 
-		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $numeroDocumento, $actual=TRUE);
-		$selectDataMat = $datosAlumno['materias'] ;
-		
+		$usuarioLogueado = $idUsuario;
+
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 		
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
 		$this->add(array(
 				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',
 				'options' => array(
 						'label' => 'Asignatura:',
 						'empty_option' => 'Seleccione una asignatura..',
-						'value_options' => $selectDataMat,
+						//'value_options' => $selectDataMat,
 				),
 				'attributes' => array(
 						'required' => 'required',

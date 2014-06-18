@@ -5,31 +5,27 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-require_once "funcionesDB.php";
 
 
+/* Solicitud de Exoneración, que hereda de la clase Solicitud */
 class SolicitudExoneracion extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudExoneracion', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
-		//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su numero_de_documento
+
 		$usuarioLogueado = $idUsuario;
 		
-		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-		$numeroDocumento = $datos['numero_de_documento'];
-
-		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $numeroDocumento, TRUE);
-		$selectDataMat = $datosAlumno['materias'] ;
 		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 		
+		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
 		$this->add(array(
 				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',

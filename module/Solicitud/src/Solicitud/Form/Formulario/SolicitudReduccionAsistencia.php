@@ -5,29 +5,26 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
-require_once 'funcionesDB.php';
+
+/* Solicitud de Reducción de Asistencia, que hereda de la clase Solicitud */
 class SolicitudReduccionAsistencia extends Solicitud
 {
-	
+	//parámetros del constructor: adaptadores de la base de datos, y el identificador del usuario logueado
 	public function __construct(AdapterInterface $dbadapter, $idUsuario, AdapterInterface $sapientiaDbadapter) { //parámetro del constructor: adaptador de la base de datos
 		
+		// Le pasamos los respectivos parámetros al constructor del padre
 		parent::__construct($name = 'solicitudReduccionAsistencia', $dbadapter, $idUsuario, $sapientiaDbadapter);
 	
 		$this->setAttribute('method', 'post');
 		
 		//////////////////////***********INICIO Extracción de Datos**************/////////////////
-			//$usuarioLogueado = getUsuarioLogueado(); @todo: rescatar el usuario logueado
-		// rescatar su cedula
-// 		$usuarioLogueado = 1;
-		
-// 		$datos = getDatosUsuario($dbadapter, $usuarioLogueado);
-// 		$cedulaUsuario = $datos['cedula'];
 
-// 		$datosAlumno = getMateriasYProfesoresUsuario($sapientiaDbadapter, $cedulaUsuario, $actual=FALSE);
-// 		$selectDataMat = $datosAlumno['materias'] ;
+ 		$usuarioLogueado = $idUsuario;
+
 		
 		//////////////////////***********FIN Extracción de Datos**************/////////////////
 		
+ 		/* A partir de aquí agregamos los elementos particulares a esta solicitud */
 		$this->add(array(
 				'name' => 'asignatura',
 				'type' => 'Zend\Form\Element\Select',

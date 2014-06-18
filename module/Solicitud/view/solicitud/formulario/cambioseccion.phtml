@@ -18,12 +18,14 @@
 			 
 <?php
 // We call the prepare here in order to fill the initial data and adjust the form properties, if needed
+//Preparamos el formulario 
 $this->form1->setAttribute('class', 'form-horizontal');
 $this->form1->prepare();
 
 echo $this->form()->openTag($this->form1);
 echo '<fieldset>';
 
+// Extraemos y desplegamos cada elemento del formulario
 foreach ($this->form1 as $element) {
     if (! ($element instanceof Zend\Form\Element\Submit)) {
 
@@ -49,7 +51,7 @@ foreach ($this->form1 as $element) {
     if ($element->getName() == 'cancelar'){
 	$element->setAttribute('class', 'btn btn-primary');
 ?>
-&nbsp 
+&nbsp
 <?=$this->formelement($element)?>
 
 </div>
@@ -61,7 +63,11 @@ echo '</fieldset>';
 echo $this->form()->closeTag();
 ?>
 
+
 <script type="text/javascript">
+
+// Carga dinamica de elementos del formulario 
+
 $("#matricula").change(function() {
 	
     $.ajax({
@@ -73,9 +79,8 @@ $("#matricula").change(function() {
         	     
       },
 
-	}
-    );
 	});
+});
 
 $("#carrera").change(function() {
     $.ajax({
@@ -85,23 +90,54 @@ $("#carrera").change(function() {
 	      success: function(data, textstatus, xhr){
 	        	$('#asignatura').html(data);	     
 	      },
-    	}
-	    );
+    	});
 });
 
+$("input:radio").click(function() {
+	if ($('input[name=motivo]:radio:checked').val() == 'Otro'){
+		
+		$('#especificacion_motivo').fadeIn(1000);
+	
+	
+	}
+	if ($('input[name=motivo]:radio:checked').val() != 'Otro'){
+			
+		$('#especificacion_motivo').hide(100);
+		
+	
+	}
+});
+$('#especificacion_motivo').hide(100);
 
-// $("#asignatura").change(function() {
-//     $.ajax({
-// 	      url:"/solicitud/formulario/procesardatos",
-// 	      type: "POST",
+
+$("input:radio").click(function() {
+	if ($('input[name=tipo]:radio:checked').val() == 'Otro'){
+		
+		$('#descripcion').fadeIn(1000);
+
+	}
+	if ($('input[name=tipo]:radio:checked').val() != 'Otro'){
+			
+		$('#descripcion').hide(100);
+
+	}
+});
+
+$('#descripcion').hide(100);
+
+
+// $("#asignatura").change(function() { 
+//     $.ajax({ 
+// 	      url:"/solicitud/formulario/procesardatos", 
+// 	      type: "POST", 
 // 	      data:{"asignatura_seccion":$("#asignatura").val(), "carrera_seccion":$("#carrera").val(), "mat_seccion":$("#matricula").val()},
-// 	      success: function(data, textstatus, xhr){
+// 	      success: function(data, textstatus, xhr){ 
 	      		
 // 	        	$('#seccion').html(data);     	     
-// 	      },
-//     	}
-// 	    );
-// });
+// 	      }, 
+//     	} 
+// 	    ); 
+// }); 
 
 
 
