@@ -27,7 +27,7 @@ echo '<fieldset>';
 
 // Extraemos y desplegamos cada elemento del formulario
 foreach ($this->form1 as $element) {
-    if (! ($element instanceof Zend\Form\Element\Submit)) {
+    if (! ($element instanceof Zend\Form\Element\Submit) && ! ($element instanceof Zend\Form\Element\Button)) {
 
 ?>
 <div class="control-group">

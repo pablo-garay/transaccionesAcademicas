@@ -25,7 +25,7 @@ echo $this->form()->openTag($this->form1);
 echo '<fieldset>';
 
 foreach ($this->form1 as $element) {
-    if (! ($element instanceof Zend\Form\Element\Submit)) {
+    if (! ($element instanceof Zend\Form\Element\Submit) && ! ($element instanceof Zend\Form\Element\Button)) {
         ?>
 <div class="control-group">
 	<label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>

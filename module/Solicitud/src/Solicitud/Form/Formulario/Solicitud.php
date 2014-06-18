@@ -8,6 +8,7 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\Db\Adapter\AdapterInterface;
 use Solicitud\Sapientia\SapientiaClient as SapientiaClient;
 use Solicitud\Model\FuncionesDB as FuncionesDB;
+use Solicitud\Controller\FormularioController as CancelarAction;;
 
 // adaptador de sapientia
 use Solicitud\Service\Factory\SapientiaDatabase as SapientiaDBAdapter;
@@ -225,13 +226,21 @@ class Solicitud extends Form
         		
         		);
         
+        // rescatamos la url que necesitamos para redireccionar en caso de que se cancele la solicitud
+        $baseUrl    =    sprintf("http://%s/user",$_SERVER['HTTP_HOST']);
+        
         $this->add(array(
         		'name' => 'cancelar',
-        		'type' => 'Zend\Form\Element\Submit',
+        		'type' => 'Zend\Form\Element\Button',
+        		'options' => array (
+        				'label' => 'Cancelar',
+        			
+        		),
         		'attributes' => array(
-        				'value' => 'Cancelar',
         				
-        				'required' => 'false',
+        				'onclick' => 'window.alert("Solicitud cancelada");
+        							  window.location.replace("'.$baseUrl.'");',
+        				
         				'id' => 'cancelar'
         		),
         
@@ -250,6 +259,10 @@ class Solicitud extends Form
 
 
 
+	}
+	public function cancelarSolcitud(){
+		$cancelar = new CancelarAction();
+		$cancelar->cancelar();
 	}
 
 /* Filters y Validators para cada elemento añadido al formulario */
