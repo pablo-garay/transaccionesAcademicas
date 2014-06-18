@@ -100,8 +100,8 @@ class SolicitudCertificadoEstudios extends Solicitud
 				'options' => array(
 						'label' => 'Tipo de certificado',
 						'value_options' => array(
-								'S' => 'Simple',
-								'L' => 'Para Legalizar',
+								'Simple' => 'Simple',
+								'Para Legalizar' => 'Para Legalizar',
 
 						),
 				),
@@ -296,10 +296,13 @@ class SolicitudCertificadoEstudios extends Solicitud
 					),
 					'validators' => array (
 							array (
-									'name' => 'regex',
-									'options' => array (
-											'pattern' => '/^L|S$/',
-									)
+									'name' => 'alpha',
+										'options' => array (
+												'messages' => array (
+														'notAlpha' => 'Se requieren solo letras'
+												),
+												'allowWhiteSpace' => true,
+										)
 							),
 					)
 			)));

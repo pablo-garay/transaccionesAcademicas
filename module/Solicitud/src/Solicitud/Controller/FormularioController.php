@@ -98,7 +98,7 @@ class FormularioController extends AbstractActionController
  
              		$asignaturasSolicitudModel = $this->serviceLocator->get('table-gateway')->get('asignaturas_por_solicitud');
              		$asignaturasSolicitudModel->insert($filtered);
-            	}            	
+            	}
 				
 				
             	$this->flashmessenger()->addSuccessMessage('Solicitud Enviada');
