@@ -81,7 +81,16 @@ class ForgotController extends AbstractActionController
 
                 //only send request when email is found
                 if($user != null) {
-                    $service->sendProcessForgotRequest($user->getId(), $email);
+                    try{
+                        $service->sendProcessForgotRequest($user->getId(), $email);
+                    } catch (\Exception $e) {
+                        //return $this->redirect()->toRoute('zfcuser/forgotpassword');
+                        //echo $e->getMessage();
+                        $vm = new ViewModel(array('email' => $email));
+                        $vm->setTemplate('goalio-forgot-password/forgot/error');
+                        return $vm;
+                    }
+                    //$service->sendProcessForgotRequest($user->getId(), $email);
                 }
 
                 $vm = new ViewModel(array('email' => $email));

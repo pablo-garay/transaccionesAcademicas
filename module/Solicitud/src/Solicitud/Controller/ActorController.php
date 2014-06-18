@@ -302,7 +302,12 @@ class ActorController extends AbstractActionController
 		$value = array('content' => $text);
     	$mailService = $this->getServiceLocator()->get('goaliomailservice_message');
     	$message = $mailService->createTextMessage('transaccionesuca@gmail.com', $to, $subject, $viewTemplate, $value);
-    	$mailService->send($message);
+        
+        try{ /* enviar email */
+        	$mailService->send($message);
+        } catch (\Exception $e) { /* No se puede enviar email */
+        	error_log ("El mail de notificación no pudo ser enviado");
+        }
     }
     
     public function sendSolicitudResolucionEmailMessage($solicitudData, $text){
@@ -353,7 +358,7 @@ class ActorController extends AbstractActionController
 			if(isset($data['Aprobar'])) {
 				$this->cambiarEstadoSolicitud('APROB', $id_solicitud);
 				$message = "La solicitud fue aprobada";
-				//$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
+				$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
 			
 			} else if(isset($data['Pendiente'])) {
 				
@@ -402,12 +407,12 @@ class ActorController extends AbstractActionController
 			} else if (isset($data['Anular'])) {
 				$this->cambiarEstadoSolicitud('ANUL', $id_solicitud);
 				$message = "La solicitud fue anulada";
-				//$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
+				$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
 				
 			} else if (isset($data['Rechazar'])) {
 				$this->cambiarEstadoSolicitud('RECHAZ', $id_solicitud);
 				$message = "La solicitud fue rechazada";
-				//$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
+				$this->sendSolicitudResolucionEmailMessage($solicitudData, $message); /* email de notificacion */
 				
 			} else if (isset($data['Imprimir'])) {
 				return $this->forward()->dispatch('Visualize\Controller\Visualize', array(

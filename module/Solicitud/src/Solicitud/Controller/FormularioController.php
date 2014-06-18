@@ -101,7 +101,7 @@ class FormularioController extends AbstractActionController
             	}
 				
 				
-            	$this->flashmessenger()->addSuccessMessage('Solicitud Enviada');
+            	$this->flashmessenger()->addInfoMessage('Solicitud Enviada');
 
 				// redirect the user to its home page
 				

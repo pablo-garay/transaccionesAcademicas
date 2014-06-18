@@ -2,6 +2,5 @@
 Sistema de Transacciones Académicas - UCA
 
 Usted ha recibido este email porque solicitó restablecer su contraseña con nosotros. Para continuar con el proceso, por favor presione el enlace de abajo.
-<!-- You have received this email because you initiated to reset your password with us. To continue with the process, please click the link below: -->
 
 <?php echo $this->serverUrl($this->url('zfcuser/resetpassword', array('userId' => $this->record->getUserId(), 'token' => $this->record->getRequestKey()))); ?>

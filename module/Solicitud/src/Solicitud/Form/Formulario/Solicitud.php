@@ -238,7 +238,7 @@ class Solicitud extends Form
         		),
         		'attributes' => array(
         				
-        				'onclick' => 'window.alert("Solicitud cancelada");
+        				'onclick' => 'window.alert("Ha decidido cancelar el envío de la solicitud");
         							  window.location.replace("'.$baseUrl.'");',
         				
         				'id' => 'cancelar'
