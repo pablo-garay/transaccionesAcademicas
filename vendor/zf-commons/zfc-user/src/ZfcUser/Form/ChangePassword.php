@@ -33,7 +33,7 @@ class ChangePassword extends ProvidesEventsForm
         $this->add(array(
             'name' => 'credential',
             'options' => array(
-                'label' => 'Current Password',
+                'label' => 'Contraseña Actual',
             ),
             'attributes' => array(
                 'type' => 'password',
@@ -43,7 +43,7 @@ class ChangePassword extends ProvidesEventsForm
         $this->add(array(
             'name' => 'newCredential',
             'options' => array(
-                'label' => 'New Password',
+                'label' => 'Nueva Contraseña',
             ),
             'attributes' => array(
                 'type' => 'password',
@@ -53,7 +53,7 @@ class ChangePassword extends ProvidesEventsForm
         $this->add(array(
             'name' => 'newCredentialVerify',
             'options' => array(
-                'label' => 'Verify New Password',
+                'label' => 'Verifique su nueva Contraseña',
             ),
             'attributes' => array(
                 'type' => 'password',
@@ -63,8 +63,9 @@ class ChangePassword extends ProvidesEventsForm
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
-                'value' => 'Submit',
-                'type'  => 'submit'
+                'value' => 'Guardar',
+                'type'  => 'submit',
+                'class' => 'btn btn-primary'
             ),
         ));
 

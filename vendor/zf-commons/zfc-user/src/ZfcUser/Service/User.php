@@ -11,6 +11,7 @@ use Zend\Stdlib\Hydrator;
 use ZfcBase\EventManager\EventProvider;
 use ZfcUser\Mapper\UserInterface as UserMapperInterface;
 use ZfcUser\Options\UserServiceOptionsInterface;
+use ZfcUser\Entity\UserInterface;
 
 
 class User extends EventProvider implements ServiceManagerAwareInterface
@@ -149,6 +150,30 @@ class User extends EventProvider implements ServiceManagerAwareInterface
         $this->getEventManager()->trigger(__FUNCTION__.'.post', $this, array('user' => $currentUser));
 
         return true;
+    }
+
+   /**
+     * @param Form $form
+     * @param array $data
+     * @param UserInterface $user
+     * @return UserInterface
+     */
+    public function edit(Form $form, array $data, UserInterface $user)
+    {
+        foreach ($data as $key => $value) {
+            if ($key == 'contrasena') continue;
+
+            $setter = $this->getAccessorName($key);
+            if (method_exists($user, $setter)) call_user_func(array($user, $setter), $value);
+        }
+
+        $argv = array();
+
+        $argv += array('user' => $user, 'form' => $form, 'data' => $data);
+        $this->getEventManager()->trigger(__FUNCTION__, $this, $argv);
+        $this->getUserMapper()->update($user);
+        $this->getEventManager()->trigger(__FUNCTION__ . '.post', $this, $argv);
+        return $user;
     }
 
     /**
@@ -312,5 +337,14 @@ class User extends EventProvider implements ServiceManagerAwareInterface
     {
         $this->formHydrator = $formHydrator;
         return $this;
+    }
+
+    protected function getAccessorName($property, $set = true)
+    {
+        $parts = explode('_', $property);
+        array_walk($parts, function (&$val) {
+            $val = ucfirst($val);
+        });
+        return (($set ? 'set' : 'get') . implode('', $parts));
     }
 }

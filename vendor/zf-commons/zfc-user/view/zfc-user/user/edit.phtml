@@ -1,0 +1,39 @@
+<?php
+$form = $this->editForm;
+$form->prepare();
+$form->setAttribute('action', $this->url('zfcuser/edit'));
+$form->setAttribute('method', 'post');
+?>
+
+<div class="page-header">
+    <h1>Editar Datos Personales</h1>
+</div>
+
+<?php echo $this->form()->openTag($form) ?>
+    <dl class="zend_form">
+        <?php foreach ($form as $element){
+                    if (! ($element instanceof Zend\Form\Element\Submit)) {
+                ?>
+        <div class="control-group">
+            <label class="control-label" for="<?= $element->getName() ?>"><?= $this->translate($element->getLabel()) ?></label>
+            <div class="controls">
+                    <?= $this->formElement($element)?>
+                    <h5><span style="color:#E00C0C"><?= $this->formElementErrors($element)?></span></h5>
+                </div>
+        </div>
+        <?php
+            } else {
+                $element->setAttribute('class', 'btn btn-primary');
+                ?>
+        <br>        
+        <div class="form-actions">
+        <?=$this->formelement($element)?>
+            </div>
+        <?php
+            }
+        }?>
+    </dl>
+<?php if ($this->redirect): ?>
+    <input type="hidden" name="redirect" value="<?php echo $this->redirect ?>">
+<?php endif ?>
+<?php echo $this->form()->closeTag() ?>

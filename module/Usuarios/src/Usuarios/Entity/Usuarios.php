@@ -33,7 +33,7 @@ class Usuarios implements UserInterface
     /**
      * @var int
      */
-    protected $estado_cuenta;
+    protected $state;
 
     /**
      * @var int
@@ -197,7 +197,7 @@ class Usuarios implements UserInterface
      */
     public function getState()
     {
-        return $this->estado_cuenta;
+        return $this->state;
     }
 
     /**
@@ -208,7 +208,7 @@ class Usuarios implements UserInterface
      */
     public function setState($state)
     {
-        $this->estado_cuenta = $state;
+        $this->state = $state;
         return $this;
     }
 

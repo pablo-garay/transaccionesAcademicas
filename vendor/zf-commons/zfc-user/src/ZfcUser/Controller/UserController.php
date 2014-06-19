@@ -9,6 +9,9 @@ use Zend\Stdlib\Parameters;
 use Zend\View\Model\ViewModel;
 use ZfcUser\Service\User as UserService;
 use ZfcUser\Options\UserControllerOptionsInterface;
+use ZfcUser\Form as ZfcUForm;
+use ZfcUser\Form\RegisterFilter;
+use ZfcUser\Validator\NoRecordExists;
 
 class UserController extends AbstractActionController
 {
@@ -273,8 +276,8 @@ class UserController extends AbstractActionController
             );
         }
 
-        $this->flashMessenger()->setNamespace('change-password')->addMessage(true);
-        return $this->redirect()->toRoute(static::ROUTE_CHANGEPASSWD);
+        $this->flashMessenger()->addSuccessMessage('Contraseña actualizada');
+        return $this->redirect()->toRoute('zfcuser/editarDatos');
     }
 
     public function changeEmailAction()
@@ -325,8 +328,62 @@ class UserController extends AbstractActionController
             );
         }
 
-        $this->flashMessenger()->setNamespace('change-email')->addMessage(true);
-        return $this->redirect()->toRoute(static::ROUTE_CHANGEEMAIL);
+        $this->flashMessenger()->addSuccessMessage('Email actualizado');
+        return $this->redirect()->toRoute('zfcuser/editarDatos');
+    }
+
+    public function editAction(){
+        // if the user isn't logged in, we can't change email
+        if (!$this->zfcUserAuthentication()->hasIdentity()) {
+            // redirect to the login redirect route
+            return $this->redirect()->toRoute($this->getOptions()->getLoginRedirectRoute());
+        }
+        $userId=$this->getUserService()->getAuthService()->getIdentity()->getId();
+        $user=$this->getServiceLocator()->get('zfcuser_user_mapper')->findById($userId);
+
+        $zfcUserOptions = $this->getOptions();
+        $form = new ZfcUForm\Edit(null, $zfcUserOptions);
+        $filter = new RegisterFilter(
+            new NoRecordExists(array(
+                'mapper' => $this->getServiceLocator()->get('zfcuser_user_mapper'),
+                'key' => 'email'
+            )),
+            new NoRecordExists(array(
+                'mapper' => $this->getServiceLocator()->get('zfcuser_user_mapper'),
+                'key' => 'username'
+            )),
+            $zfcUserOptions
+        );
+        $filter->remove('contrasena')->remove('contrasena_verify');
+        $form->setInputFilter($filter);
+        $form->setUser($user);
+
+        /** @var $request \Zend\Http\Request */
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setData($request->getPost());
+            $user = $this->getUserService()->edit($form, (array)$request->getPost(), $user);
+            if ($user) {
+                    $this->flashMessenger()->addSuccessMessage('Datos de usuario actualizados');
+                    return $this->redirect()->toRoute('zfcuser/editarDatos');
+                }
+        }else {
+            $form->populateFromUser($user);
+        }
+        return array(
+            'editForm' => $form,
+        );
+
+    }
+
+    public function editarDatosAction(){
+        // if the user isn't logged in, we can't change email
+        if (!$this->zfcUserAuthentication()->hasIdentity()) {
+            // redirect to the login redirect route
+            return $this->redirect()->toRoute($this->getOptions()->getLoginRedirectRoute());
+        }
+
+        return array();
     }
 
     /**

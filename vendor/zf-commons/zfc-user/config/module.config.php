@@ -99,6 +99,26 @@ return array(
                             ),
                         ),                        
                     ),
+                    'edit' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/edit',
+                            'defaults' => array(
+                                'controller' => 'zfcuser',
+                                'action' => 'edit',
+                            ),
+                        ),                        
+                    ),
+                    'editarDatos' => array(
+                        'type' => 'Literal',
+                        'options' => array(
+                            'route' => '/editarDatos',
+                            'defaults' => array(
+                                'controller' => 'zfcuser',
+                                'action' => 'editarDatos',
+                            ),
+                        ),                        
+                    ),
                 ),
             ),
         ),
