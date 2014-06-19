@@ -27,22 +27,22 @@ $url_order = $this->order == 'ASC' ? 'DESC' : 'ASC';
 <thead>
     <tr>
         <th>
-        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'tipo_solicitud', 'order' => $url_order)) ?>">Tipo de solicitud<?php 
+        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'tipo_solicitud', 'order' => $url_order), array('query' => array('filter' => $this->filter))) ?>">Tipo de solicitud<?php 
         	if ($this->order_by == 'tipo_solicitud'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
         	</a>
         </th>
         <th>
-        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'fecha_solicitada', 'order' => $url_order)) ?>">Fecha solicitada<?php 
+        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'fecha_solicitada', 'order' => $url_order), array('query' => array('filter' => $this->filter))) ?>">Fecha solicitada<?php 
         	if ($this->order_by == 'fecha_solicitada'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
         	</a>
         </th>
         <th>
-        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'estado_solicitud', 'order' => $url_order)) ?>">Estado<?php 
+        	<a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'estado_solicitud', 'order' => $url_order), array('query' => array('filter' => $this->filter))) ?>">Estado<?php 
         	if ($this->order_by == 'estado_solicitud'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
         	</a>
         </th>
         <th>
-            <a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'matricula', 'order' => $url_order)) ?>">Matrícula<?php 
+            <a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'matricula', 'order' => $url_order), array('query' => array('filter' => $this->filter))) ?>">Matrícula<?php 
         	if ($this->order_by == 'matricula'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
         	</a>
         </th>
