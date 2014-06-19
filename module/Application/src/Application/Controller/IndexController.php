@@ -33,4 +33,19 @@ class IndexController extends AbstractActionController
 	{
 		return array();
 	}
+	
+	public function manualsAction(){
+		
+		/* Get user role */
+		$authorize = $this->getServiceLocator()->get('BjyAuthorize\Provider\Identity\ProviderInterface');
+		$roles = $authorize->getIdentityRoles();
+		$role = $roles[0];
+		
+		if ($role == 'admin') return $this->redirect()->toUrl("/manuals/manual_administrador.pdf");
+		else if (in_array ($role , 
+				array('recepcion', 'secretaria_general', 'secretaria_departamento', 'secretaria_academica', 'decano', 'director_academico', 'director_departamento')))
+			return $this->redirect()->toUrl("/manuals/manual_funcionario.pdf");
+		else 
+			return $this->redirect()->toUrl("/manuals/manual_usuario.pdf");
+	}
 }

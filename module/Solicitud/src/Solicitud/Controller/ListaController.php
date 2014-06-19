@@ -87,9 +87,10 @@ class ListaController extends AbstractActionController
 			$result->where(array(
 					new Predicate\PredicateSet(
 							array(
-									new Predicate\Like('tipo_solicitud', '%'.str_replace(' ', '_', $searchstring).'%'),
+									new Predicate\Like('tipo_solicitud', '%'.str_replace(' ', '_', strtolower($searchstring)).'%'),
 	 								new Predicate\Expression('fecha_solicitada::text LIKE ?', '%'.$searchstring.'%'),
 									new Predicate\Like('estado_solicitud', '%'.strtoupper($searchstring).'%'),
+									new Predicate\Expression('matricula::text LIKE ?', '%'.$searchstring.'%'),
 							),
 							Predicate\PredicateSet::COMBINED_BY_OR
 					),

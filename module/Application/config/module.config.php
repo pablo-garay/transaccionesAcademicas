@@ -114,10 +114,16 @@ return array(
     					'uri'   => 'http://www.cyt.uc.edu.py/',
     				),
     				array(
-    						'label' => 'Ayuda',
+    						'label' => 'Ayuda con las Solicitudes',
     						'route' => 'application/default',
     						'controller' => 'index',
     						'action' => 'help'
+    				),
+    				array(
+    						'label' => 'Manual de Usuario',
+    						'route' => 'application/default',
+    						'controller' => 'index',
+    						'action' => 'manuals'
     				)
     			)
     		),

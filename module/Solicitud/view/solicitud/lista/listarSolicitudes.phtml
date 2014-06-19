@@ -17,6 +17,8 @@ elseif ($this->order_by == 'fecha_solicitada')
 	$url_order = $this->order == 'ASC' ? 'DESC' : 'ASC';
 elseif ($this->order_by == 'estado_solicitud')
 	$url_order = $this->order == 'ASC' ? 'DESC' : 'ASC';
+elseif ($this->order_by == 'matricula')
+$url_order = $this->order == 'ASC' ? 'DESC' : 'ASC';
 ?>
 
 
@@ -39,7 +41,11 @@ elseif ($this->order_by == 'estado_solicitud')
         	if ($this->order_by == 'estado_solicitud'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
         	</a>
         </th>
-        <th></th>
+        <th>
+            <a href="<?= $this->url('solicitud/list', array('controller' => 'lista', 'action' => $this->listaAction, 'order_by' => 'matricula', 'order' => $url_order)) ?>">Matrícula<?php 
+        	if ($this->order_by == 'matricula'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?>
+        	</a>
+        </th>
         <th></th>
         <th></th>
     </tr>
@@ -50,6 +56,7 @@ elseif ($this->order_by == 'estado_solicitud')
             <td><?= $this->escapehtml($name = str_replace('_', ' ', strtoupper($solicitud['tipo_solicitud']))) ?></td>
             <td><?= $this->escapehtml($solicitud['fecha_solicitada']) ?></td>
             <td><?= $this->escapehtml($solicitud['estado_solicitud']) ?> </td>
+            <td><?= $this->escapehtml($solicitud['matricula']) ?> </td>
             <td><a href="<?= $this->url('solicitud/actor', 
             		array('controller'=> 'actor', 'action'=>$this->actorAction, 'id'=> $solicitud['solicitud'])) ?>"><?= $this->translate('Visualizar') ?></a></td>
             <td><?php
